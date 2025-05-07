@@ -1,39 +1,4 @@
-// let Header = (user) => {
-//   let header = document.createElement("header");
-//   if (user) {
-//     header.innerHTML = `
-//         <h1 class="logo"><a href="/front-end/">Forum</a></h1>
-//         <div>
-//         <button class="primary-btn new_post_btn" id="craete_post_btn"><i class="fas fa-plus"></i><span>New Post</span></button>
-//         // i nedd filter button 
-//         // i need chat button
-//         </div>
-//         <nav class="navigation-links">
-              
-//               <div class="user-profile " id="user-profile" >
-//                 <img
-//                   src="./assets/avatar.png"
-//                   alt="User Profile"
-//                   class="profile-pic"
-//                 />
-//               </div>
-//         </nav>
-        
-//     `;
-//     header.appendChild(userProfile(user));
-//   } else {
-//     header.innerHTML = `
-//           <h1 class="logo"><a href="/front-end/">Forum</a></h1>
-//           <nav class="navigation-links">
-//                 <button class="primary-btn" id="login_btn"><i class="fas fa-sign-in-alt"></i> Login</button>
-//           </nav>
-//       `;
-//   }
-
-//   return header;
-// };
-
-let Header = (user) => {
+const Header = (user) => {
   let header = document.createElement("header");
 
   if (user) {
@@ -71,8 +36,7 @@ let Header = (user) => {
   return header;
 };
 
-
-let userProfile = (user) => {
+const userProfile = (user) => {
   let underProfile = document.createElement("div");
   underProfile.setAttribute("class", "underProfile hidden");
   underProfile.setAttribute("id", "underProfile");
@@ -114,7 +78,7 @@ let userProfile = (user) => {
   return underProfile;
 };
 
-let loginForm = (errrors = {}) => {
+const loginForm = (errrors = {}) => {
   let form = document.createElement("div");
   form.setAttribute("class", "modal-overlay");
   form.setAttribute("id", "login_form");
@@ -143,7 +107,7 @@ let loginForm = (errrors = {}) => {
   return form;
 };
 
-let registerForm = (errrors = {}) => {
+const registerForm = (errrors = {}) => {
   let form = document.createElement("div");
   form.setAttribute("class", "modal-overlay");
   form.setAttribute("id", "register_form");
@@ -198,7 +162,7 @@ let registerForm = (errrors = {}) => {
   return form;
 };
 
-let postCard = (post) => {
+const postCard = (post) => {
   let postElement = document.createElement("div");
   postElement.setAttribute("class", "post-card");
 
@@ -250,7 +214,7 @@ let postCard = (post) => {
   return postElement;
 };
 
-let postForm = (errors = {}) => {
+const postForm = (errors = {}) => {
   // let careate our form
 
   let form = document.createElement("div");
@@ -312,7 +276,32 @@ let postForm = (errors = {}) => {
            `;
   return form;
 };
-let  filterForm = () => {
+const activeUsersComponent = (users) => {
+  const container = document.createElement("div");
+  container.setAttribute("id", "active_users");
+
+  const usersHTML = users
+    .map(
+      (user) => `
+    <li class="user-item">
+      <div class="avatar-wrapper">
+        <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+        <span class="status-dot"></span>
+      </div>
+      <span class="user-nickname">${user.nickname}</span>
+    </li>
+  `
+    )
+    .join("");
+
+  container.innerHTML = `
+    <ul class="users-list">${usersHTML}</ul>
+  `;
+
+  return container;
+};
+
+const filterForm = () => {
   const container = document.createElement("form");
   container.id = "categoryFilterPanel";
   container.className = "category-filter-form";
@@ -355,8 +344,7 @@ let  filterForm = () => {
   return container;
 };
 
-
-let Footer = () => {
+const Footer = () => {
   let footer = document.createElement("footer");
   footer.innerHTML = `
     <p>&copy; 2025 Forum. All rights reserved.</p>
@@ -364,4 +352,13 @@ let Footer = () => {
   return footer;
 };
 
-export { Footer, Header, loginForm, registerForm, postCard, postForm,filterForm };
+export {
+  Footer,
+  Header,
+  loginForm,
+  registerForm,
+  postCard,
+  postForm,
+  filterForm,
+  activeUsersComponent,
+};

@@ -8,6 +8,7 @@ import {
   Header,
   Footer,
   filterForm,
+  activeUsersComponent,
 } from "./componnents.js";
 
 import {
@@ -58,7 +59,6 @@ async function renderHomePage(data) {
   }
   document.body.innerHTML = "";
   removeOldeForms();
-  // document.getElementById("container")?.classList.remove("modal-active");
   document.body.appendChild(Header(user));
   bindLoginBtn();
   bindRegisterbtn();
@@ -67,19 +67,23 @@ async function renderHomePage(data) {
     showProfile();
     logOut();
     bindfiletrBtn();
+    listenChatBtn();
   }
   if (!data) {
     data = await fetchPosts();
   }
-  await getActiveUsers();
+  
   // let posts = await fetchPosts();
   let main = document.createElement("main");
   let section = document.createElement("section");
   section.setAttribute("class", "container");
   section.setAttribute("id", "container");
+  // fetch active users
+  const activeUsers = await getActiveUsers();
+  const usersComponent = activeUsersComponent(activeUsers);
+  section.appendChild(usersComponent);
   let posts = document.createElement("div");
   posts.setAttribute("class", "posts");
-
   if (!data) {
     posts.textContent = "No posts yet.";
   } else {
@@ -367,6 +371,23 @@ function showFilterForm() {
     form.remove(); // Optional: remove popup after applying
   });
 }
+
+const listenChatBtn = () => {
+  const chatBtn = document.getElementById("chat_btn");
+
+  chatBtn.addEventListener("click", () => {
+    if (!document.getElementById("active_users")) {
+      // const usersComponent = activeUsersComponent(activeUsers);
+      document.querySelector('.posts')?.classList.add("hidden")
+      document.body.appendChild(usersComponent);
+      // <button class="primary-btn" id="close_users"><i class="fas fa-times"></i> Close</button>
+      // Add close functionality
+      document.getElementById("close_users").addEventListener("click", () => {
+        usersComponent.remove();
+      });
+    }
+  });
+};
 
 export {
   renderHomePage,

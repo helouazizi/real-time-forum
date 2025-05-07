@@ -1,0 +1,135 @@
+#active_users {
+  position: fixed;
+  align-items: center;
+  top: 160px;
+  /* right: 34%; */
+  width:fit-content;
+  max-width: 90%;
+  background: #fff;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  gap: 10px;
+}
+
+
+#active_users ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  max-height: 200px;
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+#active_users ul li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+#active_users ul li:last-child {
+  border-bottom: none;
+}
+
+.users-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  max-height: 250px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.user-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.status-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  background-color: #28a745; /* green */
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+
+#active_users #close_users {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+
+@media (max-width: 768px) {
+   
+ 
+  
+    #active_users ul {
+      gap: 6px;
+      max-height: 180px;
+    }
+  
+    #active_users ul li {
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+    }
+  
+    .user-item {
+      gap: 8px;
+    }
+  
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+    }
+  
+    .status-dot {
+      width: 8px;
+      height: 8px;
+    }
+  
+    .user-nickname {
+      font-size: 0.9rem;
+    }
+  
+    #active_users #close_users {
+      font-size: 0.85rem;
+      padding: 0.5rem 0.75rem;
+    }
+  }
+  
