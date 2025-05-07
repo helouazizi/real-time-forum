@@ -15,10 +15,12 @@ import (
 )
 
 type Application struct {
-	DB          *sql.DB
-	Home        *handlers.HomeHandler
-	UserHandler *handlers.UserHandler
-	PostHandler *handlers.PostHandler
+	DB                 *sql.DB
+	Home               *handlers.HomeHandler
+	UserHandler        *handlers.UserHandler
+	PostHandler        *handlers.PostHandler
+	ChatHandler        *handlers.ChatHandler
+	ActiveUsersHandler *handlers.ActiveHandler
 }
 
 func NewApp(config *config.Configuration) *Application {
@@ -30,25 +32,34 @@ func NewApp(config *config.Configuration) *Application {
 	}
 	// Run database migrations to craete tables
 	database.Migrate(db)
+
 	// Initialize repositorys
 	homeRepo := repository.NewHomeRepository(db)
 	userMethods := repository.NewUserRepository(db)
 	postMrthods := repository.NewPostRepository(db)
+	chatMethods := repository.NewChatRepo(db)
+	activeUsers := repository.NewActiveRepo(db)
 
 	// Initialize services
 	homeService := services.NewHomeService(homeRepo)
 	userService := services.NewUserService(userMethods)
 	postServices := services.NewPostService(postMrthods)
+	chatServices := services.NewChatService(chatMethods)
+	activeServices := services.NewActiveRepo(activeUsers)
 
 	// Initialize handlers
 	homeHandler := handlers.NewHomeHandler(homeService)
 	userHandler := handlers.NewUserHandler(userService)
 	postHandler := handlers.NewPostHandler(postServices)
+	chatHandler := handlers.NewChatHandler(chatServices)
+	activeHandlers := handlers.NewActiveHandler(activeServices)
 
 	return &Application{
-		DB:          db,
-		Home:        homeHandler,
-		UserHandler: userHandler,
-		PostHandler: postHandler,
+		DB:                 db,
+		Home:               homeHandler,
+		UserHandler:        userHandler,
+		PostHandler:        postHandler,
+		ChatHandler:        chatHandler,
+		ActiveUsersHandler: activeHandlers,
 	}
 }

@@ -17,7 +17,7 @@ type UserMethods interface {
 	CreateUser(user models.User) models.Error
 	Login(user models.UserLogin) (models.UserLogin, models.Error)
 	Logout(token string) models.Error
-	//UpdateUser(user models.User) (models.User, models.Error)
+	// UpdateUser(user models.User) (models.User, models.Error)
 	GetUserInfo(token string) (models.User, models.Error)
 	IsUsernameOrEmailTaken(username, email string) models.Error
 }
@@ -79,15 +79,13 @@ func (r *UserRepository) CreateUser(user models.User) models.Error {
 }
 
 func (r *UserRepository) Login(user models.UserLogin) (models.UserLogin, models.Error) {
-
 	query := `SELECT password_hash FROM users WHERE nickname = ?`
-	Updatequery := `UPDATE users SET session_token = ?, session_expires_at = ? WHERE nickname = ?`
+	Updatequery := `UPDATE users SET session_token = ?, session_expires_at = ?, is_active = true WHERE nickname = ?`
 	isEmail := utils.ValidEmail(user.LoginId)
 	if isEmail {
 		query = fmt.Sprintf(`SELECT password_hash FROM users WHERE %s = ?`, "email")
-		Updatequery = fmt.Sprintf(`UPDATE users SET session_token = ?, session_expires_at = ? WHERE %s = ?`, "email")
+		Updatequery = fmt.Sprintf(`UPDATE users SET session_token = ?, session_expires_at = ? , is_active = true WHERE %s = ?`, "email")
 	}
-
 	var hash string
 	err := r.db.QueryRow(query, user.LoginId).Scan(&hash)
 	if err != nil {
@@ -97,7 +95,8 @@ func (r *UserRepository) Login(user models.UserLogin) (models.UserLogin, models.
 			UserErrors: models.UserInputErrors{
 				HasError: true,
 				Nickname: "Invalid nickname or email",
-			}}
+			},
+		}
 	}
 
 	errCompare := utils.ComparePass([]byte(hash), []byte(user.Password))
@@ -109,7 +108,8 @@ func (r *UserRepository) Login(user models.UserLogin) (models.UserLogin, models.
 			UserErrors: models.UserInputErrors{
 				HasError: true,
 				Pass:     "Invalid password",
-			}}
+			},
+		}
 	}
 
 	// Generate a new token
@@ -152,7 +152,6 @@ func (r *UserRepository) GetUserInfo(token string) (models.User, models.Error) {
 		&userInfo.CreatedAt,
 		&userInfo.UpdatedAt,
 	)
-
 	if err != nil {
 		logger.LogWithDetails(err)
 		return models.User{}, models.Error{
@@ -168,7 +167,7 @@ func (r *UserRepository) GetUserInfo(token string) (models.User, models.Error) {
 }
 
 func (r *UserRepository) Logout(token string) models.Error {
-	query := `UPDATE users SET session_token = NULL, session_expires_at = NULL WHERE session_token = ?`
+	query := `UPDATE users SET session_token = NULL, session_expires_at = NULL , is_active = false WHERE session_token = ?`
 	result, err := r.db.Exec(query, token)
 	if err != nil {
 		logger.LogWithDetails(err)

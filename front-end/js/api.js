@@ -14,6 +14,9 @@ async function isAouth() {
     });
     if (response.ok) {
       let data = await response.json();
+      console.log(data);
+
+      sessionStorage.setItem("user_id", data.id);
       return data;
     } else {
       return null;
@@ -237,6 +240,61 @@ async function showComments(postId, container) {
   }
 }
 
+async function chat() {
+  const senderId = sessionStorage.getItem("user_id");
+
+  const receiverId = 456;
+  const messageInput = document.getElementById("message-input");
+
+  // WebSocket connection
+  const socket = new WebSocket("ws://http://localhost:3000/api/v1/chat");
+
+  // When the WebSocket is open, send the message
+  socket.onopen = function (event) {
+    const sendButton = document.getElementById("send-button");
+    sendButton.addEventListener("click", function () {
+      // Get the message content
+      const message = messageInput.value;
+      const messageData = {
+        sender_id: senderId,
+        receiver_id: receiverId,
+        message: message,
+      };
+
+      // Send the message
+      socket.send(JSON.stringify(messageData));
+
+      // Clear the input field after sending the message
+      messageInput.value = "";
+    });
+  };
+
+  // Handling incoming messages
+  socket.onmessage = function (event) {
+    const incomingMessage = JSON.parse(event.data);
+    console.log("Received message:", incomingMessage);
+  };
+}
+
+async function getActiveUsers() {
+  try {
+    const response = await fetch("http://localhost:3000/api/v1/active", {
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch active users");
+    }
+
+    const users = await response.json();
+    console.log("Active users:", users);
+    return users;
+  } catch (error) {
+    console.error("Error fetching active users:", error);
+    return [];
+  }
+}
+
 export {
   isAouth,
   logOut,
@@ -246,4 +304,5 @@ export {
   sendPostCommen,
   showComments,
   fetchFilteredPosts,
+  getActiveUsers,
 };

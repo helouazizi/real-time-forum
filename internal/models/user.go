@@ -14,7 +14,7 @@ type User struct {
 	// Bio               string    `json:"bio"`
 	// AvatarURL         string    `json:"avatar_url"`
 	// Role              string    `json:"role"`
-	// IsActive          bool      `json:"is_active"`
+	IsActive bool `json:"is_active"`
 	// EmailVerified     bool      `json:"email_verified"`
 	// VerificationToken string    `json:"verification_token,omitempty"`
 	// SessionToken string `json:"session_token,omitempty"`
@@ -31,16 +31,16 @@ type UserLogin struct {
 }
 
 type UserInputErrors struct {
-	HasError  bool
-	Nickname  string
-	Email     string
-	Pass      string
-	Age       string
-	LastName  string
-	FirstName string
-	Gender    string
-	PostTilte string
-	PostContent string
+	HasError       bool
+	Nickname       string
+	Email          string
+	Pass           string
+	Age            string
+	LastName       string
+	FirstName      string
+	Gender         string
+	PostTilte      string
+	PostContent    string
 	Postcategories string
 }
 

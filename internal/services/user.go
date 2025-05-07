@@ -18,16 +18,6 @@ func (s *UserService) CreateUser(user models.User) ( models.Error) {
 	
 }
 
-//	func (s *UserService) UpdateUser(user models.User) (models.User, models.Error) {
-//		User, err := s.repo.UpdateUser(user)
-//		if err.Code != http.StatusOK {
-//			return models.User{}, err
-//		}
-//		return User, models.Error{
-//			Message: "seccefully updated information",
-//			Code:    http.StatusOK, // 200
-//		}
-//	}
 func (s *UserService) Login(user models.UserLogin) (models.UserLogin, models.Error) {
 	User, err := s.repo.Login(user)
 
@@ -43,4 +33,13 @@ func (s *UserService) GetUserInfo(token string) (models.User, models.Error) {
 	return User, err
 }
 
-// Implement other methods...
+//	func (s *UserService) UpdateUser(user models.User) (models.User, models.Error) {
+//		User, err := s.repo.UpdateUser(user)
+//		if err.Code != http.StatusOK {
+//			return models.User{}, err
+//		}
+//		return User, models.Error{
+//			Message: "seccefully updated information",
+//			Code:    http.StatusOK, // 200
+//		}
+//	}

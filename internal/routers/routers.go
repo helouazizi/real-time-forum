@@ -26,5 +26,9 @@ func SetupRoutes(h *app.Application) *http.ServeMux {
 	mux.Handle("/api/v1/posts/fetchComments", middlewares.AuthMiddleware(http.HandlerFunc(h.PostHandler.FetchComments), h.DB))
 	mux.Handle("/api/v1/posts/filter", middlewares.AuthMiddleware(http.HandlerFunc(h.PostHandler.FilterPosts), h.DB))
 
+	// ---- char handler (with auth middleware) ---
+	mux.Handle("/api/v1/chat", middlewares.AuthMiddleware(http.HandlerFunc(h.ChatHandler.HandleChat), h.DB))
+	mux.Handle("/api/v1/active", middlewares.AuthMiddleware(http.HandlerFunc(h.ActiveUsersHandler.GetActiveUsers), h.DB))
+
 	return mux
 }

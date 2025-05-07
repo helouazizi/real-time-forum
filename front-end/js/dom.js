@@ -19,12 +19,14 @@ import {
   sendPostCommen,
   showComments,
   fetchFilteredPosts,
+  getActiveUsers,
 } from "./api.js";
 
 function styleBody(params) {
   // Clear the body
   document.body.innerHTML = "";
-  document.body.style.background = "radial-gradient(circle at center, rgb(37, 42, 61), rgb(65, 47, 102))";
+  document.body.style.background =
+    "radial-gradient(circle at center, rgb(37, 42, 61), rgb(65, 47, 102))";
   document.body.style.fontFamily = "Segoe UI, sans-serif";
   // document.body.style.color = "#ffffff"; // fallback text color
 
@@ -47,13 +49,10 @@ function styleBody(params) {
   document.body.appendChild(subText);
 }
 
-
-
 async function renderHomePage(data) {
   let user = await isAouth();
   if (!user) {
     styleBody();
-    // Show login form
     showLoginForm();
     return;
   }
@@ -72,6 +71,7 @@ async function renderHomePage(data) {
   if (!data) {
     data = await fetchPosts();
   }
+  await getActiveUsers();
   // let posts = await fetchPosts();
   let main = document.createElement("main");
   let section = document.createElement("section");

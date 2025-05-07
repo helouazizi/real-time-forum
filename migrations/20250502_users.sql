@@ -11,7 +11,7 @@ CREATE TABLE
         -- bio TEXT DEFAULT '',
         -- avatar_url TEXT DEFAULT '',
         -- role TEXT NOT NULL DEFAULT 'user',
-        -- is_active BOOLEAN NOT NULL DEFAULT 1,
+        is_active BOOLEAN NOT NULL DEFAULT 0,
         -- email_verified BOOLEAN NOT NULL DEFAULT 0,
         -- verification_token TEXT,
         session_token TEXT UNIQUE,
