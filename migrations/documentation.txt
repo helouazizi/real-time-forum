@@ -1,0 +1,32 @@
+=====================******************===================
+                         migrations
+=====================******************===================
+
+## plaese folowe this principles for migrations good practice
+
+
+1) Incorporate Timestamps for Ordering:
+
+    Format: Use a timestamp at the beginning of the filename to ensure migrations are applied sequentially.
+    >>> Example: 20250219181305_create_users_table.sql
+    Reasoning: Timestamps prevent conflicts and ambiguities, especially in collaborative environments where multiple 
+    developers might create migrations simultaneously. 
+    STUDYRAID
+
+2) Use Descriptive Names:
+
+    Format: After the timestamp, include a concise description of the migration's purpose,
+    using underscores to separate words.
+    >>> Example: 20250219181305_add_email_to_users.sql
+    Reasoning: Descriptive names provide immediate insight into what the migration accomplishes,
+    aiding in code readability and maintenance.
+
+3) Use naming syntax like the first letter must be upercase and has prefex of name of the table and underscore
+    >>> Exemple:✅ Recommended version (snake_case for consistency):
+
+The folder should looke like this 
+
+migrations/
+│   ├── 20250219181305_create_users_table.sql
+│   ├── 20250219182010_add_email_to_users.sql
+│   └── 20250219182545_create_posts_table.sql

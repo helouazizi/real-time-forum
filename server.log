@@ -1,0 +1,37 @@
+2025/05/06 15:31:45 2025-05-06T15:31:45+01:00 [Function: web-forum/internal/repository.(*UserRepository).GetUserInfo] [Line: 157] sql: no rows in result set
+2025/05/06 15:31:45 2025-05-06T15:31:45+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 137] Internal Server Error
+2025/05/06 15:33:27 2025-05-06T15:33:27+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/06 16:42:45 2025-05-06T16:42:45+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Logout] [Line: 104] Token not found or invalid
+2025/05/06 16:42:50 2025-05-06T16:42:50+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Logout] [Line: 104] Token not found or invalid
+2025/05/06 16:43:18 2025-05-06T16:43:18+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/06 16:44:17 2025-05-06T16:44:17+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/06 17:53:28 2025-05-06T17:53:28+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/06 17:53:44 2025-05-06T17:53:44+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/06 17:55:02 2025-05-06T17:55:02+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] Error scanning post row
+2025/05/06 17:56:23 2025-05-06T17:56:23+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] Error scanning post row
+2025/05/06 17:59:21 2025-05-06T17:59:21+01:00 [Function: web-forum/internal/repository.(*PostRepository).FilterPosts] [Line: 293] sql: Scan error on column index 10, name "categories": unsupported Scan, storing driver.Value type string into type *[]string
+2025/05/06 17:59:21 2025-05-06T17:59:21+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] Error scanning post row
+2025/05/06 18:01:56 2025-05-06T18:01:56+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:02:46 2025-05-06T18:02:46+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:03:52 2025-05-06T18:03:52+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:06:03 2025-05-06T18:06:03+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:07:57 2025-05-06T18:07:57+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:09:03 2025-05-06T18:09:03+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:11:59 2025-05-06T18:11:59+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:17:18 2025-05-06T18:17:18+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:18:57 2025-05-06T18:18:57+01:00 [Function: web-forum/internal/handlers.(*PostHandler).FilterPosts] [Line: 220] 
+2025/05/06 18:25:35 2025-05-06T18:25:35+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/07 10:06:52 2025-05-07T10:06:52+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/07 10:06:56 2025-05-07T10:06:56+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/07 10:07:35 2025-05-07T10:07:35+01:00 [Function: web-forum/internal/handlers.(*UserHandler).CreateUser] [Line: 37] invalid user credentials
+2025/05/07 10:08:37 2025-05-07T10:08:37+01:00 [Function: web-forum/internal/repository.(*UserRepository).CreateUser] [Line: 47] Bad Request
+2025/05/07 10:08:37 2025-05-07T10:08:37+01:00 [Function: web-forum/internal/handlers.(*UserHandler).CreateUser] [Line: 43] 
+2025/05/07 10:09:36 2025-05-07T10:09:36+01:00 [Function: web-forum/internal/repository.(*UserRepository).CreateUser] [Line: 67] UNIQUE constraint failed: users.last_name
+2025/05/07 10:09:36 2025-05-07T10:09:36+01:00 [Function: web-forum/internal/handlers.(*UserHandler).CreateUser] [Line: 43] 
+2025/05/07 10:10:04 2025-05-07T10:10:04+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/07 10:10:13 2025-05-07T10:10:13+01:00 [Function: web-forum/internal/repository.(*UserRepository).Login] [Line: 105] crypto/bcrypt: hashedPassword is not the hash of the given password
+2025/05/07 10:10:13 2025-05-07T10:10:13+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 84] Bad Request
+2025/05/07 10:13:17 2025-05-07T10:13:17+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Token not found or invalid
+2025/05/07 10:16:51 2025-05-07T10:16:51+01:00 [Function: web-forum/internal/handlers.(*UserHandler).CreateUser] [Line: 37] invalid user credentials
+2025/05/07 10:19:00 2025-05-07T10:19:00+01:00 [Function: web-forum/internal/handlers.(*PostHandler).CreatePost] [Line: 38] invalid post input
+2025/05/07 10:25:45 listen tcp :3000: bind: address already in use
