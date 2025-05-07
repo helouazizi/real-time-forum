@@ -27,6 +27,7 @@ function login() {
         };
         throw error;
       }
+      location.reload()
       renderHomePage()
     } catch (err) {
       showErrorPage(err);

@@ -120,7 +120,6 @@ let loginForm = (errrors = {}) => {
   form.setAttribute("id", "login_form");
   form.innerHTML = `
                 <div class="modal-content">
-                <button class="close-btn" id="close-form">&times;</button>
                     <!-- Login Form -->
                 <form action="http://localhost:3000/api/v1/users/login" method="POST" id="login_form_element">
                 <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
@@ -150,7 +149,6 @@ let registerForm = (errrors = {}) => {
   form.setAttribute("id", "register_form");
   form.innerHTML = `
                 <div class="modal-content">
-                <button class="close-btn" id="close-form">&times;</button>
                     <!-- Login Form -->
                 <form action="http://localhost:3000/api/v1/users/register" method="POST" id="register_form_element">
                 <h2><i class="fas fa-user-plus"></i> Register</h2>

@@ -128,14 +128,14 @@ func (h *UserHandler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 	token, err := utils.GetToken(r, "Token")
 	if err.Code != http.StatusOK {
 		logger.LogWithDetails(fmt.Errorf(err.Message))
-		utils.RespondWithJSON(w, http.StatusTemporaryRedirect, err)
+		utils.RespondWithJSON(w, err.Code, err)
 		return
 	}
 
 	userInfo, err1 := h.userService.GetUserInfo(token)
 	if err1.Code != http.StatusOK {
 		logger.LogWithDetails(fmt.Errorf(err1.Message))
-		utils.RespondWithJSON(w, http.StatusTemporaryRedirect, models.Error{Message: "No token Yet", Code: http.StatusTemporaryRedirect})
+		utils.RespondWithJSON(w, err1.Code,err1)
 		return
 	}
 	utils.RespondWithJSON(w, http.StatusOK, userInfo)

@@ -21,6 +21,80 @@ import {
   fetchFilteredPosts,
 } from "./api.js";
 
+function styleBody(params) {
+  // Clear the body
+  document.body.innerHTML = "";
+  document.body.style.background = "radial-gradient(circle at center, rgb(37, 42, 61), rgb(65, 47, 102))";
+  document.body.style.fontFamily = "Segoe UI, sans-serif";
+  // document.body.style.color = "#ffffff"; // fallback text color
+
+  // Add welcome message
+  const welcomeText = document.createElement("h1");
+  welcomeText.textContent = "Welcome to Our Forum!";
+  welcomeText.style.textAlign = "center";
+  welcomeText.style.fontSize = "2.5rem";
+  welcomeText.style.marginBottom = "1rem";
+  welcomeText.style.padding = "1rem";
+  welcomeText.style.color = "#ffd369"; // bright accent (yellow-gold)
+  document.body.appendChild(welcomeText);
+
+  const subText = document.createElement("p");
+  subText.textContent = "Please log in to continue";
+  subText.style.textAlign = "center";
+  subText.style.fontSize = "1.2rem";
+  subText.style.marginBottom = "2rem";
+  subText.style.color = "#e0e0e0"; // soft gray-white
+  document.body.appendChild(subText);
+}
+
+
+
+async function renderHomePage(data) {
+  let user = await isAouth();
+  if (!user) {
+    styleBody();
+    // Show login form
+    showLoginForm();
+    return;
+  }
+  document.body.innerHTML = "";
+  removeOldeForms();
+  // document.getElementById("container")?.classList.remove("modal-active");
+  document.body.appendChild(Header(user));
+  bindLoginBtn();
+  bindRegisterbtn();
+  showPostForm();
+  if (user) {
+    showProfile();
+    logOut();
+    bindfiletrBtn();
+  }
+  if (!data) {
+    data = await fetchPosts();
+  }
+  // let posts = await fetchPosts();
+  let main = document.createElement("main");
+  let section = document.createElement("section");
+  section.setAttribute("class", "container");
+  section.setAttribute("id", "container");
+  let posts = document.createElement("div");
+  posts.setAttribute("class", "posts");
+
+  if (!data) {
+    posts.textContent = "No posts yet.";
+  } else {
+    data.forEach((post) => {
+      posts.appendChild(postCard(post));
+    });
+  }
+
+  section.appendChild(posts);
+  main.appendChild(section);
+  document.body.appendChild(main);
+  document.body.appendChild(Footer());
+
+  postActions();
+}
 // this function diplay the login form
 function bindLoginBtn() {
   const login_btn = document.getElementById("login_btn");
@@ -36,10 +110,6 @@ function bindLoginBtn() {
   }
 }
 function showLoginForm(errors) {
-  const container = document.getElementById("container");
-  container.classList.add("modal-active");
-
-  // remove the previouse form
   removeOldeForms();
   let form = loginForm(errors);
   form.classList.add("active");
@@ -47,18 +117,11 @@ function showLoginForm(errors) {
 
   bindRegisterbtn();
   login();
-  /////////////////// handle the form caancling
-  const close_btn = document.getElementById("close-form");
-  close_btn.addEventListener("click", () => {
-    form.remove();
-    container.classList.remove("modal-active");
-  });
 }
 
 // this function dipay the registration form
 function bindRegisterbtn() {
   const register_btn = document.getElementById("register_btn");
-
   if (register_btn) {
     register_btn.addEventListener("click", (e) => {
       showRegisterForm();
@@ -66,9 +129,6 @@ function bindRegisterbtn() {
   }
 }
 function showRegisterForm(errors = {}) {
-  const container = document.getElementById("container");
-  container.classList.add("modal-active");
-  // remove the previouse form
   removeOldeForms();
 
   let form = registerForm(errors);
@@ -77,12 +137,6 @@ function showRegisterForm(errors = {}) {
 
   bindLoginBtn();
   register();
-
-  const close_btn = document.getElementById("close-form");
-  close_btn.addEventListener("click", () => {
-    form.remove();
-    container.classList.remove("modal-active");
-  });
 }
 
 // this function diplay the craete post form
@@ -124,48 +178,7 @@ function removeOldeForms() {
       form.remove();
     });
   }
-}
-
-async function renderHomePage(data) {
-  
-  let user = await isAouth();
-  document.body.innerHTML = "";
-  removeOldeForms();
-  document.getElementById("container")?.classList.remove("modal-active");
-  document.body.appendChild(Header(user));
-  bindLoginBtn();
-  bindRegisterbtn();
-  showPostForm();
-  if (user) {
-    showProfile();
-    logOut();
-    bindfiletrBtn();
-  }
-  if (!data) {
-    data = await fetchPosts();
-  }
-  // let posts = await fetchPosts();
-  let main = document.createElement("main");
-  let section = document.createElement("section");
-  section.setAttribute("class", "container");
-  section.setAttribute("id", "container");
-  let posts = document.createElement("div");
-  posts.setAttribute("class", "posts");
-
-  if (!data) {
-    posts.textContent = "No posts yet.";
-  } else {
-    data.forEach((post) => {
-      posts.appendChild(postCard(post));
-    });
-  }
-
-  section.appendChild(posts);
-  main.appendChild(section);
-  document.body.appendChild(main);
-  document.body.appendChild(Footer());
-
-  postActions();
+  document.getElementById("categoryFilterPanel")?.remove();
 }
 
 function showMessage(message) {
@@ -331,7 +344,7 @@ function bindfiletrBtn() {
   }
 }
 function showFilterForm() {
-  document.getElementById("categoryFilterPanel")?.remove();
+  removeOldeForms();
   let form = filterForm();
   document.body.appendChild(form);
   // Handle close
@@ -342,7 +355,7 @@ function showFilterForm() {
 
   // Handle filter submit
   const submitBtn = document.getElementById("applyFilter");
-  submitBtn.addEventListener("click",async (e) => {
+  submitBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const checked = form.querySelectorAll("input[name='categories']:checked");
     const selectedCategories = Array.from(checked).map((input) => input.value);

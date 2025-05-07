@@ -4,7 +4,7 @@ import {
   showLoginForm,
   showMessage,
   showPostForm,
-  renderComments
+  renderComments,
 } from "./dom.js";
 async function isAouth() {
   try {
@@ -16,13 +16,9 @@ async function isAouth() {
       let data = await response.json();
       return data;
     } else {
-      // const errorData = await response.json();
-      // console.log(errorData, "from api err");
-      // showLoginForm();
       return null;
     }
   } catch (err) {
-    // alert("Error: " + err.message);
     console.log(err);
   }
 }
@@ -42,19 +38,12 @@ function logOut() {
 
         if (response.ok) {
           renderHomePage();
-          // showLoginForm();
-          // location.reload();
         } else {
           const errorData = await response.json();
-          console.error(
-            "Logout failed:",
-            errorData.message || response.statusText
-          );
-          alert("Logout failed: " + (errorData.message || response.statusText));
+          throw { code: errorData.Code, message: errorData.Message };
         }
       } catch (err) {
-        console.error("Network error:", err);
-        alert("Network error: " + err.message);
+        showErrorPage(err);
       }
     });
   }
@@ -129,7 +118,7 @@ async function fetchPosts() {
       throw err;
     }
 
-    const posts = await response.json();    
+    const posts = await response.json();
     return posts;
   } catch (error) {
     showErrorPage(error);
@@ -155,13 +144,12 @@ async function fetchFilteredPosts(categories) {
       throw err;
     }
 
-    const posts = await response.json();    
+    const posts = await response.json();
     return posts;
   } catch (error) {
     showErrorPage(error);
   }
 }
-
 
 async function reactToPost(postId, reaction) {
   try {
@@ -185,7 +173,7 @@ async function reactToPost(postId, reaction) {
       };
       throw err;
     }
-    return true
+    return true;
   } catch (error) {
     showErrorPage(error);
   }
@@ -242,8 +230,8 @@ async function showComments(postId, container) {
     const comments = await response.json();
     if (!comments) return;
     console.log(comments);
-    
-    renderComments(comments, postId,container);
+
+    renderComments(comments, postId, container);
   } catch (error) {
     showErrorPage(error);
   }
@@ -257,5 +245,5 @@ export {
   reactToPost,
   sendPostCommen,
   showComments,
-  fetchFilteredPosts
+  fetchFilteredPosts,
 };

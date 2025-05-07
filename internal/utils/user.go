@@ -123,7 +123,7 @@ func GetToken(r *http.Request, name string) (string, models.Error) {
 	if err != nil || cookie.Value == "" {
 		// Return unauthorized if there's no cookie or cookie is empty
 		return "", models.Error{
-			Message: "Token not found or invalid",
+			Message: "Service Unauthorized",
 			Code:    http.StatusUnauthorized,
 		}
 	}

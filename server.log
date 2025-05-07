@@ -35,3 +35,36 @@
 2025/05/07 10:16:51 2025-05-07T10:16:51+01:00 [Function: web-forum/internal/handlers.(*UserHandler).CreateUser] [Line: 37] invalid user credentials
 2025/05/07 10:19:00 2025-05-07T10:19:00+01:00 [Function: web-forum/internal/handlers.(*PostHandler).CreatePost] [Line: 38] invalid post input
 2025/05/07 10:25:45 listen tcp :3000: bind: address already in use
+2025/05/07 10:39:28 2025-05-07T10:39:28+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:40:58 2025-05-07T10:40:58+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:42:40 2025-05-07T10:42:40+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:43:01 2025-05-07T10:43:01+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:43:56 2025-05-07T10:43:56+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:45:52 2025-05-07T10:45:52+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:45:54 2025-05-07T10:45:54+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:46:20 2025-05-07T10:46:20+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:46:37 2025-05-07T10:46:37+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:47:05 2025-05-07T10:47:05+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:49:18 2025-05-07T10:49:18+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 10:49:20 2025-05-07T10:49:20+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:00:03 2025-05-07T11:00:03+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:00:05 2025-05-07T11:00:05+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:01:27 2025-05-07T11:01:27+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:02:29 2025-05-07T11:02:29+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:02:40 2025-05-07T11:02:40+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:03:29 2025-05-07T11:03:29+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:03:56 2025-05-07T11:03:56+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:04:53 2025-05-07T11:04:53+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:05:59 2025-05-07T11:05:59+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:07:03 2025-05-07T11:07:03+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:07:36 2025-05-07T11:07:36+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:08:58 2025-05-07T11:08:58+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:10:08 2025-05-07T11:10:08+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:11:24 2025-05-07T11:11:24+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:12:15 2025-05-07T11:12:15+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:12:42 2025-05-07T11:12:42+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:13:02 2025-05-07T11:13:02+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:14:52 2025-05-07T11:14:52+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
+2025/05/07 11:15:03 2025-05-07T11:15:03+01:00 [Function: web-forum/internal/repository.(*UserRepository).Login] [Line: 105] crypto/bcrypt: hashedPassword is not the hash of the given password
+2025/05/07 11:15:03 2025-05-07T11:15:03+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 84] Bad Request
+2025/05/07 11:16:21 2025-05-07T11:16:21+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 130] Service Unauthorized
