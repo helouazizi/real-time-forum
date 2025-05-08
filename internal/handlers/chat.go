@@ -86,11 +86,21 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		conn.Close()
 		return
 	}
-	h.chatServices.SaveMessage(msg)
+	
 
 	h.Hub.Register <- models.ClientRegistration{SenderId: msg.SenderID, Conn: conn}
+	// extract the previouse messages
+	messages, err := h.chatServices.GetMessages(msg)
+	if err != nil {
+		logger.LogWithDetails(err)
+	}
+	fmt.Println(messages,"umessages")
+	for _,message := range messages{
+		// h.Hub.Broadcast <- message
+		conn.WriteJSON(message)
+	}
 	// Send to the intended recipient
-	h.Hub.Broadcast <- msg
+
 
 	defer func() {
 		h.Hub.Unregister <- msg.SenderID

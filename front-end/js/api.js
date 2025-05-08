@@ -232,15 +232,26 @@ async function showComments(postId, container) {
   }
 }
 
-async function chat(chatContainer,socket ) {
+async function chat(chatContainer) {
   const senderId = sessionStorage.getItem("user_id");
-  
+  const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
 
   const spanElement = chatContainer.querySelector("span[user-id]");
   const recieverId = spanElement.getAttribute("user-id");
 
   socket.onopen = () => {
+    //================ establish first connection
+    const establishconection = {
+      sender: parseInt(senderId),
+      receiver: parseInt(recieverId),
+      message: "",
+    };
+
+    socket.send(JSON.stringify(establishconection));
+    //================ establish the rest connection
+
     const sendBtn = chatContainer.querySelector("#sent-message");
+
     sendBtn.addEventListener("click", () => {
       const messageInput = chatContainer.querySelector("#message");
       const message = messageInput.value.trim();

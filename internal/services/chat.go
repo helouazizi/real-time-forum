@@ -17,6 +17,6 @@ func (r *ChatService) SaveMessage( message models.Message) error {
 	return r.repo.SaveMessage(message)
 }
 
-func (r *ChatService) GetMessages() ([]models.Message, error) {
-	return r.repo.GetMessages()
+func (r *ChatService) GetMessages(message models.Message) ([]models.Message, error) {
+	return r.repo.GetMessages(message)
 }

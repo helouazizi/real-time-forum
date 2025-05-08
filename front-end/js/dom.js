@@ -422,8 +422,8 @@ const showChatWindow = (container, user) => {
     `;
     chatContainer.appendChild(chatWindow);
     console.log(chatContainer, "chatcontainer");
-    const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
-    chat(chatContainer,socket)
+    
+    chat(chatContainer)
   
 
     let close = document.getElementById("close_messages");
