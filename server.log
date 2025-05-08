@@ -9,3 +9,5 @@
 2025/05/07 17:34:43 2025-05-07T17:34:43+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 111] Service Unauthorized
 2025/05/07 17:35:27 2025-05-07T17:35:27+01:00 [Function: web-forum/internal/repository.(*UserRepository).Login] [Line: 104] crypto/bcrypt: hashedPassword is not the hash of the given password
 2025/05/07 17:35:27 2025-05-07T17:35:27+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 65] Bad Request
+2025/05/08 09:19:40 2025-05-08T09:19:40+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 111] Service Unauthorized
+2025/05/08 10:15:31 2025-05-08T10:15:31+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 111] Service Unauthorized

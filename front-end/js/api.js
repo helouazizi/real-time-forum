@@ -14,8 +14,6 @@ async function isAouth() {
     });
     if (response.ok) {
       let data = await response.json();
-      console.log(data);
-
       sessionStorage.setItem("user_id", data.id);
       return data;
     } else {
@@ -182,7 +180,6 @@ async function reactToPost(postId, reaction) {
   }
 }
 async function sendPostCommen(postId, commenttext) {
-  console.log(postId, commenttext, "hhhh");
 
   try {
     const response = await fetch(
@@ -210,8 +207,6 @@ async function sendPostCommen(postId, commenttext) {
     }
     let res = await response.json();
     showMessage(res.Message);
-
-    console.log("Comment submitted successfully:");
     // Optionally update the UI here
   } catch (error) {
     showErrorPage(error);
@@ -232,8 +227,6 @@ async function showComments(postId, container) {
 
     const comments = await response.json();
     if (!comments) return;
-    console.log(comments);
-
     renderComments(comments, postId, container);
   } catch (error) {
     showErrorPage(error);
@@ -283,14 +276,13 @@ async function getActiveUsers() {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch active users");
+      throw {code : response.Code, message:response.Messgae}
     }
 
     const users = await response.json();
-    console.log("Active users:", users);
     return users;
   } catch (error) {
-    console.error("Error fetching active users:", error);
+    showErrorPage(error)
     return [];
   }
 }

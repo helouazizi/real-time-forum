@@ -32,7 +32,7 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer conn.Close()
-
+	
 	// Example of storing messages and responding
 	for {
 		msgType, msg, err := conn.ReadMessage()

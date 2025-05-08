@@ -279,6 +279,7 @@ const postForm = (errors = {}) => {
 const activeUsersComponent = (users) => {
   const container = document.createElement("div");
   container.setAttribute("id", "active_users");
+  container.classList.add('hidden')
 
   const usersHTML = users
     .map(
@@ -300,6 +301,43 @@ const activeUsersComponent = (users) => {
 
   return container;
 };
+const chatUsersComponent = (users, onUserClick) => {
+  const container = document.createElement("div");
+  container.setAttribute("id", "chat_users");
+
+  const usersHTML = users
+    .map(
+      (user) => `
+    <li class="chat-user-item" data-user="${user.nickname}">
+      <div class="avatar-wrapper">
+        <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+        <span class="status-dot online"></span>
+      </div>
+      <span class="user-nickname">${user.nickname}</span>
+    </li>
+  `
+    )
+    .join("");
+
+  container.innerHTML = `
+    <ul class="chat-users-list">${usersHTML}</ul>
+  `;
+
+  // Event delegation for click on any user
+  container.addEventListener("click", (e) => {
+    const item = e.target.closest(".chat-user-item");
+    if (item) {
+      const nickname = item.dataset.user;
+      const selectedUser = users.find((u) => u.nickname === nickname);
+      if (selectedUser) {
+        onUserClick(selectedUser); // open chat window
+      }
+    }
+  });
+
+  return container;
+};
+
 
 const filterForm = () => {
   const container = document.createElement("form");
@@ -361,4 +399,5 @@ export {
   postForm,
   filterForm,
   activeUsersComponent,
+  chatUsersComponent
 };

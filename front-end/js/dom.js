@@ -9,6 +9,7 @@ import {
   Footer,
   filterForm,
   activeUsersComponent,
+  chatUsersComponent,
 } from "./componnents.js";
 
 import {
@@ -72,16 +73,16 @@ async function renderHomePage(data) {
   if (!data) {
     data = await fetchPosts();
   }
-  
+
   // let posts = await fetchPosts();
   let main = document.createElement("main");
   let section = document.createElement("section");
   section.setAttribute("class", "container");
   section.setAttribute("id", "container");
   // fetch active users
-  const activeUsers = await getActiveUsers();
-  const usersComponent = activeUsersComponent(activeUsers);
-  section.appendChild(usersComponent);
+  // const activeUsers = await getActiveUsers();
+  // const usersComponent = activeUsersComponent(activeUsers);
+  // section.appendChild(usersComponent);
   let posts = document.createElement("div");
   posts.setAttribute("class", "posts");
   if (!data) {
@@ -375,18 +376,36 @@ function showFilterForm() {
 const listenChatBtn = () => {
   const chatBtn = document.getElementById("chat_btn");
 
-  chatBtn.addEventListener("click", () => {
-    if (!document.getElementById("active_users")) {
-      // const usersComponent = activeUsersComponent(activeUsers);
-      document.querySelector('.posts')?.classList.add("hidden")
-      document.body.appendChild(usersComponent);
-      // <button class="primary-btn" id="close_users"><i class="fas fa-times"></i> Close</button>
-      // Add close functionality
-      document.getElementById("close_users").addEventListener("click", () => {
-        usersComponent.remove();
-      });
-    }
+  chatBtn.addEventListener("click", async () => {
+    console.log(chatBtn, "here");
+    const activeUsers = await getActiveUsers();
+    document.querySelector(".posts")?.classList.add("hidden");
+    let container = document.querySelector(".container");
+    container.appendChild(chatUsersComponent(activeUsers, showChatWindow));
+    // <button class="primary-btn" id="close_users"><i class="fas fa-times"></i> Close</button>
+    // Add close functionality
+    // document.getElementById("close_chat").addEventListener("click", () => {
+    //   usersComponent.remove();
+    // });
   });
+};
+
+const showChatWindow = (user) => {
+  let chatWindow = document.getElementById("chat_window");
+
+  if (!chatWindow) {
+    chatWindow = document.createElement("div");
+    chatWindow.setAttribute("id", "chat_window");
+    chatWindow.innerHTML = `
+      <div class="chat-header">Chatting with <span id="chat_user_nickname"></span></div>
+      <div class="chat-messages"></div>
+      <input type="text" class="chat-input" placeholder="Type a message..." />
+    `;
+    document.body.appendChild(chatWindow);
+  }
+
+  document.getElementById("chat_user_nickname").textContent = user.nickname;
+  chatWindow.style.display = "block";
 };
 
 export {
