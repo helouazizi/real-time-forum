@@ -86,7 +86,6 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		conn.Close()
 		return
 	}
-	
 
 	h.Hub.Register <- models.ClientRegistration{SenderId: msg.SenderID, Conn: conn}
 	// extract the previouse messages
@@ -94,14 +93,11 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.LogWithDetails(err)
 	}
-	fmt.Println(messages,"umessages")
-	for _,message := range messages{
-		// h.Hub.Broadcast <- message
+	fmt.Println(messages, "umessages")
+	for _, message := range messages {
 		conn.WriteJSON(message)
 	}
 	// Send to the intended recipient
-
-
 	defer func() {
 		h.Hub.Unregister <- msg.SenderID
 	}()
@@ -123,7 +119,6 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 
 		// Save to DB
 		h.chatServices.SaveMessage(msg)
-		
 
 		// Send to the intended recipient
 		h.Hub.Broadcast <- msg

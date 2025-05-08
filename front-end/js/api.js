@@ -278,14 +278,22 @@ async function chat(chatContainer) {
   };
 
   socket.onmessage = (event) => {
-    const incomingMessage = JSON.parse(event.data);
-    console.log("Received message:", incomingMessage);
-
+    const ResponseMessages = JSON.parse(event.data);
+    console.log("Received message:", ResponseMessages);
     // Optional: render incoming message in chat window
     const messagesContainer = chatContainer.querySelector(".chat-messages");
     const messageElement = document.createElement("div");
-    messageElement.className = "incoming-message";
-    messageElement.innerText = `${incomingMessage.message}`;
+    console.log(ResponseMessages.sender , "sender");
+    console.log(senderId , "id");
+
+
+    
+    if (ResponseMessages.sender == senderId) {
+      messageElement.className = "outgoing-message"
+    } else {
+      messageElement.className = "incoming-message";
+    }
+    messageElement.innerText = `${ResponseMessages.message}`;
     messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
   };
