@@ -10,6 +10,7 @@ import {
   filterForm,
   activeUsersComponent,
   chatUsersComponent,
+  
 } from "./componnents.js";
 
 import {
@@ -22,6 +23,7 @@ import {
   showComments,
   fetchFilteredPosts,
   getActiveUsers,
+  chat,
 } from "./api.js";
 
 function styleBody(params) {
@@ -80,9 +82,9 @@ async function renderHomePage(data) {
   section.setAttribute("class", "container");
   section.setAttribute("id", "container");
   // fetch active users
-  // const activeUsers = await getActiveUsers();
-  // const usersComponent = activeUsersComponent(activeUsers);
-  // section.appendChild(usersComponent);
+  const activeUsers = await getActiveUsers();
+  const usersComponent = activeUsersComponent(activeUsers);
+  section.appendChild(usersComponent);
   let posts = document.createElement("div");
   posts.setAttribute("class", "posts");
   if (!data) {
@@ -184,6 +186,7 @@ function removeOldeForms() {
     });
   }
   document.getElementById("categoryFilterPanel")?.remove();
+  document.getElementById("chat_users")?.remove();
 }
 
 function showMessage(message) {
@@ -377,35 +380,61 @@ const listenChatBtn = () => {
   const chatBtn = document.getElementById("chat_btn");
 
   chatBtn.addEventListener("click", async () => {
-    console.log(chatBtn, "here");
+    removeOldeForms();
     const activeUsers = await getActiveUsers();
     document.querySelector(".posts")?.classList.add("hidden");
     let container = document.querySelector(".container");
     container.appendChild(chatUsersComponent(activeUsers, showChatWindow));
-    // <button class="primary-btn" id="close_users"><i class="fas fa-times"></i> Close</button>
+
     // Add close functionality
-    // document.getElementById("close_chat").addEventListener("click", () => {
-    //   usersComponent.remove();
-    // });
+    document.getElementById("close_chat").addEventListener("click", () => {
+      document.querySelector("#chat_users")?.remove();
+      document.querySelector(".posts")?.classList.remove("hidden");
+    });
   });
 };
 
-const showChatWindow = (user) => {
-  let chatWindow = document.getElementById("chat_window");
+const showChatWindow = (container, user) => {
+  console.log(user, "user");
 
+  container.querySelector(".chat-users-list")?.classList.add("hidden");
+  let chatContainer = container.querySelector(".chat-container");
+  let chatWindow = document.getElementById("chat_window");
   if (!chatWindow) {
     chatWindow = document.createElement("div");
     chatWindow.setAttribute("id", "chat_window");
     chatWindow.innerHTML = `
-      <div class="chat-header">Chatting with <span id="chat_user_nickname"></span></div>
+      <div class="chat-header">
+      <div id="chat_user_profile">
+        <div class="avatar-wrapper">
+        <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+        <span class="status-dot online"></span>
+      </div>
+      <span user-id="${user.id}" class="user-nickname">${user.nickname}</span>
+      </div>
+      <button class="primary-btn" id="close_messages"><i class="fas fa-times"></i></button>
+      </div>
       <div class="chat-messages"></div>
-      <input type="text" class="chat-input" placeholder="Type a message..." />
+      <div class="message-actions">
+      <input type="text" id="message" class="chat-input" placeholder="Type a message..." />
+      <button  id="sent-message" class="sent-message primary-btn"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
     `;
-    document.body.appendChild(chatWindow);
+    chatContainer.appendChild(chatWindow);
+    console.log(chatContainer, "chatcontainer");
+    const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
+    chat(chatContainer,socket)
+  
+
+    let close = document.getElementById("close_messages");
+
+    close.addEventListener("click", () => {
+      chatWindow.remove();
+      container.querySelector(".chat-users-list")?.classList.remove("hidden");
+    });
   }
 
-  document.getElementById("chat_user_nickname").textContent = user.nickname;
-  chatWindow.style.display = "block";
+  // document.getElementById("chat_user_profile").textContent = user.nickname;
 };
 
 export {

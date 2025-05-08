@@ -40,6 +40,7 @@ main::-webkit-scrollbar {
   background-color: var(--primary-color);
   color: var(--third-color);
   border: none;
+  cursor: pointer;
 }
 
 /* Body blur when modal is active */

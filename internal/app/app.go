@@ -51,8 +51,11 @@ func NewApp(config *config.Configuration) *Application {
 	homeHandler := handlers.NewHomeHandler(homeService)
 	userHandler := handlers.NewUserHandler(userService)
 	postHandler := handlers.NewPostHandler(postServices)
-	chatHandler := handlers.NewChatHandler(chatServices)
+	// this for chst handler
+	hub := handlers.NewHub()
+	chatHandler := handlers.NewChatHandler(hub, chatServices)
 	activeHandlers := handlers.NewActiveHandler(activeServices)
+	go hub.Run()
 
 	return &Application{
 		DB:                 db,

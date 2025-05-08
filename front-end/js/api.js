@@ -180,7 +180,6 @@ async function reactToPost(postId, reaction) {
   }
 }
 async function sendPostCommen(postId, commenttext) {
-
   try {
     const response = await fetch(
       "http://localhost:3000/api/v1/posts/addComment",
@@ -233,39 +232,59 @@ async function showComments(postId, container) {
   }
 }
 
-async function chat() {
+async function chat(chatContainer,socket ) {
   const senderId = sessionStorage.getItem("user_id");
+  
 
-  const receiverId = 456;
-  const messageInput = document.getElementById("message-input");
+  const spanElement = chatContainer.querySelector("span[user-id]");
+  const recieverId = spanElement.getAttribute("user-id");
 
-  // WebSocket connection
-  const socket = new WebSocket("ws://http://localhost:3000/api/v1/chat");
+  socket.onopen = () => {
+    const sendBtn = chatContainer.querySelector("#sent-message");
+    sendBtn.addEventListener("click", () => {
+      const messageInput = chatContainer.querySelector("#message");
+      const message = messageInput.value.trim();
 
-  // When the WebSocket is open, send the message
-  socket.onopen = function (event) {
-    const sendButton = document.getElementById("send-button");
-    sendButton.addEventListener("click", function () {
-      // Get the message content
-      const message = messageInput.value;
+      if (!message) return; // prevent empty messages
+
       const messageData = {
-        sender_id: senderId,
-        receiver_id: receiverId,
+        sender: parseInt(senderId),
+        receiver: parseInt(recieverId),
         message: message,
       };
+      console.log(messageData, "messaaaaage");
 
-      // Send the message
       socket.send(JSON.stringify(messageData));
-
-      // Clear the input field after sending the message
-      messageInput.value = "";
+      // Optional: render incoming message in chat window
+      const messagesContainer = chatContainer.querySelector(".chat-messages");
+      const messageElement = document.createElement("div");
+      messageElement.className = "outgoing-message";
+      messageElement.innerText = `${message}`;
+      messagesContainer.appendChild(messageElement);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
+      messageInput.value = ""; // Clear the input field
     });
   };
 
-  // Handling incoming messages
-  socket.onmessage = function (event) {
+  socket.onmessage = (event) => {
     const incomingMessage = JSON.parse(event.data);
     console.log("Received message:", incomingMessage);
+
+    // Optional: render incoming message in chat window
+    const messagesContainer = chatContainer.querySelector(".chat-messages");
+    const messageElement = document.createElement("div");
+    messageElement.className = "incoming-message";
+    messageElement.innerText = `${incomingMessage.message}`;
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
+  };
+
+  socket.onerror = (error) => {
+    console.error("WebSocket error:", error);
+  };
+
+  socket.onclose = () => {
+    console.log("WebSocket connection closed");
   };
 }
 
@@ -276,13 +295,15 @@ async function getActiveUsers() {
     });
 
     if (!response.ok) {
-      throw {code : response.Code, message:response.Messgae}
+      throw { code: response.Code, message: response.Messgae };
     }
 
     const users = await response.json();
+    console.log(users);
+
     return users;
   } catch (error) {
-    showErrorPage(error)
+    showErrorPage(error);
     return [];
   }
 }
@@ -297,4 +318,5 @@ export {
   showComments,
   fetchFilteredPosts,
   getActiveUsers,
+  chat,
 };

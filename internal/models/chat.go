@@ -1,8 +1,14 @@
 package models
 
+import "github.com/gorilla/websocket"
+
 type Message struct {
-	ID        int
 	SenderID  int    `json:"sender"`
-	ReciverId int    `json:"reciver"`
-	Content   string `json:"meassge"`
+	ReciverID int    `json:"receiver"`
+	Content   string `json:"message"`
+}
+
+type ClientRegistration struct {
+	SenderId int
+	Conn     *websocket.Conn
 }
