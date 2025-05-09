@@ -110,7 +110,7 @@ function createPost() {
 
 async function fetchPosts() {
   try {
-    const response = await fetch("http://localhost:3000/");
+    const response = await fetch("http://localhost:3000/api/v1/posts");
     if (!response.ok) {
       let err = {
         code: response.status,

@@ -12,6 +12,10 @@ type PostService struct {
 func NewPostService(repo repository.PostsMethods) *PostService {
 	return &PostService{repo: repo}
 }
+func (s *PostService) FetchPosts() ([]models.Post, models.Error) {
+	Posts, err := s.repo.FetchAllPosts()
+	return Posts, err
+}
 
 func (s *PostService) CreatePost(post models.Post) models.Error {
 	return s.repo.CreatePost(post)

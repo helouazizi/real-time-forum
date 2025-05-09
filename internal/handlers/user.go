@@ -19,6 +19,7 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
 }
 
+
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.RespondWithJSON(w, http.StatusMethodNotAllowed, models.Error{Message: "Method Not Allowed", Code: http.StatusMethodNotAllowed})

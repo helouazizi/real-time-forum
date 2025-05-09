@@ -16,7 +16,7 @@ import (
 
 type Application struct {
 	DB                 *sql.DB
-	Home               *handlers.HomeHandler
+	// Home               *handlers.HomeHandler
 	UserHandler        *handlers.UserHandler
 	PostHandler        *handlers.PostHandler
 	ChatHandler        *handlers.ChatHandler
@@ -34,21 +34,21 @@ func NewApp(config *config.Configuration) *Application {
 	database.Migrate(db)
 
 	// Initialize repositorys
-	homeRepo := repository.NewHomeRepository(db)
+	// homeRepo := repository.NewHomeRepository(db)
 	userMethods := repository.NewUserRepository(db)
 	postMrthods := repository.NewPostRepository(db)
 	chatMethods := repository.NewChatRepo(db)
 	activeUsers := repository.NewActiveRepo(db)
 
 	// Initialize services
-	homeService := services.NewHomeService(homeRepo)
+	// homeService := services.NewHomeService(homeRepo)
 	userService := services.NewUserService(userMethods)
 	postServices := services.NewPostService(postMrthods)
 	chatServices := services.NewChatService(chatMethods)
 	activeServices := services.NewActiveRepo(activeUsers)
 
 	// Initialize handlers
-	homeHandler := handlers.NewHomeHandler(homeService)
+	// homeHandler := handlers.NewHomeHandler(homeService)
 	userHandler := handlers.NewUserHandler(userService)
 	postHandler := handlers.NewPostHandler(postServices)
 	// this for chst handler
@@ -59,7 +59,7 @@ func NewApp(config *config.Configuration) *Application {
 
 	return &Application{
 		DB:                 db,
-		Home:               homeHandler,
+		// Home:               homeHandler,
 		UserHandler:        userHandler,
 		PostHandler:        postHandler,
 		ChatHandler:        chatHandler,

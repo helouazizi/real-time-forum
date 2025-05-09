@@ -308,7 +308,7 @@ const chatUsersComponent = (users, onUserClick) => {
       (user) => `
     <li class="chat-user-item" data-user="${user.nickname}">
       <div class="avatar-wrapper">
-        <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+        <img class="user-avatar" src="../assets/avatar.png" alt="Profile picture of ${user.nickname}" />
         <span class="status-dot online"></span>
       </div>
       <span  class="user-nickname">${user.nickname}</span>

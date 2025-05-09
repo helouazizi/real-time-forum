@@ -8,6 +8,9 @@
 @import url("chat.css");
 
 @import url("filter.css");
+h1 {
+  color: red;
+}
 
 * {
   box-sizing: border-box;

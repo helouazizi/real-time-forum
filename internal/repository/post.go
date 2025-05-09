@@ -17,6 +17,7 @@ type PostsMethods interface {
 	AddComment(token string, reaction models.PostReaction) models.Error
 	GetCommentsByPostID(postId int) ([]models.PostComments, models.Error)
 	FilterPosts(categories []string) ([]models.Post, models.Error)
+	FetchAllPosts() ([]models.Post, models.Error) 
 }
 
 type PostRepository struct {
@@ -25,6 +26,76 @@ type PostRepository struct {
 
 func NewPostRepository(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
+}
+func (r *PostRepository) FetchAllPosts() ([]models.Post, models.Error) {
+	rows, err := r.db.Query(`
+		SELECT 
+			posts.id, 
+			posts.user_id, 
+			posts.title, 
+			posts.content, 
+			posts.created_at, 
+			posts.updated_at, 
+			posts.total_likes, 
+			posts.total_dislikes, 
+			posts.total_comments,
+			users.nickname,
+			GROUP_CONCAT(categories.category_name) AS categories
+		FROM posts
+		JOIN users ON posts.user_id = users.id
+		LEFT JOIN post_categories ON posts.id = post_categories.post_id
+		LEFT JOIN categories ON post_categories.category_id = categories.id
+		GROUP BY posts.id
+		ORDER BY posts.created_at DESC
+	`)
+	if err != nil {
+		logger.LogWithDetails(err)
+		return nil, models.Error{
+			Message: "Internal server error",
+			Code:    http.StatusInternalServerError,
+		}
+	}
+	defer rows.Close()
+
+	var posts []models.Post
+	for rows.Next() {
+		var post models.Post
+		var categories string
+
+		err := rows.Scan(
+			&post.ID,
+			&post.UserID,
+			&post.Title,
+			&post.Content,
+			&post.CreatedAt,
+			&post.UpdatedAt,
+			&post.TotalLikes,
+			&post.TotalDislikes,
+			&post.TotalComments,
+			&post.Creator,
+			&categories,
+		)
+		if err != nil {
+			logger.LogWithDetails(err)
+			return nil, models.Error{
+				Message: "Internal server error",
+				Code:    http.StatusInternalServerError,
+			}
+		}
+
+		if categories != "" {
+			post.Categories = strings.Split(categories, ",")
+		} else {
+			post.Categories = []string{}
+		}
+
+		posts = append(posts, post)
+	}
+
+	return posts, models.Error{
+		Message: "Successfully fetched data",
+		Code:    http.StatusOK,
+	}
 }
 
 // CreatePost requires the user to be logged in (verified by token)

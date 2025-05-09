@@ -20,6 +20,22 @@ type PostHandler struct {
 func NewPostHandler(PostService *services.PostService) *PostHandler {
 	return &PostHandler{PostService: PostService}
 }
+func (h *PostHandler) FetchPosts(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodGet {
+		utils.RespondWithJSON(w, http.StatusMethodNotAllowed, models.Error{Message: "Method Not Allowed", Code: http.StatusMethodNotAllowed})
+		return
+	}
+	Posts, err := h.PostService.FetchPosts()
+	if err.Code != http.StatusOK {
+		utils.RespondWithJSON(w, http.StatusInternalServerError, models.Error{
+			Message: "Internal server error",
+			Code:    http.StatusInternalServerError,
+		})
+		return
+	}
+	utils.RespondWithJSON(w, http.StatusOK, Posts)
+}
 
 func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
