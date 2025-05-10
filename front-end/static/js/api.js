@@ -231,82 +231,6 @@ async function showComments(postId, container) {
     showErrorPage(error);
   }
 }
-
-async function chat(chatContainer) {
-  const senderId = sessionStorage.getItem("user_id");
-  const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
-
-  const spanElement = chatContainer.querySelector("span[user-id]");
-  const recieverId = spanElement.getAttribute("user-id");
-
-  socket.onopen = () => {
-    //================ establish first connection
-    const establishconection = {
-      sender: parseInt(senderId),
-      receiver: parseInt(recieverId),
-      message: "",
-    };
-
-    socket.send(JSON.stringify(establishconection));
-    //================ establish the rest connection
-
-    const sendBtn = chatContainer.querySelector("#sent-message");
-
-    sendBtn.addEventListener("click", () => {
-      const messageInput = chatContainer.querySelector("#message");
-      const message = messageInput.value.trim();
-
-      if (!message) return; // prevent empty messages
-
-      const messageData = {
-        sender: parseInt(senderId),
-        receiver: parseInt(recieverId),
-        message: message,
-      };
-      console.log(messageData, "messaaaaage");
-
-      socket.send(JSON.stringify(messageData));
-      // Optional: render incoming message in chat window
-      const messagesContainer = chatContainer.querySelector(".chat-messages");
-      const messageElement = document.createElement("div");
-      messageElement.className = "outgoing-message";
-      messageElement.innerText = `${message}`;
-      messagesContainer.appendChild(messageElement);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
-      messageInput.value = ""; // Clear the input field
-    });
-  };
-
-  socket.onmessage = (event) => {
-    const ResponseMessages = JSON.parse(event.data);
-    console.log("Received message:", ResponseMessages);
-    // Optional: render incoming message in chat window
-    const messagesContainer = chatContainer.querySelector(".chat-messages");
-    const messageElement = document.createElement("div");
-    console.log(ResponseMessages.sender , "sender");
-    console.log(senderId , "id");
-
-
-    
-    if (ResponseMessages.sender == senderId) {
-      messageElement.className = "outgoing-message"
-    } else {
-      messageElement.className = "incoming-message";
-    }
-    messageElement.innerText = `${ResponseMessages.message}`;
-    messagesContainer.appendChild(messageElement);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
-  };
-
-  socket.onerror = (error) => {
-    console.error("WebSocket error:", error);
-  };
-
-  socket.onclose = () => {
-    console.log("WebSocket connection closed");
-  };
-}
-
 async function getActiveUsers() {
   try {
     const response = await fetch("http://localhost:3000/api/v1/active", {
@@ -327,6 +251,93 @@ async function getActiveUsers() {
   }
 }
 
+async function chat(chatContainer, socket) {
+  const senderId = sessionStorage.getItem("user_id");
+  const spanElement = chatContainer.querySelector("span[user-id]");
+  const recieverId = spanElement.getAttribute("user-id");
+  // ================ establish history  connection
+  const historyConnection = {
+    sender: parseInt(senderId),
+    receiver: parseInt(recieverId),
+    message: "",
+  };
+  socket.send(JSON.stringify(historyConnection));
+
+  const sendBtn = chatContainer.querySelector("#sent-message");
+  sendBtn.addEventListener("click", () => {
+    const messageInput = chatContainer.querySelector("#message");
+    const message = messageInput.value.trim();
+
+    if (!message) return; // prevent empty messages
+
+    const messageData = {
+      sender: parseInt(senderId),
+      receiver: parseInt(recieverId),
+      message: message,
+    };
+    socket.send(JSON.stringify(messageData));
+    // Optional: render incoming message in chat window
+    const messagesContainer = chatContainer.querySelector(".chat-messages");
+    const messageElement = document.createElement("div");
+    messageElement.className = "outgoing-message";
+    messageElement.innerText = `${message}`;
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
+    messageInput.value = ""; // Clear the input field
+  });
+
+  socket.onmessage = (event) => {
+    const ResponseMessages = JSON.parse(event.data);
+    // Optional: render incoming message in chat window
+    const messagesContainer = chatContainer.querySelector(".chat-messages");
+    const chat_window = chatContainer.querySelector("#chat_window");
+    const messageElement = document.createElement("div");
+
+    if (ResponseMessages.sender == senderId) {
+      messageElement.className = "outgoing-message";
+    } else {
+      messageElement.className = "incoming-message";
+    }
+    messageElement.innerText = `${ResponseMessages.message}`;
+    if (chat_window) {
+      messagesContainer.appendChild(messageElement);
+    } else {
+      showMessage(`new message arrived: ${ResponseMessages.message}`);
+    }
+    if (chat_window) {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
+    }
+  };
+
+  socket.onerror = (error) => {
+    console.error("WebSocket error:", error);
+  };
+
+  socket.onclose = () => {
+    console.log("WebSocket connection closed");
+  };
+}
+
+async function establishConnection() {
+  const senderId = sessionStorage.getItem("user_id");
+  const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
+
+  return new Promise((resolve, reject) => {
+    socket.onopen = () => {
+      socket.send(JSON.stringify({ sender: parseInt(senderId) }));
+      resolve(socket);
+    };
+    socket.onmessage = (event) => {
+      const ResponseMessages = JSON.parse(event.data);
+      if (ResponseMessages.message) {
+        showMessage(`new message arrived: ${ResponseMessages.message}`);
+      }
+    };
+
+    socket.onerror = reject;
+  });
+}
+
 export {
   isAouth,
   logOut,
@@ -338,4 +349,5 @@ export {
   fetchFilteredPosts,
   getActiveUsers,
   chat,
+  establishConnection,
 };

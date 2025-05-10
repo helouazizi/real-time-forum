@@ -299,7 +299,7 @@ const activeUsersComponent = (users) => {
 
   return container;
 };
-const chatUsersComponent = (users, onUserClick) => {
+const chatUsersComponent = (users, onUserClick,socket) => {
   const container = document.createElement("div");
   container.setAttribute("id", "chat_users");
   container.setAttribute("class", "chat_users");
@@ -330,7 +330,7 @@ const chatUsersComponent = (users, onUserClick) => {
       const nickname = item.dataset.user;
       const selectedUser = users.find((u) => u.nickname === nickname);
       if (selectedUser) {
-        onUserClick(container,selectedUser); // open chat window
+        onUserClick(container,selectedUser,socket); // open chat window
       }
     }
   });

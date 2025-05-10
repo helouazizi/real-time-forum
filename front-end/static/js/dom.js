@@ -24,6 +24,7 @@ import {
   fetchFilteredPosts,
   getActiveUsers,
   chat,
+  establishConnection
 } from "./api.js";
 
 function styleBody(params) {
@@ -69,8 +70,10 @@ async function renderHomePage(data) {
   if (user) {
     showProfile();
     logOut();
+
     bindfiletrBtn();
-    listenChatBtn();
+    const socket = await establishConnection()
+    listenChatBtn(socket);
   }
   if (!data) {
     data = await fetchPosts();
@@ -376,7 +379,7 @@ function showFilterForm() {
   });
 }
 
-const listenChatBtn = () => {
+const listenChatBtn = (socket) => {
   const chatBtn = document.getElementById("chat_btn");
 
   chatBtn.addEventListener("click", async () => {
@@ -384,7 +387,7 @@ const listenChatBtn = () => {
     const activeUsers = await getActiveUsers();
     document.querySelector(".posts")?.classList.add("hidden");
     let container = document.querySelector(".container");
-    container.appendChild(chatUsersComponent(activeUsers, showChatWindow));
+    container.appendChild(chatUsersComponent(activeUsers, showChatWindow,socket));
 
     // Add close functionality
     document.getElementById("close_chat").addEventListener("click", () => {
@@ -394,9 +397,7 @@ const listenChatBtn = () => {
   });
 };
 
-const showChatWindow = (container, user) => {
-  console.log(user, "user");
-
+const showChatWindow = (container, user,socket) => {
   container.querySelector(".chat-users-list")?.classList.add("hidden");
   let chatContainer = container.querySelector(".chat-container");
   let chatWindow = document.getElementById("chat_window");
@@ -420,12 +421,8 @@ const showChatWindow = (container, user) => {
       <button  id="sent-message" class="sent-message primary-btn"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     `;
-    chatContainer.appendChild(chatWindow);
-    console.log(chatContainer, "chatcontainer");
-    
-    chat(chatContainer)
-  
-
+    chatContainer.appendChild(chatWindow);    
+    chat(chatContainer,socket)
     let close = document.getElementById("close_messages");
 
     close.addEventListener("click", () => {
@@ -434,7 +431,6 @@ const showChatWindow = (container, user) => {
     });
   }
 
-  // document.getElementById("chat_user_profile").textContent = user.nickname;
 };
 
 export {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
 
 	"web-forum/internal/models"
 	"web-forum/internal/services"
@@ -25,6 +26,7 @@ type Hub struct {
 	Register   chan models.ClientRegistration
 	Unregister chan int
 	Broadcast  chan models.Message
+	Mu         sync.Mutex
 }
 
 func NewHub() *Hub {
@@ -47,6 +49,8 @@ func (h *Hub) Run() {
 		select {
 		case reg := <-h.Register:
 			h.Clients[reg.SenderId] = reg.Conn
+			fmt.Println(h.Clients, "clinets inside")
+
 		case senderId := <-h.Unregister:
 			if conn, ok := h.Clients[senderId]; ok {
 				conn.Close()
@@ -72,7 +76,7 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Read the first message to get the sender ID
+	// Initial registration
 	_, msgBytes, err := conn.ReadMessage()
 	if err != nil {
 		logger.LogWithDetails(err)
@@ -80,48 +84,52 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var msg models.Message
-	if err := json.Unmarshal(msgBytes, &msg); err != nil {
+	var regMsg models.Message
+	if err := json.Unmarshal(msgBytes, &regMsg); err != nil {
 		logger.LogWithDetails(err)
 		conn.Close()
 		return
 	}
 
-	h.Hub.Register <- models.ClientRegistration{SenderId: msg.SenderID, Conn: conn}
-	// extract the previouse messages
-	messages, err := h.chatServices.GetMessages(msg)
-	if err != nil {
-		logger.LogWithDetails(err)
-	}
-	fmt.Println(messages, "umessages")
-	for _, message := range messages {
-		conn.WriteJSON(message)
-	}
-	// Send to the intended recipient
+	h.Hub.Register <- models.ClientRegistration{SenderId: regMsg.SenderID, Conn: conn}
+
+	// Wait for chat history request (with both sender and receiver)
 	defer func() {
-		h.Hub.Unregister <- msg.SenderID
+		h.Hub.Unregister <- regMsg.SenderID
 	}()
 
 	for {
-
 		_, msgBytes, err := conn.ReadMessage()
 		if err != nil {
 			logger.LogWithDetails(err)
 			break
 		}
 
+		var msg models.Message
 		if err := json.Unmarshal(msgBytes, &msg); err != nil {
 			logger.LogWithDetails(err)
 			continue
 		}
-		fmt.Println(msg, "message")
-		fmt.Println(h.Hub.Clients, "clients")
 
-		// Save to DB
+		if msg.ReciverID > 0 && msg.Content == "" {
+			// This is likely a history request
+			messages, err := h.chatServices.GetMessages(msg)
+			if err != nil {
+				logger.LogWithDetails(err)
+				continue
+			}
+			for _, m := range messages {
+				conn.WriteJSON(m)
+			}
+			continue
+		}
+
+		if msg.Content == "" {
+			continue
+		}
+
+		// Save and broadcast real message
 		h.chatServices.SaveMessage(msg)
-
-		// Send to the intended recipient
 		h.Hub.Broadcast <- msg
-		msg = models.Message{}
 	}
 }
