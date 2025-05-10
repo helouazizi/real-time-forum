@@ -17,7 +17,7 @@ const Header = (user) => {
       </div>
       <nav class="navigation-links">
         <div class="user-profile" id="user-profile">
-          <img src="./assets/avatar.png" alt="User Profile" class="profile-pic" />
+          <img src="/front-end/assets/avatar.png" alt="User Profile" class="profile-pic" />
         </div>
       </nav>
     `;
@@ -177,7 +177,7 @@ const postCard = (post) => {
   postElement.innerHTML = `
     <div class="post-header">
       <img
-        src="./assets/avatar.png"
+        src="/front-end//assets/avatar.png"
         alt="User Profile"
         class="profile-pic"
       />
@@ -277,20 +277,24 @@ const postForm = (errors = {}) => {
   return form;
 };
 const activeUsersComponent = (users) => {
+  console.log(users, "all users");
+
   const container = document.createElement("div");
   container.setAttribute("id", "active_users");
+
   const usersHTML = users
-    .map(
-      (user) => `
-    <li class="user-item">
-      <div class="avatar-wrapper">
-        <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
-        <span class="status-dot"></span>
-      </div>
-      <span class="user-nickname">${user.nickname}</span>
-    </li>
-  `
-    )
+    .map((user) => {
+      const isActive = user.is_active ? "active" : ""; // conditionally add class
+      return `
+        <li class="user-item">
+          <div class="avatar-wrapper">
+            <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+            ${user.is_active ? '<span class="status-dot active"></span>' : ''}
+          </div>
+          <span class="user-nickname">${user.nickname}</span>
+        </li>
+      `;
+    })
     .join("");
 
   container.innerHTML = `
@@ -299,6 +303,7 @@ const activeUsersComponent = (users) => {
 
   return container;
 };
+
 const chatUsersComponent = (users, onUserClick,socket) => {
   const container = document.createElement("div");
   container.setAttribute("id", "chat_users");
@@ -309,7 +314,7 @@ const chatUsersComponent = (users, onUserClick,socket) => {
     <li class="chat-user-item" data-user="${user.nickname}">
       <div class="avatar-wrapper">
         <img class="user-avatar" src="../assets/avatar.png" alt="Profile picture of ${user.nickname}" />
-        <span class="status-dot online"></span>
+        ${user.is_active ? '<span class="status-dot active"></span>' : ''}
       </div>
       <span  class="user-nickname">${user.nickname}</span>
     </li>

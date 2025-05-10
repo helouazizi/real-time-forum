@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"sync"
 
 	"web-forum/internal/models"
 	"web-forum/internal/services"
@@ -20,12 +19,12 @@ type ChatHandler struct {
 	Hub          *Hub
 	chatServices *services.ChatService
 }
+
 type Hub struct {
 	Clients    map[int]*websocket.Conn
 	Register   chan models.ClientRegistration
 	Unregister chan int
 	Broadcast  chan models.Message
-	Mu         sync.Mutex
 }
 
 func NewHub() *Hub {

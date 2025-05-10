@@ -19,17 +19,16 @@ func NewActiveRepo(db *sql.DB) *ActiveRepository {
 }
 
 func (r *ActiveRepository) GetActiveUsers() ([]models.User, error) {
-	rows, err := r.db.Query("SELECT id, nickname, email FROM users WHERE is_active = TRUE")
+	rows, err := r.db.Query("SELECT id, nickname, is_active FROM users ")
 	if err != nil {
 		logger.LogWithDetails(err)
 		return nil, err
 	}
 	defer rows.Close()
-
 	var users []models.User
 	for rows.Next() {
 		var user models.User
-		if err := rows.Scan(&user.ID, &user.Nickname, &user.Email); err != nil {
+		if err := rows.Scan(&user.ID, &user.Nickname, &user.IsActive); err != nil {
 			logger.LogWithDetails(err)
 			return nil, err
 		}
