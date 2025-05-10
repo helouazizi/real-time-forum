@@ -96,10 +96,10 @@
 
 .status-dot {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 10px;
-  height: 10px;
+  bottom: 0px;
+  right: 0px;
+  width: 15px;
+  height: 15px;
   background-color: #28a745; /* green */
   border: 2px solid #fff;
   border-radius: 50%;
@@ -169,7 +169,6 @@
     color: #fff;
   }
 }
-
 
 .chat-messages {
   flex-grow: 1;

@@ -289,6 +289,8 @@ async function chat(chatContainer, socket) {
   socket.onmessage = (event) => {
     const ResponseMessages = JSON.parse(event.data);
     // Optional: render incoming message in chat window
+    console.log(ResponseMessages, "here");
+
     const messagesContainer = chatContainer.querySelector(".chat-messages");
     const chat_window = chatContainer.querySelector("#chat_window");
     const messageElement = document.createElement("div");
@@ -302,7 +304,9 @@ async function chat(chatContainer, socket) {
     if (chat_window) {
       messagesContainer.appendChild(messageElement);
     } else {
-      showMessage(`new message arrived: ${ResponseMessages.message}`);
+      showMessage(
+        `New message from ${ResponseMessages.RecieverNickname}: ${ResponseMessages.message}`
+      );
     }
     if (chat_window) {
       messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
@@ -330,7 +334,9 @@ async function establishConnection() {
     socket.onmessage = (event) => {
       const ResponseMessages = JSON.parse(event.data);
       if (ResponseMessages.message) {
-        showMessage(`new message arrived: ${ResponseMessages.message}`);
+        showMessage(
+          `New message from ${ResponseMessages.RecieverNickname}: ${ResponseMessages.message}`
+        );
       }
     };
 
