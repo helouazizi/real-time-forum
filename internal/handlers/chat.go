@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"sync"
 
@@ -49,7 +48,7 @@ func (h *Hub) Run() {
 		select {
 		case reg := <-h.Register:
 			h.Clients[reg.SenderId] = reg.Conn
-			fmt.Println(h.Clients, "clinets inside")
+			// fmt.Println(h.Clients, "clinets inside")
 
 		case senderId := <-h.Unregister:
 			if conn, ok := h.Clients[senderId]; ok {

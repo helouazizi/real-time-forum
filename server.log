@@ -20,3 +20,5 @@
 2025/05/10 12:18:24 2025-05-10T12:18:24+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 104] websocket: close 1001 (going away)
 2025/05/10 12:19:14 2025-05-10T12:19:14+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 104] websocket: close 1001 (going away)
 2025/05/10 12:19:16 2025-05-10T12:19:16+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 104] websocket: close 1001 (going away)
+2025/05/10 12:38:13 2025-05-10T12:38:13+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 104] websocket: close 1001 (going away)
+2025/05/10 12:38:13 2025-05-10T12:38:13+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 104] websocket: close 1001 (going away)
