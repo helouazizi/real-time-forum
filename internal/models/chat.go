@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/gorilla/websocket"
 )
 
@@ -12,9 +10,9 @@ type Message struct {
 	Content          string `json:"message"`
 	SenderNickname   string
 	RecieverNickname string
-	Offset           int `json:"offset,omitempty"` // for pagination
-	Limit            int `json:"limit,omitempty"`  // for pagination
-	Date             time.Time `json:"timestamp"`
+	Offset           int    `json:"offset,omitempty"` // for pagination
+	Limit            int    `json:"limit,omitempty"`  // for pagination
+	Date             string `json:"timestamp"`
 }
 
 type ClientRegistration struct {

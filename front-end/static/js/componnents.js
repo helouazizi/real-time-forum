@@ -277,8 +277,6 @@ const postForm = (errors = {}) => {
   return form;
 };
 const activeUsersComponent = (users) => {
-  console.log(users, "all users");
-
   const container = document.createElement("div");
   container.setAttribute("id", "active_users");
 

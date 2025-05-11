@@ -242,8 +242,6 @@ async function getActiveUsers() {
     }
 
     const users = await response.json();
-    console.log(users);
-
     return users;
   } catch (error) {
     showErrorPage(error);
@@ -296,13 +294,13 @@ async function chat(chatContainer, socket) {
       sender: senderId,
       receiver: receiverId,
       message,
-      timestamp:Date.now()
+      timestamp: new Date(Date.now()).toLocaleString(),
     };
 
     socket.send(JSON.stringify(messageData));
 
     // Display message immediately in UI
-    const messageElement = createMessageElement(messageData,senderId)
+    const messageElement = createMessageElement(messageData, senderId);
     messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     messageInput.value = "";
@@ -311,23 +309,20 @@ async function chat(chatContainer, socket) {
   // Handle incoming WebSocket messages
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-
-    const chatWindowExists = !!chatContainer.querySelector("#chat_window");
-
+    const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
     const msg = data.data;
-    console.log(msg);
-    
 
     if (type === "history") {
       loading = false;
-    
+
       const currentScrollHeight = messagesContainer.scrollHeight;
       const msgEl = createMessageElement(msg, senderId);
       messagesContainer.prepend(msgEl);
-    
-      messagesContainer.scrollTop = messagesContainer.scrollHeight - currentScrollHeight;
-    
+
+      messagesContainer.scrollTop =
+        messagesContainer.scrollHeight - currentScrollHeight;
+
       offset += 1;
     } else if (type === "message") {
       const msgEl = createMessageElement(msg, senderId);
@@ -335,10 +330,11 @@ async function chat(chatContainer, socket) {
         messagesContainer.appendChild(msgEl);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
-        showMessage(`New message from ${msg.SenderNickname || "Someone"}: ${msg.message}`);
+        showMessage(
+          `New message from ${msg.SenderNickname || "Someone"}: ${msg.message}`
+        );
       }
     }
-    
   };
 
   socket.onerror = (error) => {
@@ -351,14 +347,12 @@ async function chat(chatContainer, socket) {
 }
 function createMessageElement(msg, senderId) {
   const messageElement = document.createElement("div");
-  messageElement.className = (msg.sender === parseInt(senderId))
-    ? "outgoing-message"
-    : "incoming-message";
+  messageElement.className =
+    msg.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
 
   const timestamp = new Date(msg.timestamp).toLocaleString(); // Assumes ISO timestamp
-  const senderName = msg.sender === parseInt(senderId)
-    ? "You"
-    : msg.SenderNickname || "Unknown";
+  const senderName =
+    msg.sender === parseInt(senderId) ? "You" : msg.SenderNickname || "Unknown";
 
   messageElement.innerHTML = `
     <div class="message-meta">
@@ -382,10 +376,10 @@ async function establishConnection() {
     };
     socket.onmessage = (event) => {
       const ResponseMessages = JSON.parse(event.data);
-      if (ResponseMessages.message) {
-        showMessage(
-          `New message from ${ResponseMessages.RecieverNickname}: ${ResponseMessages.message}`
-        );
+      if (ResponseMessages.data.message) {
+      showMessage(
+        `New message from ${ResponseMessages.data.SenderNickname}: ${ResponseMessages.data.message}`
+      );
       }
     };
 
