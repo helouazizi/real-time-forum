@@ -178,6 +178,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  max-height: 400px;
 }
 
 /* Chat input at the bottom */
@@ -217,6 +218,17 @@
   background-color: #2f80ed;
   color: white;
   align-self: flex-end;
+}
+
+.message-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.message-content {
+  margin-top: 4px;
 }
 
 /* Incoming message (from other user) */

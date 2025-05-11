@@ -59,7 +59,10 @@ func (h *Hub) Run() {
 			if !ok {
 				continue
 			}
-			if err := conn.WriteJSON(msg); err != nil {
+			if err := conn.WriteJSON(map[string]any{
+				"type": "message",
+				"data": msg,
+			}); err != nil {
 				conn.Close()
 				delete(h.Clients, msg.ReciverID)
 			}
@@ -110,14 +113,17 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if msg.ReciverID > 0 && msg.Content == "" {
-			// This is likely a history request
+			// History request with pagination
 			messages, err := h.chatServices.GetMessages(msg)
 			if err != nil {
 				logger.LogWithDetails(err)
 				continue
 			}
-			for _, m := range messages {
-				conn.WriteJSON(m)
+			for i := len(messages) - 1; i >= 0; i-- { // send in chronological order
+				conn.WriteJSON(map[string]any{
+					"type": "history",
+					"data": messages[i],
+				})
 			}
 			continue
 		}

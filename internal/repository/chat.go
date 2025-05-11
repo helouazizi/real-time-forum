@@ -27,18 +27,25 @@ func (r *ChatRepository) SaveMessage(message models.Message) error {
 }
 
 func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, error) {
-	// get nicknames
+	// Get nicknames
 	senderNickname, receiverNickname, err := r.GetChatNicknamesOnce(message.ReciverID, message.SenderID)
 	if err != nil {
 		logger.LogWithDetails(err)
 		return nil, err
 	}
-	// be care full need to get just the reciever id
-	rows, err := r.db.Query(`SELECT sender_id, receiver_id, content 
-	FROM messages 
-	WHERE (sender_id = ? AND receiver_id = ?) 
-	   OR (sender_id = ? AND receiver_id = ?) 
-	ORDER BY id ASC `, message.SenderID, message.ReciverID, message.ReciverID, message.SenderID)
+
+	// Pagination-aware query: get latest messages first
+	rows, err := r.db.Query(`
+		SELECT sender_id, receiver_id, content , sent_at
+		FROM messages 
+		WHERE (sender_id = ? AND receiver_id = ?) 
+		   OR (sender_id = ? AND receiver_id = ?) 
+		ORDER BY id DESC
+		LIMIT ? OFFSET ?`,
+		message.SenderID, message.ReciverID,
+		message.ReciverID, message.SenderID,
+		message.Limit, message.Offset,
+	)
 	if err != nil {
 		logger.LogWithDetails(err)
 		return nil, err
@@ -48,7 +55,7 @@ func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, 
 	var messages []models.Message
 	for rows.Next() {
 		var msg models.Message
-		if err := rows.Scan(&msg.SenderID, &msg.ReciverID, &msg.Content); err != nil {
+		if err := rows.Scan(&msg.SenderID, &msg.ReciverID, &msg.Content, &msg.Date); err != nil {
 			logger.LogWithDetails(err)
 			return nil, err
 		}
@@ -56,6 +63,12 @@ func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, 
 		msg.SenderNickname = senderNickname
 		messages = append(messages, msg)
 	}
+
+	// Optional: reverse messages to get them in ascending order
+	for i, j := 0, len(messages)-1; i < j; i, j = i+1, j-1 {
+		messages[i], messages[j] = messages[j], messages[i]
+	}
+
 	return messages, nil
 }
 

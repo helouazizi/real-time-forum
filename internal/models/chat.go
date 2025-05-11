@@ -1,13 +1,20 @@
 package models
 
-import "github.com/gorilla/websocket"
+import (
+	"time"
+
+	"github.com/gorilla/websocket"
+)
 
 type Message struct {
 	SenderID         int    `json:"sender"`
 	ReciverID        int    `json:"receiver"`
 	Content          string `json:"message"`
-	SenderNickname   string 
-	RecieverNickname string  
+	SenderNickname   string
+	RecieverNickname string
+	Offset           int `json:"offset,omitempty"` // for pagination
+	Limit            int `json:"limit,omitempty"`  // for pagination
+	Date             time.Time `json:"timestamp"`
 }
 
 type ClientRegistration struct {

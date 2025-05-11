@@ -252,65 +252,94 @@ async function getActiveUsers() {
 }
 
 async function chat(chatContainer, socket) {
-  const senderId = sessionStorage.getItem("user_id");
+  const senderId = parseInt(sessionStorage.getItem("user_id"));
   const spanElement = chatContainer.querySelector("span[user-id]");
-  const recieverId = spanElement.getAttribute("user-id");
-  // ================ establish history  connection
-  const historyConnection = {
-    sender: parseInt(senderId),
-    receiver: parseInt(recieverId),
-    message: "",
-  };
-  socket.send(JSON.stringify(historyConnection));
+  const receiverId = parseInt(spanElement.getAttribute("user-id"));
 
+  // Pagination state
+  let offset = 0;
+  const limit = 10;
+  let loading = false;
+
+  const messagesContainer = chatContainer.querySelector(".chat-messages");
+  // Load chat history (initial fetch)
+  function fetchHistory() {
+    const historyRequest = {
+      sender: senderId,
+      receiver: receiverId,
+      message: "",
+      limit,
+      offset,
+    };
+    socket.send(JSON.stringify(historyRequest));
+  }
+
+  fetchHistory(); // Load the latest messages on open
+
+  // Scroll listener for loading older messages
+  messagesContainer.addEventListener("scroll", () => {
+    if (messagesContainer.scrollTop === 0 && !loading) {
+      loading = true;
+      fetchHistory();
+    }
+  });
+
+  // Send message button logic
   const sendBtn = chatContainer.querySelector("#sent-message");
   sendBtn.addEventListener("click", () => {
     const messageInput = chatContainer.querySelector("#message");
     const message = messageInput.value.trim();
 
-    if (!message) return; // prevent empty messages
+    if (!message) return;
 
     const messageData = {
-      sender: parseInt(senderId),
-      receiver: parseInt(recieverId),
-      message: message,
+      sender: senderId,
+      receiver: receiverId,
+      message,
     };
+
     socket.send(JSON.stringify(messageData));
-    // Optional: render incoming message in chat window
-    const messagesContainer = chatContainer.querySelector(".chat-messages");
+
+    // Display message immediately in UI
     const messageElement = document.createElement("div");
     messageElement.className = "outgoing-message";
-    messageElement.innerText = `${message}`;
+    messageElement.innerText = message;
     messagesContainer.appendChild(messageElement);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
-    messageInput.value = ""; // Clear the input field
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    messageInput.value = "";
   });
 
+  // Handle incoming WebSocket messages
   socket.onmessage = (event) => {
-    const ResponseMessages = JSON.parse(event.data);
-    // Optional: render incoming message in chat window
-    console.log(ResponseMessages, "here");
+    const data = JSON.parse(event.data);
 
-    const messagesContainer = chatContainer.querySelector(".chat-messages");
-    const chat_window = chatContainer.querySelector("#chat_window");
-    const messageElement = document.createElement("div");
+    const chatWindowExists = !!chatContainer.querySelector("#chat_window");
 
-    if (ResponseMessages.sender == senderId) {
-      messageElement.className = "outgoing-message";
-    } else {
-      messageElement.className = "incoming-message";
+    const type = data.type;
+    const msg = data.data;
+    console.log(msg);
+    
+
+    if (type === "history") {
+      loading = false;
+    
+      const currentScrollHeight = messagesContainer.scrollHeight;
+      const msgEl = createMessageElement(msg, senderId);
+      messagesContainer.prepend(msgEl);
+    
+      messagesContainer.scrollTop = messagesContainer.scrollHeight - currentScrollHeight;
+    
+      offset += 1;
+    } else if (type === "message") {
+      const msgEl = createMessageElement(msg, senderId);
+      if (chatWindowExists) {
+        messagesContainer.appendChild(msgEl);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      } else {
+        showMessage(`New message from ${msg.SenderNickname || "Someone"}: ${msg.message}`);
+      }
     }
-    messageElement.innerText = `${ResponseMessages.message}`;
-    if (chat_window) {
-      messagesContainer.appendChild(messageElement);
-    } else {
-      showMessage(
-        `New message from ${ResponseMessages.RecieverNickname}: ${ResponseMessages.message}`
-      );
-    }
-    if (chat_window) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight; // auto-scroll
-    }
+    
   };
 
   socket.onerror = (error) => {
@@ -320,6 +349,27 @@ async function chat(chatContainer, socket) {
   socket.onclose = () => {
     console.log("WebSocket connection closed");
   };
+}
+function createMessageElement(msg, senderId) {
+  const messageElement = document.createElement("div");
+  messageElement.className = (msg.sender === parseInt(senderId))
+    ? "outgoing-message"
+    : "incoming-message";
+
+  const timestamp = new Date(msg.timestamp).toLocaleString(); // Assumes ISO timestamp
+  const senderName = msg.sender === parseInt(senderId)
+    ? "You"
+    : msg.SenderNickname || "Unknown";
+
+  messageElement.innerHTML = `
+    <div class="message-meta">
+      <span class="message-user">${senderName}</span>
+      <span class="message-time">${timestamp}</span>
+    </div>
+    <div class="message-content">${msg.message}</div>
+  `;
+
+  return messageElement;
 }
 
 async function establishConnection() {

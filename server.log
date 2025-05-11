@@ -72,3 +72,21 @@
 2025/05/10 14:44:39 2025-05-10T14:44:39+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] one or both users not found
 2025/05/10 14:45:47 2025-05-10T14:45:47+01:00 [Function: web-forum/internal/repository.(*ChatRepository).GetMessages] [Line: 33] one or both users not found
 2025/05/10 14:45:47 2025-05-10T14:45:47+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] one or both users not found
+2025/05/11 10:29:18 2025-05-11T10:29:18+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/11 10:29:24 2025-05-11T10:29:24+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/11 10:29:31 2025-05-11T10:29:31+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/11 10:33:15 2025-05-11T10:33:15+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 102] websocket: close 1001 (going away)
+2025/05/11 11:06:28 2025-05-11T11:06:28+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 102] websocket: close 1001 (going away)
+2025/05/11 11:07:46 2025-05-11T11:07:46+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 102] websocket: close 1001 (going away)
+2025/05/11 11:18:01 2025-05-11T11:18:01+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:20:18 2025-05-11T11:20:18+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:21:00 2025-05-11T11:21:00+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:23:43 2025-05-11T11:23:43+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:25:32 2025-05-11T11:25:32+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:26:27 2025-05-11T11:26:27+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:29:17 2025-05-11T11:29:17+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:29:32 2025-05-11T11:29:32+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:41:18 2025-05-11T11:41:18+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/11 11:42:40 2025-05-11T11:42:40+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:43:57 2025-05-11T11:43:57+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:44:11 2025-05-11T11:44:11+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
