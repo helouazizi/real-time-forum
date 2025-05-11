@@ -90,3 +90,6 @@
 2025/05/11 11:42:40 2025-05-11T11:42:40+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
 2025/05/11 11:43:57 2025-05-11T11:43:57+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
 2025/05/11 11:44:11 2025-05-11T11:44:11+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:49:19 2025-05-11T11:49:19+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:50:13 2025-05-11T11:50:13+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 105] websocket: close 1001 (going away)
+2025/05/11 11:50:23 2025-05-11T11:50:23+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 111] Time.UnmarshalJSON: input is not a JSON string

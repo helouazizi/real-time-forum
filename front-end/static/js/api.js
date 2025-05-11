@@ -296,14 +296,13 @@ async function chat(chatContainer, socket) {
       sender: senderId,
       receiver: receiverId,
       message,
+      timestamp:Date.now()
     };
 
     socket.send(JSON.stringify(messageData));
 
     // Display message immediately in UI
-    const messageElement = document.createElement("div");
-    messageElement.className = "outgoing-message";
-    messageElement.innerText = message;
+    const messageElement = createMessageElement(messageData,senderId)
     messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     messageInput.value = "";
