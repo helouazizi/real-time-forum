@@ -16,6 +16,6 @@ type Message struct {
 }
 
 type ClientRegistration struct {
-	SenderId int
+	SenderId int   `json:"user_id"`
 	Conn     *websocket.Conn
 }

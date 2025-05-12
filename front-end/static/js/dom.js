@@ -10,7 +10,6 @@ import {
   filterForm,
   activeUsersComponent,
   chatUsersComponent,
-  
 } from "./componnents.js";
 
 import {
@@ -24,7 +23,7 @@ import {
   fetchFilteredPosts,
   getActiveUsers,
   chat,
-  establishConnection
+  establishConnection,
 } from "./api.js";
 
 function styleBody(params) {
@@ -72,7 +71,7 @@ async function renderHomePage(data) {
     logOut();
 
     bindfiletrBtn();
-    const socket = await establishConnection()
+    const socket = await establishConnection();
     listenChatBtn(socket);
   }
   if (!data) {
@@ -86,8 +85,11 @@ async function renderHomePage(data) {
   section.setAttribute("id", "container");
   // fetch active users
   const activeUsers = await getActiveUsers();
-  const usersComponent = activeUsersComponent(activeUsers);
-  section.appendChild(usersComponent);
+  if (activeUsers) {
+    const usersComponent = activeUsersComponent(activeUsers);
+    section.appendChild(usersComponent);
+  }
+
   let posts = document.createElement("div");
   posts.setAttribute("class", "posts");
   if (!data) {
@@ -387,7 +389,9 @@ const listenChatBtn = (socket) => {
     const activeUsers = await getActiveUsers();
     document.querySelector(".posts")?.classList.add("hidden");
     let container = document.querySelector(".container");
-    container.appendChild(chatUsersComponent(activeUsers, showChatWindow,socket));
+    container.appendChild(
+      chatUsersComponent(activeUsers, showChatWindow, socket)
+    );
 
     // Add close functionality
     document.getElementById("close_chat").addEventListener("click", () => {
@@ -397,7 +401,7 @@ const listenChatBtn = (socket) => {
   });
 };
 
-const showChatWindow = (container, user,socket) => {
+const showChatWindow = (container, user, socket) => {
   container.querySelector(".chat-users-list")?.classList.add("hidden");
   let chatContainer = container.querySelector(".chat-container");
   let chatWindow = document.getElementById("chat_window");
@@ -421,8 +425,8 @@ const showChatWindow = (container, user,socket) => {
       <button  id="sent-message" class="sent-message primary-btn"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     `;
-    chatContainer.appendChild(chatWindow);    
-    chat(chatContainer,socket)
+    chatContainer.appendChild(chatWindow);
+    chat(chatContainer, socket);
     let close = document.getElementById("close_messages");
 
     close.addEventListener("click", () => {
@@ -430,7 +434,6 @@ const showChatWindow = (container, user,socket) => {
       container.querySelector(".chat-users-list")?.classList.remove("hidden");
     });
   }
-
 };
 
 export {

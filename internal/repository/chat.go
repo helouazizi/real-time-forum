@@ -11,6 +11,7 @@ import (
 type ChatMethods interface {
 	SaveMessage(models.Message) error                     // Save chat messages to DB
 	GetMessages(models.Message) ([]models.Message, error) // Retrieve chat messages from DB
+	GetUserNickname(int) (string ,error)
 }
 
 type ChatRepository struct {
@@ -28,11 +29,17 @@ func (r *ChatRepository) SaveMessage(message models.Message) error {
 
 func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, error) {
 	// Get nicknames
-	senderNickname, receiverNickname, err := r.GetChatNicknamesOnce(message.ReciverID, message.SenderID)
+	senderNickname, err := r.GetUserNickname(message.SenderID)
 	if err != nil {
 		logger.LogWithDetails(err)
 		return nil, err
 	}
+	receiverNickname, err := r.GetUserNickname(message.ReciverID)
+	if err != nil {
+		logger.LogWithDetails(err)
+		return nil, err
+	}
+
 
 	// Pagination-aware query: get latest messages first
 	rows, err := r.db.Query(`
@@ -72,39 +79,24 @@ func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, 
 	return messages, nil
 }
 
-func (r *ChatRepository) GetChatNicknamesOnce(senderID, receiverID int) (string, string, error) {
-	var senderNickname, receiverNickname string
+func (r *ChatRepository) GetUserNickname(userId int) (string, error) {
+	var Nickname string
 
 	query := `
-	SELECT id, nickname FROM users 
-	WHERE id IN (?, ?)
+	SELECT nickname FROM users 
+	WHERE id = ?
 	`
 
-	rows, err := r.db.Query(query, senderID, receiverID)
+	err := r.db.QueryRow(query, userId).Scan(&Nickname)
 	if err != nil {
 		logger.LogWithDetails(err)
-		return "", "", err
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var id int
-		var nickname string
-		if err := rows.Scan(&id, &nickname); err != nil {
-			logger.LogWithDetails(err)
-			return "", "", err
-		}
-		if id == senderID {
-			senderNickname = nickname
-		} else if id == receiverID {
-			receiverNickname = nickname
-		}
+		return "", err
 	}
 
-	// Check if one of the nicknames is missing
-	if senderNickname == "" || receiverNickname == "" {
-		return "", "", fmt.Errorf("one or both users not found")
+	if Nickname == "" {
+		logger.LogWithDetails(fmt.Errorf("user not exist"))
+		return "", fmt.Errorf("user not exist")
 	}
 
-	return senderNickname, receiverNickname, nil
+	return Nickname, nil
 }

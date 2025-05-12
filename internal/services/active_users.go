@@ -13,6 +13,6 @@ func NewActiveRepo(repo *repository.ActiveRepository) *ActiveService {
 	return &ActiveService{repo: repo}
 }
 
-func (r *ActiveService) GetActiveUsers() ([]models.User, error) {
-	return r.repo.GetActiveUsers()
+func (r *ActiveService) GetActiveUsers(userid int) ([]models.User, error) {
+	return r.repo.GetActiveUsers(userid)
 }

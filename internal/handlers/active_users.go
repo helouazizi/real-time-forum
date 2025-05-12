@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"web-forum/internal/models"
@@ -18,12 +19,19 @@ func NewActiveHandler(activeService *services.ActiveService) *ActiveHandler {
 }
 
 func (h *ActiveHandler) GetActiveUsers(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	if r.Method != http.MethodPost {
 		utils.RespondWithJSON(w, http.StatusMethodNotAllowed, models.Error{Message: "Method Not Allowed", Code: http.StatusMethodNotAllowed})
 		return
 	}
+	var user models.ClientRegistration
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		logger.LogWithDetails(err)
+		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Message: "Bad Request", Code: http.StatusBadRequest})
+		return
+	}
+	// fmt.Println(user.SenderId,"user id")
 
-	activeUsers, err1 := h.activeService.GetActiveUsers()
+	activeUsers, err1 := h.activeService.GetActiveUsers(user.SenderId)
 	if err1 != nil {
 		logger.LogWithDetails(err1)
 		return

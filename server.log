@@ -1,24 +1,20 @@
-2025/05/11 13:58:11 2025-05-11T13:58:11+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 13:58:13 2025-05-11T13:58:13+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 13:58:37 2025-05-11T13:58:37+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:00:23 2025-05-11T14:00:23+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:00:26 2025-05-11T14:00:26+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:00:26 2025-05-11T14:00:26+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:02:59 2025-05-11T14:02:59+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:03:01 2025-05-11T14:03:01+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:03:35 2025-05-11T14:03:35+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:03:37 2025-05-11T14:03:37+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:03:37 2025-05-11T14:03:37+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] read tcp [::1]:3000->[::1]:48378: use of closed network connection
-2025/05/11 14:04:21 2025-05-11T14:04:21+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:04:23 2025-05-11T14:04:23+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:06:03 2025-05-11T14:06:03+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:06:04 2025-05-11T14:06:04+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:06:18 2025-05-11T14:06:18+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:06:20 2025-05-11T14:06:20+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:06:24 2025-05-11T14:06:24+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:06:26 2025-05-11T14:06:26+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:10:20 2025-05-11T14:10:20+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:11:15 2025-05-11T14:11:15+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:11:17 2025-05-11T14:11:17+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:11:19 2025-05-11T14:11:19+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] websocket: close 1001 (going away)
-2025/05/11 14:11:19 2025-05-11T14:11:19+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 106] read tcp [::1]:3000->[::1]:54948: use of closed network connection
+2025/05/12 10:04:53 2025-05-12T10:04:53+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:04:55 2025-05-12T10:04:55+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:15:06 2025-05-12T10:15:06+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:15:09 2025-05-12T10:15:09+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:16:07 2025-05-12T10:16:07+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:20:19 2025-05-12T10:20:19+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:22:16 2025-05-12T10:22:16+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:22:22 2025-05-12T10:22:22+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:49:02 2025-05-12T10:49:02+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/12 10:49:05 2025-05-12T10:49:05+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/12 10:49:13 2025-05-12T10:49:13+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/12 10:49:19 2025-05-12T10:49:19+01:00 [Function: web-forum/internal/repository.(*ChatRepository).GetUserNickname] [Line: 92] sql: expected 2 destination arguments in Scan, not 1
+2025/05/12 10:49:19 2025-05-12T10:49:19+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 97] sql: expected 2 destination arguments in Scan, not 1
+2025/05/12 10:49:28 2025-05-12T10:49:28+01:00 [Function: web-forum/internal/repository.(*ChatRepository).GetUserNickname] [Line: 92] sql: expected 2 destination arguments in Scan, not 1
+2025/05/12 10:49:28 2025-05-12T10:49:28+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 97] sql: expected 2 destination arguments in Scan, not 1
+2025/05/12 10:49:46 2025-05-12T10:49:46+01:00 [Function: web-forum/internal/repository.(*ChatRepository).GetUserNickname] [Line: 92] sql: expected 2 destination arguments in Scan, not 1
+2025/05/12 10:49:46 2025-05-12T10:49:46+01:00 [Function: web-forum/internal/repository.(*ChatRepository).GetMessages] [Line: 34] sql: expected 2 destination arguments in Scan, not 1
+2025/05/12 10:49:46 2025-05-12T10:49:46+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 124] sql: expected 2 destination arguments in Scan, not 1
+2025/05/12 10:56:39 2025-05-12T10:56:39+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/05/12 10:56:42 2025-05-12T10:56:42+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)

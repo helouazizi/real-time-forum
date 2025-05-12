@@ -13,10 +13,14 @@ func NewChatService(repo repository.ChatMethods) *ChatService {
 	return &ChatService{repo: repo}
 }
 
-func (r *ChatService) SaveMessage( message models.Message) error {
+func (r *ChatService) SaveMessage(message models.Message) error {
 	return r.repo.SaveMessage(message)
 }
 
 func (r *ChatService) GetMessages(message models.Message) ([]models.Message, error) {
 	return r.repo.GetMessages(message)
+}
+
+func (r *ChatService) GetUserNickname(id int) (string, error) {
+	return  r.repo.GetUserNickname(id)
 }

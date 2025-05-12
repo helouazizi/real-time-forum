@@ -232,9 +232,14 @@ async function showComments(postId, container) {
   }
 }
 async function getActiveUsers() {
+  const senderId = sessionStorage.getItem("user_id");
+  console.log(senderId, "user id ");
+
   try {
-    const response = await fetch("http://localhost:3000/api/v1/active", {
+    const response = await fetch("http://localhost:3000/api/v1/users", {
+      method: "POST",
       credentials: "include",
+      body: JSON.stringify({ user_id: parseInt(senderId) }),
     });
 
     if (!response.ok) {
@@ -312,6 +317,7 @@ async function chat(chatContainer, socket) {
     const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
     const msg = data.data;
+    
 
     if (type === "history") {
       loading = false;
@@ -346,6 +352,7 @@ async function chat(chatContainer, socket) {
   };
 }
 function createMessageElement(msg, senderId) {
+  
   const messageElement = document.createElement("div");
   messageElement.className =
     msg.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
@@ -377,9 +384,9 @@ async function establishConnection() {
     socket.onmessage = (event) => {
       const ResponseMessages = JSON.parse(event.data);
       if (ResponseMessages.data.message) {
-      showMessage(
-        `New message from ${ResponseMessages.data.SenderNickname}: ${ResponseMessages.data.message}`
-      );
+        showMessage(
+          `New message from ${ResponseMessages.data.SenderNickname}: ${ResponseMessages.data.message}`
+        );
       }
     };
 

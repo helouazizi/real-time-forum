@@ -34,7 +34,7 @@ func SetupRoutes(h *app.Application) *http.ServeMux {
 
 	// --- Chat routes ---
 	mux.Handle("/api/v1/chat", middlewares.AuthMiddleware(http.HandlerFunc(h.ChatHandler.HandleChat), h.DB))
-	mux.Handle("/api/v1/active", middlewares.AuthMiddleware(http.HandlerFunc(h.ActiveUsersHandler.GetActiveUsers), h.DB))
+	mux.Handle("/api/v1/users", middlewares.AuthMiddleware(http.HandlerFunc(h.ActiveUsersHandler.GetActiveUsers), h.DB))
 
 	return mux
 }

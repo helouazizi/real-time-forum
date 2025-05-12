@@ -8,7 +8,7 @@ import (
 )
 
 type ActiveUsersMethods interface {
-	GetActiveUsers() ([]models.User, error)
+	GetActiveUsers(userid int) ([]models.User, error)
 }
 type ActiveRepository struct {
 	db *sql.DB
@@ -18,13 +18,27 @@ func NewActiveRepo(db *sql.DB) *ActiveRepository {
 	return &ActiveRepository{db: db}
 }
 
-func (r *ActiveRepository) GetActiveUsers() ([]models.User, error) {
-	rows, err := r.db.Query("SELECT id, nickname, is_active FROM users ")
+func (r *ActiveRepository) GetActiveUsers(currentUserID int) ([]models.User, error) {
+	query := `
+		SELECT u.id , u.nickname , u.is_active
+		FROM users u
+		JOIN messages m 
+			ON (
+				(m.sender_id = u.id AND m.receiver_id = ?)
+				OR 
+				(m.receiver_id = u.id AND m.sender_id = ?)
+			)
+		WHERE u.id != ?
+		GROUP BY u.id
+		ORDER BY MAX(m.sent_at) DESC
+	`
+	rows, err := r.db.Query(query, currentUserID, currentUserID, currentUserID)
 	if err != nil {
 		logger.LogWithDetails(err)
 		return nil, err
 	}
 	defer rows.Close()
+
 	var users []models.User
 	for rows.Next() {
 		var user models.User
@@ -34,5 +48,6 @@ func (r *ActiveRepository) GetActiveUsers() ([]models.User, error) {
 		}
 		users = append(users, user)
 	}
+
 	return users, nil
 }

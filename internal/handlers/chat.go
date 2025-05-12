@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"web-forum/internal/models"
@@ -48,7 +47,7 @@ func (h *Hub) Run() {
 		select {
 		case reg := <-h.Register:
 			h.Clients[reg.SenderId] = reg.Conn
-			fmt.Println(h.Clients, "clinets inside")
+			// fmt.Println(h.Clients, "clinets inside")
 
 		case senderId := <-h.Unregister:
 			if conn, ok := h.Clients[senderId]; ok {
@@ -92,6 +91,10 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		conn.Close()
 		return
 	}
+	sendNickname, err := h.chatServices.GetUserNickname(regMsg.SenderID)
+	if err != nil {
+		logger.LogWithDetails(err)
+	}
 
 	h.Hub.Register <- models.ClientRegistration{SenderId: regMsg.SenderID, Conn: conn}
 
@@ -134,6 +137,7 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Save and broadcast real message
+		msg.SenderNickname = sendNickname
 		h.chatServices.SaveMessage(msg)
 		h.Hub.Broadcast <- msg
 	}

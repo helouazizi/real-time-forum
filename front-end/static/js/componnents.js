@@ -3,7 +3,7 @@ const Header = (user) => {
 
   if (user) {
     header.innerHTML = `
-      <h1 class="logo"><a href="/front-end/">Forum</a></h1>
+      <h1 class="logo"><a href="/">Forum</a></h1>
       <div class="header-center-buttons">
        <button class="primary-btn new_post_btn" id="craete_post_btn">
        <i class="fas fa-plus"></i>
