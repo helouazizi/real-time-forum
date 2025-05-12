@@ -20,8 +20,9 @@ type User struct {
 	// SessionToken string `json:"session_token,omitempty"`
 	// SessionExpiresAt  time.Time `json:"session_expires_at,omitempty"`
 	// LastLoginAt       time.Time `json:"last_login_at,omitempty"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+	LastMessageAt time.Time
 }
 
 type UserLogin struct {

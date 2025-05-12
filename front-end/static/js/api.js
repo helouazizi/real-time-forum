@@ -352,25 +352,32 @@ async function chat(chatContainer, socket) {
   };
 }
 function createMessageElement(msg, senderId) {
-  
   const messageElement = document.createElement("div");
-  messageElement.className =
-    msg.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
+  messageElement.className = msg.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
 
   const timestamp = new Date(msg.timestamp).toLocaleString(); // Assumes ISO timestamp
-  const senderName =
-    msg.sender === parseInt(senderId) ? "You" : msg.SenderNickname || "Unknown";
+  const senderName = msg.sender === parseInt(senderId) ? "You" : msg.SenderNickname || "Unknown";
 
   messageElement.innerHTML = `
     <div class="message-meta">
-      <span class="message-user">${senderName}</span>
-      <span class="message-time">${timestamp}</span>
+      <strong class="message-user">${senderName}</strong>
+      <time class="message-time">${timestamp}</time>
     </div>
-    <div class="message-content">${msg.message}</div>
+    <div class="message-content">
+      <p>${sanitizeHTML(msg.message)}</p>
+    </div>
   `;
 
   return messageElement;
 }
+
+// Sanitize to prevent XSS
+function sanitizeHTML(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 
 async function establishConnection() {
   const senderId = sessionStorage.getItem("user_id");
