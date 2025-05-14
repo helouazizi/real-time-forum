@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"web-forum/internal/models"
@@ -137,6 +138,14 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 				})
 			}
 			continue
+		}
+		fmt.Println(msg)
+		if msg.Typing {
+			conn.WriteJSON(map[string]any{
+				"type": "typing",
+			})
+			continue
+
 		}
 
 		if msg.Content == "" {

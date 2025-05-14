@@ -5,6 +5,7 @@ import {
   showPostForm,
   renderComments,
 } from "./dom.js";
+import { createTypingIndicator } from "./componnents.js";
 
 async function isAouth() {
   try {
@@ -80,13 +81,13 @@ function createPost() {
           body: JSON.stringify(postData),
         }
       );
-      console.log(response.status,"status");
-      
+      console.log(response.status, "status");
+
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData,"errrrrr");
-        
+        console.log(errorData, "errrrrr");
+
         if (errorData.UserErrors.HasError) {
           showPostForm(errorData.UserErrors, true);
           return;
@@ -99,8 +100,8 @@ function createPost() {
           code: errorData.Code,
           message: errorData.Message,
         };
-        console.log(error,"test");
-        
+        console.log(error, "test");
+
         throw error;
       }
       const result = await response.json();
@@ -109,8 +110,8 @@ function createPost() {
         renderHomePage();
       }, 2000);
     } catch (err) {
-      console.log(err,"ctacj");
-      
+      console.log(err, "ctacj");
+
       showErrorPage(err);
     }
   });
@@ -275,7 +276,7 @@ async function chat(chatContainer, socket) {
   // Load chat history (initial fetch)
   function fetchHistory() {
     const historyRequest = {
-      username : username,
+      username: username,
       sender: senderId,
       receiver: receiverId,
       message: "",
@@ -294,7 +295,7 @@ async function chat(chatContainer, socket) {
       fetchHistory();
     }
   });
-
+  typing(socket ,username, senderId, receiverId)
   // Send message button logic
   const sendBtn = chatContainer.querySelector("#sent-message");
   sendBtn.addEventListener("click", () => {
@@ -305,14 +306,14 @@ async function chat(chatContainer, socket) {
 
     const messageData = {
       data: {
-       username : username,
+        username: username,
         sender: senderId,
         receiver: receiverId,
         message,
         timestamp: new Date(Date.now()).toLocaleString(),
 
       },
-      type : 'message'
+      type: 'message'
 
     };
 
@@ -331,10 +332,17 @@ async function chat(chatContainer, socket) {
     // console.log(data,"incommking");
     const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
-    const msg = data.data;
 
+    let typingcontainer = createTypingIndicator()
+    if (type === "typing") {
+console.log(type);
+
+      messagesContainer.appendChild(typingcontainer)
+
+    }
 
     if (type === "history") {
+      typingcontainer?.remove()
       loading = false;
       const currentScrollHeight = messagesContainer.scrollHeight;
       const msgEl = createMessageElement(data, senderId);
@@ -345,6 +353,7 @@ async function chat(chatContainer, socket) {
 
       offset += 1;
     } else if (type === "message") {
+      typingcontainer?.remove()
       const msgEl = createMessageElement(data, senderId);
       if (chatWindowExists) {
         messagesContainer.appendChild(msgEl);
@@ -412,11 +421,11 @@ async function establishConnection() {
 
   return new Promise((resolve, reject) => {
     socket.onopen = () => {
-      socket.send(JSON.stringify({ sender: parseInt(senderId), username : username }));
+      socket.send(JSON.stringify({ sender: parseInt(senderId), username: username }));
       resolve(socket);
     };
     socket.onmessage = (event) => {
-      const ResponseMessages = JSON.parse(event.data);      
+      const ResponseMessages = JSON.parse(event.data);
       if (ResponseMessages.data.message) {
         showMessage(
           `New message from ${ResponseMessages.data.username}`
@@ -426,6 +435,27 @@ async function establishConnection() {
 
     socket.onerror = reject;
   });
+}
+async function typing(socket, username, senderId, receiverId) {
+  let message = document.getElementById('message')
+  if (message) {
+    message.addEventListener("input", () => {
+      const messageData = {
+        
+          username: username,
+          sender: senderId,
+          receiver: receiverId,
+          typing: true
+        
+      };
+      console.log('he is typing');
+      
+      socket.send(JSON.stringify(messageData));
+
+
+    })
+  }
+
 }
 
 export {

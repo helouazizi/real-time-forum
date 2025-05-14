@@ -391,8 +391,22 @@ const Footer = () => {
     `;
   return footer;
 };
+ function createTypingIndicator() {
+  const container = document.createElement("div");
+  container.className = "typing-indicator";
+
+  for (let i = 0; i < 3; i++) {
+    const dot = document.createElement("span");
+    dot.className = `dot dot-${i + 1}`;
+    container.appendChild(dot);
+  }
+
+  return container;
+}
+
 
 export {
+  createTypingIndicator,
   Footer,
   Header,
   loginForm,
