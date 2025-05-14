@@ -4,6 +4,7 @@ import {
   showMessage,
   showPostForm,
   renderComments,
+  removetyping
 } from "./dom.js";
 import { createTypingIndicator } from "./componnents.js";
 
@@ -295,7 +296,7 @@ async function chat(chatContainer, socket) {
       fetchHistory();
     }
   });
-  typing(socket ,username, senderId, receiverId)
+  setupTypingIndicator(socket, username, senderId, receiverId)
   // Send message button logic
   const sendBtn = chatContainer.querySelector("#sent-message");
   sendBtn.addEventListener("click", () => {
@@ -325,7 +326,7 @@ async function chat(chatContainer, socket) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     messageInput.value = "";
   });
-
+  let once = true
   // Handle incoming WebSocket messages
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
@@ -334,15 +335,24 @@ async function chat(chatContainer, socket) {
     const type = data.type;
 
     let typingcontainer = createTypingIndicator()
-    if (type === "typing") {
-console.log(type);
+    if (data.data.typing == "typing") {
+      if (once) {
 
-      messagesContainer.appendChild(typingcontainer)
+        once = false
 
+
+        removetyping(messagesContainer)
+        messagesContainer.appendChild(typingcontainer)
+      }
+
+    } else {
+
+        removetyping(messagesContainer)
+      once = true
     }
 
     if (type === "history") {
-      typingcontainer?.remove()
+
       loading = false;
       const currentScrollHeight = messagesContainer.scrollHeight;
       const msgEl = createMessageElement(data, senderId);
@@ -352,8 +362,12 @@ console.log(type);
         messagesContainer.scrollHeight - currentScrollHeight;
 
       offset += 1;
-    } else if (type === "message") {
-      typingcontainer?.remove()
+
+
+
+    } else if (type === "message" && !data.data.typing) {
+
+        removetyping(messagesContainer)
       const msgEl = createMessageElement(data, senderId);
       if (chatWindowExists) {
         messagesContainer.appendChild(msgEl);
@@ -436,27 +450,45 @@ async function establishConnection() {
     socket.onerror = reject;
   });
 }
-async function typing(socket, username, senderId, receiverId) {
-  let message = document.getElementById('message')
-  if (message) {
-    message.addEventListener("input", () => {
-      const messageData = {
-        
-          username: username,
-          sender: senderId,
-          receiver: receiverId,
-          typing: true
-        
+
+function setupTypingIndicator(socket, username, senderId, receiverId) {
+  const messageInput = document.getElementById('message');
+  if (!messageInput) return;
+
+  let typingTimeout;
+  let isTyping = false; setupTypingIndicator
+
+  messageInput.addEventListener("input", () => {
+    if (!isTyping) {
+      // Send typing: true only once when typing starts
+      const typingData = {
+        username,
+        sender: senderId,
+        receiver: receiverId,
+        typing: "typing"
       };
-      console.log('he is typing');
-      
-      socket.send(JSON.stringify(messageData));
+      socket.send(JSON.stringify(typingData));
+      isTyping = true;
+    }
 
-
-    })
-  }
-
+    // Reset the timer on every keypress
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+      // Send typing: false after 2 seconds of inactivity
+      const stopTypingData = {
+        username,
+        sender: senderId,
+        receiver: receiverId,
+        typing: "fin"
+      };
+      socket.send(JSON.stringify(stopTypingData));
+      isTyping = false;
+    }, 2000); // 2 seconds delay
+  });
 }
+
+
+
 
 export {
   isAouth,

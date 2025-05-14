@@ -117,13 +117,18 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 			logger.LogWithDetails(err)
 			break
 		}
+			
 
 		var msg models.Message
 		if err := json.Unmarshal(msgBytes, &msg); err != nil {
 			logger.LogWithDetails(err)
 			continue
 		}
-
+	fmt.Println(msg.Typing)
+		if msg.Typing == "typing" || msg.Typing == "fin" {
+	h.Hub.Broadcast <- msg
+			continue
+		}
 		if msg.ReciverID > 0 && msg.Content == "" {
 			// History request with pagination
 			messages, err := h.chatServices.GetMessages(msg)
@@ -139,14 +144,7 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 			}
 			continue
 		}
-		fmt.Println(msg)
-		if msg.Typing {
-			conn.WriteJSON(map[string]any{
-				"type": "typing",
-			})
-			continue
 
-		}
 
 		if msg.Content == "" {
 			continue

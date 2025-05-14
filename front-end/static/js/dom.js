@@ -434,6 +434,17 @@ const showChatWindow = (container, user, socket) => {
     });
   }
 };
+const removetyping = (container)=>{
+let typers = container.querySelectorAll(".typing-indicator")
+console.log(typers, 'typers');
+
+if (typers.length > 0 ){
+typers.forEach((elem)=> {
+  elem.remove()
+})
+}
+}
+
 
 export {
   renderHomePage,
@@ -447,4 +458,5 @@ export {
   showErrorPage,
   postActions,
   renderComments,
+  removetyping
 };

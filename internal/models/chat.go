@@ -13,7 +13,7 @@ type Message struct {
 	Offset           int    `json:"offset,omitempty"` // for pagination
 	Limit            int    `json:"limit,omitempty"`  // for pagination
 	Date             string `json:"timestamp"`
-    Typing           bool   `json:"typing"`
+    Typing           string   `json:"typing"`
 
 }
 
