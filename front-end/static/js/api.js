@@ -333,10 +333,12 @@ async function chat(chatContainer, socket) {
     // console.log(data,"incommking");
     const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
+    console.log(data.data);
+    
 
-    let typingcontainer = createTypingIndicator()
     if (data.data.typing == "typing") {
     
+    let typingcontainer = createTypingIndicator(data.data.username)
         removetyping(messagesContainer)
         messagesContainer.appendChild(typingcontainer)
     } else {

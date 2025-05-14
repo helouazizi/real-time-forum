@@ -52,20 +52,18 @@ const userProfile = (user) => {
       </div>
 
       <div class="profile-details">
-        <div class="detail-item"><strong>First Name:</strong> ${
-          user.first_name
-        }</div>
-        <div class="detail-item"><strong>Last Name:</strong> ${
-          user.last_name
-        }</div>
+        <div class="detail-item"><strong>First Name:</strong> ${user.first_name
+    }</div>
+        <div class="detail-item"><strong>Last Name:</strong> ${user.last_name
+    }</div>
         <div class="detail-item"><strong>Gender:</strong> ${user.gender}</div>
         <div class="detail-item"><strong>Age:</strong> ${user.age}</div>
         <div class="detail-item"><strong>Created At:</strong> ${new Date(
-          user.created_at
-        ).toLocaleString()}</div>
+      user.created_at
+    ).toLocaleString()}</div>
         <div class="detail-item"><strong>Updated At:</strong> ${new Date(
-          user.updated_at
-        ).toLocaleString()}</div>
+      user.updated_at
+    ).toLocaleString()}</div>
       </div>
 
       <div class="profile-actions">
@@ -279,7 +277,7 @@ const activeUsersComponent = (users) => {
 
   const usersHTML = users
     .map((user) => {
-      if (user.is_active ){
+      if (user.is_active) {
 
         return `
           <li class="user-item">
@@ -301,7 +299,7 @@ const activeUsersComponent = (users) => {
   return container;
 };
 
-const chatUsersComponent = (users, onUserClick,socket) => {
+const chatUsersComponent = (users, onUserClick, socket) => {
   const container = document.createElement("div");
   container.setAttribute("id", "chat_users");
   container.setAttribute("class", "chat_users");
@@ -332,7 +330,7 @@ const chatUsersComponent = (users, onUserClick,socket) => {
       const nickname = item.dataset.user;
       const selectedUser = users.find((u) => u.nickname === nickname);
       if (selectedUser) {
-        onUserClick(container,selectedUser,socket); // open chat window
+        onUserClick(container, selectedUser, socket); // open chat window
       }
     }
   });
@@ -356,22 +354,22 @@ const filterForm = () => {
       <label for="category-list">Select Categories:</label>
       <div class="category-container" id="category-list">
         ${[
-          { id: "tech", name: "Technology" },
-          { id: "sci", name: "Science" },
-          { id: "health", name: "Health" },
-          { id: "life", name: "Lifestyle" },
-          { id: "edu", name: "Education" },
-          { id: "game", name: "Gaming" },
-          { id: "biz", name: "Business" },
-        ]
-          .map(
-            (cat) => `
+      { id: "tech", name: "Technology" },
+      { id: "sci", name: "Science" },
+      { id: "health", name: "Health" },
+      { id: "life", name: "Lifestyle" },
+      { id: "edu", name: "Education" },
+      { id: "game", name: "Gaming" },
+      { id: "biz", name: "Business" },
+    ]
+      .map(
+        (cat) => `
           <div class="category-checkbox">
             <input type="checkbox" id="cat-${cat.id}" name="categories" value="${cat.name}" />
             <label for="cat-${cat.id}">${cat.name}</label>
           </div>`
-          )
-          .join("")}
+      )
+      .join("")}
       </div>
     </div>
 
@@ -391,15 +389,20 @@ const Footer = () => {
     `;
   return footer;
 };
- function createTypingIndicator() {
-  const container = document.createElement("div");
-  container.className = "typing-indicator";
+function createTypingIndicator(username) {
 
+  const container = document.createElement("div");
+  container.classList.add("typing-indicator");
+  container.classList.add("incoming-message");
+  let user = document.createElement("span");
+  user.innerText = username + "  is typing"
+  container.appendChild(user)
   for (let i = 0; i < 3; i++) {
     const dot = document.createElement("span");
     dot.className = `dot dot-${i + 1}`;
     container.appendChild(dot);
   }
+ 
 
   return container;
 }
