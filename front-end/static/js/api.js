@@ -326,7 +326,7 @@ async function chat(chatContainer, socket) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     messageInput.value = "";
   });
-  let once = true
+
   // Handle incoming WebSocket messages
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
@@ -336,19 +336,11 @@ async function chat(chatContainer, socket) {
 
     let typingcontainer = createTypingIndicator()
     if (data.data.typing == "typing") {
-      if (once) {
-
-        once = false
-
-
+    
         removetyping(messagesContainer)
         messagesContainer.appendChild(typingcontainer)
-      }
-
     } else {
-
         removetyping(messagesContainer)
-      once = true
     }
 
     if (type === "history") {
@@ -385,6 +377,7 @@ async function chat(chatContainer, socket) {
   };
 
   socket.onclose = () => {
+    removetyping(messagesContainer)
     console.log("WebSocket connection closed");
   };
 }
@@ -485,6 +478,18 @@ function setupTypingIndicator(socket, username, senderId, receiverId) {
       isTyping = false;
     }, 2000); // 2 seconds delay
   });
+  window.addEventListener("beforeunload", ()=> {
+    const stopTypingData = {
+        username,
+        sender: senderId,
+        receiver: receiverId,
+        typing: "fin"
+      };
+      socket.send(JSON.stringify(stopTypingData));
+      isTyping = false;
+  })
+ 
+
 }
 
 

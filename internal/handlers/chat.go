@@ -48,12 +48,13 @@ func (h *Hub) Run() {
 		select {
 		case reg := <-h.Register:
 			h.Clients[reg.SenderId] = reg.Conn
-			// fmt.Println(h.Clients, "clinets inside")
-
+			
+fmt.Println(h.Clients, "clinets inside")
 		case senderId := <-h.Unregister:
 			if conn, ok := h.Clients[senderId]; ok {
 				conn.Close()
 				delete(h.Clients, senderId)
+				fmt.Println(h.Clients, "clinets outside")
 			}
 		case msg := <-h.Broadcast:
 			conn, ok := h.Clients[msg.ReciverID]
