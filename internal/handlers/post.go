@@ -152,7 +152,7 @@ func (h *PostHandler) CommentPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate reaction type
-	if reaction.Comment == "" || len(strings.Fields(reaction.Comment)) == 0 {
+	if reaction.Comment == "" || len(strings.Fields(reaction.Comment)) == 0 || len(reaction.Comment) > 500 {
 		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{
 			Message: "Bad Request",
 			Code:    http.StatusBadRequest,

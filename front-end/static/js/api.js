@@ -1,7 +1,6 @@
 import {
   renderHomePage,
   showErrorPage,
-  showLoginForm,
   showMessage,
   showPostForm,
   renderComments,
@@ -242,8 +241,6 @@ async function showComments(postId, container) {
 }
 async function getActiveUsers() {
   const senderId = sessionStorage.getItem("user_id");
-  console.log(senderId, "user id ");
-
   try {
     const response = await fetch("http://localhost:3000/api/v1/users", {
       method: "POST",
@@ -354,7 +351,7 @@ async function chat(chatContainer, socket) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
         showMessage(
-          `New message from ${data.data.username || "Someone"}: ${data.data.message}`
+          `New message from ${data.data.username}`
         );
       }
     }
@@ -422,7 +419,7 @@ async function establishConnection() {
       const ResponseMessages = JSON.parse(event.data);      
       if (ResponseMessages.data.message) {
         showMessage(
-          `New message from ${ResponseMessages.data.username}: ${ResponseMessages.data.message}`
+          `New message from ${ResponseMessages.data.username}`
         );
       }
     };
