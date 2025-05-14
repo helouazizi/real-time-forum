@@ -6,6 +6,7 @@ import {
   showPostForm,
   renderComments,
 } from "./dom.js";
+
 async function isAouth() {
   try {
     const response = await fetch("http://localhost:3000/api/v1/users/info", {
@@ -80,21 +81,27 @@ function createPost() {
           body: JSON.stringify(postData),
         }
       );
+      console.log(response.status,"status");
+      
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(errorData,"errrrrr");
+        
         if (errorData.UserErrors.HasError) {
           showPostForm(errorData.UserErrors, true);
           return;
         }
-        if (errorData.Code === 401) {
-          showLoginForm();
-          return;
-        }
+        // if (errorData.Code === 401) {
+        //   showLoginForm();
+        //   return;
+        // }
         const error = {
           code: errorData.Code,
           message: errorData.Message,
         };
+        console.log(error,"test");
+        
         throw error;
       }
       const result = await response.json();
@@ -103,6 +110,8 @@ function createPost() {
         renderHomePage();
       }, 2000);
     } catch (err) {
+      console.log(err,"ctacj");
+      
       showErrorPage(err);
     }
   });
@@ -255,8 +264,7 @@ async function getActiveUsers() {
 }
 
 async function chat(chatContainer, socket) {
-    const username = document.getElementById("username").innerText
-  console.log(username, "username");
+  const username = document.getElementById("username").innerText
   const senderId = parseInt(sessionStorage.getItem("user_id"));
   const spanElement = chatContainer.querySelector("span[user-id]");
   const receiverId = parseInt(spanElement.getAttribute("user-id"));
@@ -323,6 +331,7 @@ async function chat(chatContainer, socket) {
   // Handle incoming WebSocket messages
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
+    // console.log(data,"incommking");
     const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
     const msg = data.data;
@@ -330,9 +339,6 @@ async function chat(chatContainer, socket) {
 
     if (type === "history") {
       loading = false;
-      console.log(data, "data history");
-
-
       const currentScrollHeight = messagesContainer.scrollHeight;
       const msgEl = createMessageElement(data, senderId);
       messagesContainer.prepend(msgEl);
@@ -348,7 +354,7 @@ async function chat(chatContainer, socket) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
         showMessage(
-          `New message from ${msg.SenderNickname || "Someone"}: ${msg.message}`
+          `New message from ${data.data.username || "Someone"}: ${data.data.message}`
         );
       }
     }
@@ -363,8 +369,6 @@ async function chat(chatContainer, socket) {
   };
 }
 function createMessageElement(data, senderId) {
-  console.log(data, "data at messages");
-
   const messageElement = document.createElement("div");
   let senderName;
   if (data.type == "history") {
@@ -406,8 +410,6 @@ function sanitizeHTML(str) {
 
 async function establishConnection() {
   const username = document.getElementById("username").innerText
-  console.log(username, "username");
-  
   const senderId = sessionStorage.getItem("user_id");
   const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
 
@@ -417,10 +419,10 @@ async function establishConnection() {
       resolve(socket);
     };
     socket.onmessage = (event) => {
-      const ResponseMessages = JSON.parse(event.data);
+      const ResponseMessages = JSON.parse(event.data);      
       if (ResponseMessages.data.message) {
         showMessage(
-          `New message from ${ResponseMessages.data.SenderNickname}: ${ResponseMessages.data.message}`
+          `New message from ${ResponseMessages.data.username}: ${ResponseMessages.data.message}`
         );
       }
     };

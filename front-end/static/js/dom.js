@@ -276,6 +276,7 @@ function renderComments(comments, postId, post) {
 function postActions() {
   document.querySelectorAll(".post-card").forEach((postCard) => {
     const postId = postCard.querySelector("#post-id")?.textContent;
+    
     // Like
     postCard.querySelector(".fa-thumbs-up")?.addEventListener("click", () => {
       const likeIcon = postCard.querySelector(".fa-thumbs-up");
@@ -324,7 +325,6 @@ function postActions() {
 
     // Show comments
     postCard.querySelector(".fa-comment")?.addEventListener("click", () => {
-      console.log("User wants to view comments for post:", postId);
       showComments(postId, postCard);
     });
 
@@ -335,7 +335,6 @@ function postActions() {
     sendBtn?.addEventListener("click", () => {
       const comment = input.value.trim();
       if (comment !== "") {
-        console.log("User commented on post:", postId, "Comment:", comment);
         input.value = "";
         let commented = sendPostCommen(postId, comment);
         if (commented) {

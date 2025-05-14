@@ -74,7 +74,7 @@ func (h *PostHandler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	err1 := h.PostService.CreatePost(Post)
 	if err1.Code != http.StatusCreated {
 		logger.LogWithDetails(fmt.Errorf(err.Message))
-		// utils.RespondWithError(w, err)
+		utils.RespondWithJSON(w, err1.Code, err1)
 		return
 	}
 	// our response

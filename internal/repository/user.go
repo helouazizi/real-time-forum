@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"web-forum/internal/models"
@@ -31,6 +32,10 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (r *UserRepository) CreateUser(user models.User) models.Error {
+	user.Email = strings.TrimSpace(user.Email)
+	user.FirstName = strings.TrimSpace(user.FirstName)
+	user.LastName = strings.TrimSpace(user.LastName)
+	user.Nickname = strings.TrimSpace(user.Nickname)
 	// lets hash the pass
 	hashedPass, err := utils.HashPassWord(user.Password)
 	if err != nil {

@@ -17,7 +17,7 @@ type PostsMethods interface {
 	AddComment(token string, reaction models.PostReaction) models.Error
 	GetCommentsByPostID(postId int) ([]models.PostComments, models.Error)
 	FilterPosts(categories []string) ([]models.Post, models.Error)
-	FetchAllPosts() ([]models.Post, models.Error) 
+	FetchAllPosts() ([]models.Post, models.Error)
 }
 
 type PostRepository struct {
@@ -100,7 +100,28 @@ func (r *PostRepository) FetchAllPosts() ([]models.Post, models.Error) {
 
 // CreatePost requires the user to be logged in (verified by token)
 func (r *PostRepository) CreatePost(post models.Post) models.Error {
-	// Insert the post
+
+	// check categories categories
+	for _, cat := range post.Categories {
+		// Ensure category exists or insert it
+		var categoryID int
+		err := r.db.QueryRow("SELECT id FROM categories WHERE category_name = ?", cat).Scan(&categoryID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				logger.LogWithDetails(err)
+				return models.Error{
+					Message: "Bad Request",
+					Code:    http.StatusBadRequest,
+				}
+			}
+			logger.LogWithDetails(err)
+			return models.Error{
+				Message: "Internal Server Erorr",
+				Code:    http.StatusInternalServerError,
+			}
+		}
+
+	}
 
 	query := `
 		INSERT INTO posts (user_id, title, content)
@@ -381,4 +402,3 @@ func (r *PostRepository) FilterPosts(categories []string) ([]models.Post, models
 
 	return posts, models.Error{Code: http.StatusOK}
 }
-
