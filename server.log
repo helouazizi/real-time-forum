@@ -63,3 +63,28 @@
 2025/05/14 10:55:09 2025-05-14T10:55:09+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
 2025/05/14 11:19:51 2025-05-14T11:19:51+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1006 (abnormal closure): unexpected EOF
 2025/05/14 11:19:51 2025-05-14T11:19:51+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1006 (abnormal closure): unexpected EOF
+2025/05/17 09:51:21 2025-05-17T09:51:21+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/17 09:51:23 2025-05-17T09:51:23+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/17 09:51:28 2025-05-17T09:51:28+01:00 [Function: web-forum/internal/repository.(*UserRepository).Login] [Line: 109] crypto/bcrypt: hashedPassword is not the hash of the given password
+2025/05/17 09:51:28 2025-05-17T09:51:28+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/17 09:51:38 2025-05-17T09:51:38+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:52:44 2025-05-17T09:52:44+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:52:46 2025-05-17T09:52:46+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:53:54 2025-05-17T09:53:54+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:53:56 2025-05-17T09:53:56+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:53:56 2025-05-17T09:53:56+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:53:56 2025-05-17T09:53:56+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 83] websocket: close 1001 (going away)
+2025/05/17 09:54:12 2025-05-17T09:54:12+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:54:13 2025-05-17T09:54:13+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:54:14 2025-05-17T09:54:14+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:55:21 2025-05-17T09:55:21+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:55:23 2025-05-17T09:55:23+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:56:33 2025-05-17T09:56:33+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:57:09 2025-05-17T09:57:09+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:57:11 2025-05-17T09:57:11+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:57:12 2025-05-17T09:57:12+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:58:01 2025-05-17T09:58:01+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:58:23 2025-05-17T09:58:23+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:58:54 2025-05-17T09:58:54+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:59:00 2025-05-17T09:59:00+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)
+2025/05/17 09:59:01 2025-05-17T09:59:01+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 116] websocket: close 1001 (going away)

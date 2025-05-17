@@ -17,14 +17,14 @@ const Header = (user) => {
       </div>
       <nav class="navigation-links">
         <div class="user-profile" id="user-profile">
-          <img src="/front-end/assets/avatar.png" alt="User Profile" class="profile-pic" />
+          <img src="front-end/static/assets/avatar.png" alt="User Profile" class="profile-pic" />
         </div>
       </nav>
     `;
     header.appendChild(userProfile(user));
   } else {
     header.innerHTML = `
-      <h1 class="logo"><a href="/front-end/">Forum</a></h1>
+      <h1 class="logo"><a href="/">Forum</a></h1>
       <nav class="navigation-links">
         <button class="primary-btn" id="login_btn">
           <i class="fas fa-sign-in-alt"></i> Login
@@ -44,7 +44,7 @@ const userProfile = (user) => {
   underProfile.innerHTML = `
     <div class="profile-card">
       <div class="profile-header">
-        <img src="./assets/avatar.png" alt="User Profile" class="profile-pic" />
+        <img src="front-end/static/assets/avatar.png" alt="User Profile" class="profile-pic" />
         <div>
           <h2 id="username">${user.nickname}</h2>
           <p>${user.email}</p>
@@ -176,7 +176,7 @@ const postCard = (post) => {
   postElement.innerHTML = `
     <div class="post-header">
       <img
-        src="/front-end//assets/avatar.png"
+        src="front-end/static/assets/avatar.png"
         alt="User Profile"
         class="profile-pic"
       />
@@ -284,7 +284,7 @@ const activeUsersComponent = (users) => {
         return `
           <li class="user-item">
             <div class="avatar-wrapper">
-              <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+              <img class="user-avatar" src="front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
               ${user.is_active ? '<span class="status-dot active"></span>' : ''}
             </div>
             <span class="user-nickname">${user.nickname}</span>
@@ -310,7 +310,7 @@ const chatUsersComponent = (users, onUserClick,socket) => {
       (user) => `
     <li class="chat-user-item" data-user="${user.nickname}">
       <div class="avatar-wrapper">
-        <img class="user-avatar" src="../assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+        <img class="user-avatar" src="front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
         ${user.is_active ? '<span class="status-dot active"></span>' : ''}
       </div>
       <span  class="user-nickname">${user.nickname}</span>
