@@ -26,7 +26,7 @@ import {
   establishConnection,
 } from "./api.js";
 
-function styleBody(params) {
+function styleBody() {
   // Clear the body
   document.body.innerHTML = "";
   document.body.style.background =

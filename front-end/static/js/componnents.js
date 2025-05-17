@@ -271,7 +271,7 @@ const postForm = (errors = {}) => {
            `;
   return form;
 };
-const activeUsersComponent = (users) => {
+const activeUsersComponent = (nickname) => {
   const container = document.createElement("div");
   container.setAttribute("id", "active_users");
 
@@ -280,12 +280,12 @@ const activeUsersComponent = (users) => {
       if (user.is_active) {
 
         return `
-          <li class="user-item">
+          <li class="user-item"  id= ${nickname}>
             <div class="avatar-wrapper">
-              <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+              <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${nickname}" />
               ${user.is_active ? '<span class="status-dot active"></span>' : ''}
             </div>
-            <span class="user-nickname">${user.nickname}</span>
+            <span class="user-nickname">${nickname}</span>
           </li>
         `;
       }
