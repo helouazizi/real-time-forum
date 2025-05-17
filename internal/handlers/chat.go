@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"web-forum/internal/models"
@@ -43,18 +42,17 @@ func NewChatHandler(hub *Hub, service *services.ChatService) *ChatHandler {
 		Hub:          hub,
 	}
 }
+
 func (h *Hub) Run() {
 	for {
 		select {
 		case reg := <-h.Register:
 			h.Clients[reg.SenderId] = reg.Conn
-			
-fmt.Println(h.Clients, "clinets inside")
+
 		case senderId := <-h.Unregister:
 			if conn, ok := h.Clients[senderId]; ok {
 				conn.Close()
 				delete(h.Clients, senderId)
-				fmt.Println(h.Clients, "clinets outside")
 			}
 		case msg := <-h.Broadcast:
 			conn, ok := h.Clients[msg.ReciverID]
@@ -118,16 +116,14 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 			logger.LogWithDetails(err)
 			break
 		}
-			
 
 		var msg models.Message
 		if err := json.Unmarshal(msgBytes, &msg); err != nil {
 			logger.LogWithDetails(err)
 			continue
 		}
-	fmt.Println(msg.Typing)
 		if msg.Typing == "typing" || msg.Typing == "fin" {
-	h.Hub.Broadcast <- msg
+			h.Hub.Broadcast <- msg
 			continue
 		}
 		if msg.ReciverID > 0 && msg.Content == "" {
@@ -145,7 +141,6 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 			}
 			continue
 		}
-
 
 		if msg.Content == "" {
 			continue

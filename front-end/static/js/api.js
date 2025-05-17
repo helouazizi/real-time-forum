@@ -330,7 +330,6 @@ async function chat(chatContainer, socket) {
   // Handle incoming WebSocket messages
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    // console.log(data,"incommking");
     const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
     console.log(data.data);
@@ -398,7 +397,7 @@ function createMessageElement(data, senderId) {
 
     messageElement.className = data.data.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
 
-    senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.SenderNickname || "Unknown";
+    senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.username || "Unknown";
   }
   const timestamp = new Date(data.data.timestamp).toLocaleString(); // Assumes ISO timestamp
   messageElement.innerHTML = `
