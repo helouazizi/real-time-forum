@@ -25,6 +25,7 @@ type Hub struct {
 	Register   chan models.ClientRegistration
 	Unregister chan int
 	Broadcast  chan models.Message
+	notify     chan models.ClientRegistration
 }
 
 func NewHub() *Hub {
@@ -33,6 +34,7 @@ func NewHub() *Hub {
 		Register:   make(chan models.ClientRegistration),
 		Unregister: make(chan int),
 		Broadcast:  make(chan models.Message),
+		notify:     make(chan models.ClientRegistration),
 	}
 }
 
@@ -65,6 +67,18 @@ func (h *Hub) Run() {
 			}); err != nil {
 				conn.Close()
 				delete(h.Clients, msg.ReciverID)
+			}
+		case online := <-h.notify:
+			for id, conn := range h.Clients {
+				if online.Conn != conn {
+					if err := conn.WriteJSON(map[string]any{
+						"type": online.Type,
+						"data": online.SenderNickname,
+					}); err != nil {
+						conn.Close()
+						delete(h.Clients, id)
+					}
+				}
 			}
 		}
 	}
@@ -104,10 +118,12 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.Hub.Register <- models.ClientRegistration{SenderId: regMsg.SenderID, Conn: conn}
+	h.Hub.notify <- models.ClientRegistration{SenderNickname: sendNickname, Conn: conn, Type: "Online"}
 
 	// Wait for chat history request (with both sender and receiver)
 	defer func() {
 		h.Hub.Unregister <- regMsg.SenderID
+		h.Hub.notify <- models.ClientRegistration{SenderNickname:sendNickname, Conn: conn, Type: "Offline"}
 	}()
 
 	for {
