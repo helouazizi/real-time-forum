@@ -351,6 +351,10 @@ async function chat(chatContainer, socket) {
           `New message from ${data.data.username}`
         );
       }
+    } else if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
+      console.log(ResponseMessages);
+
+      OneOffline(ResponseMessages)
     }
   };
 
@@ -422,7 +426,7 @@ async function establishConnection() {
         );
       } else if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
         console.log(ResponseMessages);
-        
+
         OneOffline(ResponseMessages)
       }
     };

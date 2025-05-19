@@ -211,3 +211,8 @@
 2025/05/19 17:41:15 2025-05-19T17:41:15+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
 2025/05/19 17:41:17 2025-05-19T17:41:17+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 135] websocket: close 1001 (going away)
 2025/05/19 17:41:19 2025-05-19T17:41:19+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 135] websocket: close 1001 (going away)
+2025/05/19 18:05:59 2025-05-19T18:05:59+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/19 18:06:19 2025-05-19T18:06:19+01:00 [Function: web-forum/internal/repository.(*UserRepository).Login] [Line: 109] crypto/bcrypt: hashedPassword is not the hash of the given password
+2025/05/19 18:06:19 2025-05-19T18:06:19+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/19 18:06:52 2025-05-19T18:06:52+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/19 18:06:55 2025-05-19T18:06:55+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 135] websocket: close 1001 (going away)
