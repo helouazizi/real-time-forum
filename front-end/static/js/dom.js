@@ -21,7 +21,6 @@ import {
   sendPostCommen,
   showComments,
   fetchFilteredPosts,
-  getActiveUsers,
   chat,
   establishConnection,
 } from "./api.js";
@@ -84,11 +83,7 @@ async function renderHomePage(data) {
   section.setAttribute("class", "container");
   section.setAttribute("id", "container");
   // fetch active users
-  const activeUsers = await getActiveUsers();
-  if (activeUsers) {
-    const usersComponent = activeUsersComponent(activeUsers);
-    section.appendChild(usersComponent);
-  }
+ 
 
   let posts = document.createElement("div");
   posts.setAttribute("class", "posts");
@@ -379,7 +374,20 @@ function showFilterForm() {
     form.remove(); // Optional: remove popup after applying
   });
 }
+function OneOffline(user) {
+  activeSection = document.createElement('div')
+  activeSection.id = "activeSection"
+  if (user.data == "Online"){
 
+    activeUsersComponent(user.data,container)
+    console.log(on);
+    
+  } else if (user.data = "Offline"){
+    console.log("off");
+    
+  }
+  
+}
 const listenChatBtn = (socket) => {
   const chatBtn = document.getElementById("chat_btn");
 
@@ -446,6 +454,7 @@ typers.forEach((elem)=> {
 }
 
 
+
 export {
   renderHomePage,
   showLoginForm,
@@ -457,6 +466,7 @@ export {
   showMessage,
   showErrorPage,
   postActions,
+  OneOffline,
   renderComments,
   removetyping
 };

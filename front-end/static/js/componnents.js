@@ -271,31 +271,20 @@ const postForm = (errors = {}) => {
            `;
   return form;
 };
-const activeUsersComponent = (nickname) => {
-  const container = document.createElement("div");
-  container.setAttribute("id", "active_users");
+const activeUsersComponent = (nickname , container ) => {
+  
 
-  const usersHTML = users
-    .map((user) => {
-      if (user.is_active) {
-
-        return `
+  const usersHTML = `
           <li class="user-item"  id= ${nickname}>
             <div class="avatar-wrapper">
               <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${nickname}" />
-              ${user.is_active ? '<span class="status-dot active"></span>' : ''}
+              '<span class="status-dot active"></span>' 
             </div>
             <span class="user-nickname">${nickname}</span>
           </li>
         `;
-      }
-    })
-    .join("");
-
-  container.innerHTML = `
-    <ul class="users-list">${usersHTML}</ul>
-  `;
-
+      
+        container.appendChild(usersHTML)
   return container;
 };
 

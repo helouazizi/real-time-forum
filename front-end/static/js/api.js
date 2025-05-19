@@ -4,7 +4,8 @@ import {
   showMessage,
   showPostForm,
   renderComments,
-  removetyping
+  removetyping,
+  OneOffline
 } from "./dom.js";
 import { createTypingIndicator } from "./componnents.js";
 
@@ -241,26 +242,6 @@ async function showComments(postId, container) {
     showErrorPage(error);
   }
 }
-async function getActiveUsers() {
-  const senderId = sessionStorage.getItem("user_id");
-  try {
-    const response = await fetch("http://localhost:3000/api/v1/users", {
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify({ user_id: parseInt(senderId) }),
-    });
-
-    if (!response.ok) {
-      throw { code: response.Code, message: response.Messgae };
-    }
-
-    const users = await response.json();
-    return users;
-  } catch (error) {
-    showErrorPage(error);
-    return [];
-  }
-}
 
 async function chat(chatContainer, socket) {
   const username = document.getElementById("username").innerText
@@ -370,6 +351,8 @@ async function chat(chatContainer, socket) {
           `New message from ${data.data.username}`
         );
       }
+    } else if(type== "Online" || type== "Offline" ){
+      OneOffline(data,)
     }
   };
 
@@ -505,7 +488,7 @@ export {
   sendPostCommen,
   showComments,
   fetchFilteredPosts,
-  getActiveUsers,
+
   chat,
   establishConnection,
 };
