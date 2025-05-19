@@ -271,22 +271,31 @@ const postForm = (errors = {}) => {
            `;
   return form;
 };
-const activeUsersComponent = (nickname , container ) => {
-  
+const activeUsersComponent = (nickname, container) => {
+  console.log(nickname, container, "activeUser");
 
   const usersHTML = `
-          <li class="user-item"  id= ${nickname}>
-            <div class="avatar-wrapper">
-              <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${nickname}" />
-              '<span class="status-dot active"></span>' 
-            </div>
-            <span class="user-nickname">${nickname}</span>
-          </li>
-        `;
-      
-        container.appendChild(usersHTML)
+    <li class="user-item" id="${nickname}">
+      <div class="avatar-wrapper">
+        <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${nickname}" />
+        <span class="status-dot active"></span>
+      </div>
+      <span class="user-nickname">${nickname}</span>
+    </li>
+  `;
+
+  // Create a temporary wrapper to parse the string into DOM elements
+  const tempWrapper = document.createElement("div");
+  tempWrapper.innerHTML = usersHTML.trim();
+
+  // Get the first (and only) element inside tempWrapper
+  const userElement = tempWrapper.firstChild;
+
+  container.prepend(userElement);
+
   return container;
 };
+
 
 const chatUsersComponent = (users, onUserClick, socket) => {
   const container = document.createElement("div");
@@ -391,7 +400,7 @@ function createTypingIndicator(username) {
     dot.className = `dot dot-${i + 1}`;
     container.appendChild(dot);
   }
- 
+
 
   return container;
 }

@@ -314,15 +314,15 @@ async function chat(chatContainer, socket) {
     const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
     console.log(data.data);
-    
+
 
     if (data.data.typing == "typing") {
-    
-    let typingcontainer = createTypingIndicator(data.data.username)
-        removetyping(messagesContainer)
-        messagesContainer.appendChild(typingcontainer)
+
+      let typingcontainer = createTypingIndicator(data.data.username)
+      removetyping(messagesContainer)
+      messagesContainer.appendChild(typingcontainer)
     } else {
-        removetyping(messagesContainer)
+      removetyping(messagesContainer)
     }
 
     if (type === "history") {
@@ -341,7 +341,7 @@ async function chat(chatContainer, socket) {
 
     } else if (type === "message" && !data.data.typing) {
 
-        removetyping(messagesContainer)
+      removetyping(messagesContainer)
       const msgEl = createMessageElement(data, senderId);
       if (chatWindowExists) {
         messagesContainer.appendChild(msgEl);
@@ -351,8 +351,6 @@ async function chat(chatContainer, socket) {
           `New message from ${data.data.username}`
         );
       }
-    } else if(type== "Online" || type== "Offline" ){
-      OneOffline(data,)
     }
   };
 
@@ -417,10 +415,15 @@ async function establishConnection() {
     };
     socket.onmessage = (event) => {
       const ResponseMessages = JSON.parse(event.data);
+
       if (ResponseMessages.data.message) {
         showMessage(
           `New message from ${ResponseMessages.data.username}`
         );
+      } else if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
+        console.log(ResponseMessages);
+        
+        OneOffline(ResponseMessages)
       }
     };
 
@@ -462,17 +465,17 @@ function setupTypingIndicator(socket, username, senderId, receiverId) {
       isTyping = false;
     }, 2000); // 2 seconds delay
   });
-  window.addEventListener("beforeunload", ()=> {
+  window.addEventListener("beforeunload", () => {
     const stopTypingData = {
-        username,
-        sender: senderId,
-        receiver: receiverId,
-        typing: "fin"
-      };
-      socket.send(JSON.stringify(stopTypingData));
-      isTyping = false;
+      username,
+      sender: senderId,
+      receiver: receiverId,
+      typing: "fin"
+    };
+    socket.send(JSON.stringify(stopTypingData));
+    isTyping = false;
   })
- 
+
 
 }
 

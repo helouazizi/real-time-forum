@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"web-forum/internal/models"
@@ -69,7 +70,9 @@ func (h *Hub) Run() {
 				delete(h.Clients, msg.ReciverID)
 			}
 		case online := <-h.notify:
+			fmt.Println("notify", online.SenderNickname, online.Type)
 			for id, conn := range h.Clients {
+				fmt.Println(online.SenderNickname)
 				if online.Conn != conn {
 					if err := conn.WriteJSON(map[string]any{
 						"type": online.Type,

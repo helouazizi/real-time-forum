@@ -83,7 +83,7 @@ async function renderHomePage(data) {
   section.setAttribute("class", "container");
   section.setAttribute("id", "container");
   // fetch active users
- 
+
 
   let posts = document.createElement("div");
   posts.setAttribute("class", "posts");
@@ -271,7 +271,7 @@ function renderComments(comments, postId, post) {
 function postActions() {
   document.querySelectorAll(".post-card").forEach((postCard) => {
     const postId = postCard.querySelector("#post-id")?.textContent;
-    
+
     // Like
     postCard.querySelector(".fa-thumbs-up")?.addEventListener("click", () => {
       const likeIcon = postCard.querySelector(".fa-thumbs-up");
@@ -375,18 +375,18 @@ function showFilterForm() {
   });
 }
 function OneOffline(user) {
-  activeSection = document.createElement('div')
-  activeSection.id = "activeSection"
-  if (user.data == "Online"){
+  let activeSection = document.createElement('div')
+  activeSection.id = "active_users"
+  if (user.type == "Online") {
+    activeUsersComponent(user.data, container)
+  } else if (user.type = "Offline") {
+    let offuser = activeSection.getElementById(user.data)
+    if (offuser){
+      offuser.remove()
+    }
 
-    activeUsersComponent(user.data,container)
-    console.log(on);
-    
-  } else if (user.data = "Offline"){
-    console.log("off");
-    
   }
-  
+
 }
 const listenChatBtn = (socket) => {
   const chatBtn = document.getElementById("chat_btn");
@@ -442,15 +442,15 @@ const showChatWindow = (container, user, socket) => {
     });
   }
 };
-const removetyping = (container)=>{
-let typers = container.querySelectorAll(".typing-indicator")
-console.log(typers, 'typers');
+const removetyping = (container) => {
+  let typers = container.querySelectorAll(".typing-indicator")
+  console.log(typers, 'typers');
 
-if (typers.length > 0 ){
-typers.forEach((elem)=> {
-  elem.remove()
-})
-}
+  if (typers.length > 0) {
+    typers.forEach((elem) => {
+      elem.remove()
+    })
+  }
 }
 
 
