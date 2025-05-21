@@ -272,11 +272,12 @@ const postForm = (errors = {}) => {
   return form;
 };
 const activeUsersComponent = (nickname) => {
-  let user = document.getElementById(nickname)
-  console.log( user, "activeUser");
+  let user = document.getElementById(`active-${nickname}`)
+  console.log(user, "hh");
+  
   if (!user) {
     const usersHTML = `
-      <li class="user-item" id="${nickname}">
+      <li class="user-item" id="active-${nickname}">
         <div class="avatar-wrapper">
           <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${nickname}" />
           <span class="status-dot active"></span>
@@ -291,12 +292,12 @@ const activeUsersComponent = (nickname) => {
 
     // Get the first (and only) element inside tempWrapper
     const userElement = tempWrapper.firstChild;
-return userElement
-   
+    return userElement
+
   }
 
 
- 
+
 };
 
 
@@ -307,7 +308,7 @@ const chatUsersComponent = (users, onUserClick, socket) => {
   const usersHTML = users
     .map(
       (user) => `
-    <li class="chat-user-item" data-user="${user.nickname}" id= "${user.nickname}">
+    <li class="chat-user-item" data-user="${user.nickname}" id="${user.nickname}">
       <div class="avatar-wrapper">
         <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
        

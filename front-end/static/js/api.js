@@ -42,7 +42,7 @@ function logOut(socket) {
 
         if (response.ok) {
           renderHomePage();
-         socket.close();
+          socket.close();
         } else {
           const errorData = await response.json();
           throw { code: errorData.Code, message: errorData.Message };
@@ -331,12 +331,11 @@ async function chat(chatContainer, socket) {
   });
 
   // Handle incoming WebSocket messages
-  socket.onmessage = (event) => {
+  socket.onmessage = async (event) => {
     const data = JSON.parse(event.data);
     const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
-    console.log(data.data);
-
+    console.log(type, 'tyyype');
 
     if (data.data.typing == "typing") {
 
@@ -353,13 +352,8 @@ async function chat(chatContainer, socket) {
       const currentScrollHeight = messagesContainer.scrollHeight;
       const msgEl = createMessageElement(data, senderId);
       messagesContainer.prepend(msgEl);
-
-      messagesContainer.scrollTop =
-        messagesContainer.scrollHeight - currentScrollHeight;
-
+      messagesContainer.scrollTop = messagesContainer.scrollHeight - currentScrollHeight;
       offset += 1;
-
-
 
     } else if (type === "message" && !data.data.typing) {
 
@@ -372,7 +366,15 @@ async function chat(chatContainer, socket) {
         showMessage(
           `New message from ${data.data.username}`
         );
+        let chatusers = document.getElementById("chat_users")
+        if (chatusers) {
+          const activeUsers = await getActiveUsers();
+          chatUsersComponent(activeUsers, showChatWindow, socket)
+        }
       }
+    }
+    if (data.type == "Online" || data.type == "Offline") {
+      OneOffline(data)
     }
   };
 
@@ -438,11 +440,11 @@ async function establishConnection() {
     socket.onmessage = (event) => {
 
       const ResponseMessages = JSON.parse(event.data);
-      
-      if (ResponseMessages.type == "Online" || ResponseMessages.type  ==  "Offline") {
-        console.log(ResponseMessages ,  "response 11111111");
+      console.log(ResponseMessages.type);
+      if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
+        console.log("hassan");
+        
         OneOffline(ResponseMessages)
-          console.log(ResponseMessages ,  "response -11111111");
       }
       if (ResponseMessages.data.message) {
         showMessage(

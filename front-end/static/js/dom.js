@@ -100,14 +100,13 @@ async function renderHomePage(data) {
   showPostForm();
   if (user) {
     showProfile();
-     bindfiletrBtn();
+    bindfiletrBtn();
     const socket = await establishConnection();
     listenChatBtn(socket);
-    logOut(socket);
+    logOut(socket)
 
-   
   }
-  
+
 
   postActions();
 }
@@ -388,10 +387,16 @@ function OneOffline(user) {
   console.log(activeSection, "avtive section");
   if (activeSection) {
     if (user.type == "Online") {
+      
+      console.log(user.data, "user Data");
+      
       const activuser = activeUsersComponent(user.data)
-      activeSection.appendChild(activuser)
+      console.log(activuser,"active user");
+      if (activuser) {
+        activeSection.appendChild(activuser)
+      }
     } else if (user.type = "Offline") {
-      let offuser = document.getElementById(user.data)
+      let offuser = document.getElementById(`active-${user.data}`)
       if (offuser) {
         offuser.remove()
       }
@@ -448,7 +453,7 @@ const showChatWindow = (container, user, socket) => {
     let close = document.getElementById("close_messages");
 
     close.addEventListener("click", () => {
-      
+
       chatWindow.remove();
 
       container.querySelector(".chat-users-list")?.classList.remove("hidden");
