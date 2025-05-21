@@ -271,7 +271,7 @@ const postForm = (errors = {}) => {
            `;
   return form;
 };
-const activeUsersComponent = (nickname, container) => {
+const activeUsersComponent = (nickname) => {
   let user = document.getElementById(nickname)
   console.log( user, "activeUser");
   if (!user) {
@@ -291,12 +291,12 @@ const activeUsersComponent = (nickname, container) => {
 
     // Get the first (and only) element inside tempWrapper
     const userElement = tempWrapper.firstChild;
-
-    container.appendChild(userElement);
+return userElement
+   
   }
 
 
-  return container;
+ 
 };
 
 

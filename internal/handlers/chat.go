@@ -46,19 +46,19 @@ func NewChatHandler(hub *Hub, service *services.ChatService) *ChatHandler {
 	}
 }
 
-func (h *Hub) Run() {
+func (h *ChatHandler) Run() {
 	for {
 		select {
-		case reg := <-h.Register:
-			h.Clients[reg.SenderId] = reg.Conn
+		case reg := <-h.Hub.Register:
+			h.Hub.Clients[reg.SenderId] = reg.Conn
 
-		case senderId := <-h.Unregister:
-			if conn, ok := h.Clients[senderId]; ok {
+		case senderId := <-h.Hub.Unregister:
+			if conn, ok := h.Hub.Clients[senderId]; ok {
 				conn.Close()
-				delete(h.Clients, senderId)
+				delete(h.Hub.Clients, senderId)
 			}
-		case msg := <-h.Broadcast:
-			conn, ok := h.Clients[msg.ReciverID]
+		case msg := <-h.Hub.Broadcast:
+			conn, ok := h.Hub.Clients[msg.ReciverID]
 			if !ok {
 				continue
 			}
@@ -67,22 +67,35 @@ func (h *Hub) Run() {
 				"data": msg,
 			}); err != nil {
 				conn.Close()
-				delete(h.Clients, msg.ReciverID)
+				delete(h.Hub.Clients, msg.ReciverID)
 			}
-		case online := <-h.notify:
+		case online := <-h.Hub.notify:
 			fmt.Println("notify", online.SenderNickname, online.Type)
-			for id, conn := range h.Clients {
-				fmt.Println(online.SenderNickname)
+			fmt.Println(h.Hub.Clients, "Clients")
+			for id, conn := range h.Hub.Clients {
 				if online.Conn != conn {
 					if err := conn.WriteJSON(map[string]any{
 						"type": online.Type,
 						"data": online.SenderNickname,
 					}); err != nil {
+						fmt.Println(err , "error whritong connections")
 						conn.Close()
-						delete(h.Clients, id)
+						delete(h.Hub.Clients, id)
 					}
-						
+
+					// whritinng into the same connection
+					User, _ := h.chatServices.GetUserNickname(id)
+					fmt.Println(User, "other user")
+					if err := online.Conn.WriteJSON(map[string]any{
+						"type": "Online",
+						"data": User,
+					}); err != nil {
+						fmt.Println(err, "error whritong to the same connections")
+						online.Conn.Close()
+						delete(h.Hub.Clients, online.SenderId)
+					}
 				}
+					
 			}
 		}
 	}
@@ -127,7 +140,7 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 	// Wait for chat history request (with both sender and receiver)
 	defer func() {
 		h.Hub.Unregister <- regMsg.SenderID
-		h.Hub.notify <- models.ClientRegistration{SenderNickname:sendNickname, Conn: conn, Type: "Offline"}
+		h.Hub.notify <- models.ClientRegistration{SenderNickname: sendNickname, Conn: conn, Type: "Offline"}
 	}()
 
 	for {

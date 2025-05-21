@@ -55,7 +55,7 @@ func NewApp(config *config.Configuration) *Application {
 	hub := handlers.NewHub()
 	chatHandler := handlers.NewChatHandler(hub, chatServices)
 	activeHandlers := handlers.NewActiveHandler(activeServices)
-	go hub.Run()
+	go chatHandler.Run()
 
 	return &Application{
 		DB:                 db,

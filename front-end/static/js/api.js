@@ -162,6 +162,27 @@ async function fetchFilteredPosts(categories) {
     showErrorPage(error);
   }
 }
+async function getActiveUsers() {
+  const senderId = sessionStorage.getItem("user_id");
+  try {
+    const response = await fetch("http://localhost:3000/api/v1/users", {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({ user_id: parseInt(senderId) }),
+    });
+
+    if (!response.ok) {
+      throw { code: response.Code, message: response.Messgae };
+    }
+
+    const users = await response.json();
+    return users;
+  } catch (error) {
+    showErrorPage(error);
+    return [];
+  }
+}
+
 
 async function reactToPost(postId, reaction) {
   try {
@@ -351,10 +372,6 @@ async function chat(chatContainer, socket) {
           `New message from ${data.data.username}`
         );
       }
-    } else if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
-      console.log(ResponseMessages);
-
-      OneOffline(ResponseMessages)
     }
   };
 
@@ -418,16 +435,18 @@ async function establishConnection() {
       resolve(socket);
     };
     socket.onmessage = (event) => {
-      const ResponseMessages = JSON.parse(event.data);
 
+      const ResponseMessages = JSON.parse(event.data);
+      
+      if (ResponseMessages.type == "Online" || ResponseMessages.type  ==  "Offline") {
+        console.log(ResponseMessages ,  "response 11111111");
+        OneOffline(ResponseMessages)
+          console.log(ResponseMessages ,  "response -11111111");
+      }
       if (ResponseMessages.data.message) {
         showMessage(
           `New message from ${ResponseMessages.data.username}`
         );
-      } else if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
-        console.log(ResponseMessages);
-
-        OneOffline(ResponseMessages)
       }
     };
 
@@ -495,7 +514,7 @@ export {
   sendPostCommen,
   showComments,
   fetchFilteredPosts,
-
+  getActiveUsers,
   chat,
   establishConnection,
 };

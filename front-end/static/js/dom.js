@@ -10,6 +10,7 @@ import {
   filterForm,
   activeUsersComponent,
   chatUsersComponent,
+
 } from "./componnents.js";
 
 import {
@@ -23,6 +24,7 @@ import {
   fetchFilteredPosts,
   chat,
   establishConnection,
+  getActiveUsers
 } from "./api.js";
 
 function styleBody() {
@@ -62,24 +64,17 @@ async function renderHomePage(data) {
   document.body.innerHTML = "";
   removeOldeForms();
   document.body.appendChild(Header(user));
-  bindLoginBtn();
-  bindRegisterbtn();
-  showPostForm();
-  if (user) {
-    showProfile();
-    logOut();
-
-    bindfiletrBtn();
-    const socket = await establishConnection();
-    listenChatBtn(socket);
-  }
+  let main = document.createElement("main");
+  main.id = "main"
+  let activeUsers = document.createElement("section");
+  activeUsers.setAttribute("id", "active_users")
+  main.appendChild(activeUsers);
   if (!data) {
     data = await fetchPosts();
   }
 
   // let posts = await fetchPosts();
-  let main = document.createElement("main");
-  main.id = "main"
+
   let section = document.createElement("section");
   section.setAttribute("class", "container");
   section.setAttribute("id", "container");
@@ -100,6 +95,18 @@ async function renderHomePage(data) {
   main.appendChild(section);
   document.body.appendChild(main);
   document.body.appendChild(Footer());
+  bindLoginBtn();
+  bindRegisterbtn();
+  showPostForm();
+  if (user) {
+    showProfile();
+    logOut();
+
+    bindfiletrBtn();
+    const socket = await establishConnection();
+    listenChatBtn(socket);
+  }
+  
 
   postActions();
 }
@@ -376,22 +383,19 @@ function showFilterForm() {
   });
 }
 function OneOffline(user) {
-  let main = document.getElementById('main')
-  let activeSection = document.createElement('div')
-  activeSection.id = "active_users"
-  if (user.type == "Online") {
-    activeUsersComponent(user.data, activeSection)
-    if(main){
-      main.prepend(activeSection)
+  let activeSection = document.getElementById('active_users')
+  console.log(activeSection, "avtive section");
+  if (activeSection) {
+    if (user.type == "Online") {
+      const activuser = activeUsersComponent(user.data)
+      activeSection.appendChild(activuser)
+    } else if (user.type = "Offline") {
+      let offuser = document.getElementById(user.data)
+      if (offuser) {
+        offuser.remove()
+      }
     }
-  } else if (user.type = "Offline") {
-    let offuser = document.getElementById(user.data)
-    if (offuser){
-      offuser.remove()
-    }
-
   }
-
 }
 const listenChatBtn = (socket) => {
   const chatBtn = document.getElementById("chat_btn");
