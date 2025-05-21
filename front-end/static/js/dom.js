@@ -100,11 +100,12 @@ async function renderHomePage(data) {
   showPostForm();
   if (user) {
     showProfile();
-    logOut();
-
-    bindfiletrBtn();
+     bindfiletrBtn();
     const socket = await establishConnection();
     listenChatBtn(socket);
+    logOut(socket);
+
+   
   }
   
 

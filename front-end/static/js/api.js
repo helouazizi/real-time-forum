@@ -27,7 +27,7 @@ async function isAouth() {
   }
 }
 
-function logOut() {
+function logOut(socket) {
   let log_out_btn = document.getElementById("log_out");
   if (log_out_btn) {
     log_out_btn.addEventListener("click", async () => {
@@ -42,6 +42,7 @@ function logOut() {
 
         if (response.ok) {
           renderHomePage();
+         socket.close();
         } else {
           const errorData = await response.json();
           throw { code: errorData.Code, message: errorData.Message };
