@@ -79,6 +79,7 @@ async function renderHomePage(data) {
 
   // let posts = await fetchPosts();
   let main = document.createElement("main");
+  main.id = "main"
   let section = document.createElement("section");
   section.setAttribute("class", "container");
   section.setAttribute("id", "container");
@@ -375,10 +376,14 @@ function showFilterForm() {
   });
 }
 function OneOffline(user) {
+  let main = document.getElementById('main')
   let activeSection = document.createElement('div')
   activeSection.id = "active_users"
   if (user.type == "Online") {
-    activeUsersComponent(user.data, container)
+    activeUsersComponent(user.data, activeSection)
+    if(main){
+      main.prepend(activeSection)
+    }
   } else if (user.type = "Offline") {
     let offuser = document.getElementById(user.data)
     if (offuser){

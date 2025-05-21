@@ -292,7 +292,7 @@ const activeUsersComponent = (nickname, container) => {
     // Get the first (and only) element inside tempWrapper
     const userElement = tempWrapper.firstChild;
 
-    container.prepend(userElement);
+    container.appendChild(userElement);
   }
 
 
