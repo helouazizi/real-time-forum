@@ -307,10 +307,10 @@ const chatUsersComponent = (users, onUserClick, socket) => {
   const usersHTML = users
     .map(
       (user) => `
-    <li class="chat-user-item" data-user="${user.nickname}">
+    <li class="chat-user-item" data-user="${user.nickname}" id= "${user.nickname}">
       <div class="avatar-wrapper">
         <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
-        ${user.is_active ? '<span class="status-dot active"></span>' : ''}
+       
       </div>
       <span  class="user-nickname">${user.nickname}</span>
     </li>

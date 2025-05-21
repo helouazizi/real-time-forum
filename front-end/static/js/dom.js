@@ -412,6 +412,7 @@ const listenChatBtn = (socket) => {
 
     // Add close functionality
     document.getElementById("close_chat").addEventListener("click", () => {
+
       document.querySelector("#chat_users")?.remove();
       document.querySelector(".posts")?.classList.remove("hidden");
     });
@@ -432,7 +433,7 @@ const showChatWindow = (container, user, socket) => {
         <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
         <span class="status-dot online"></span>
       </div>
-      <span user-id="${user.id}" class="user-nickname">${user.nickname}</span>
+      <span user-id="${user.id}" class="user-nickname" id="${user.nickname}">${user.nickname}</span>
       </div>
       <button class="primary-btn" id="close_messages"><i class="fas fa-times"></i></button>
       </div>
@@ -447,7 +448,9 @@ const showChatWindow = (container, user, socket) => {
     let close = document.getElementById("close_messages");
 
     close.addEventListener("click", () => {
+      
       chatWindow.remove();
+
       container.querySelector(".chat-users-list")?.classList.remove("hidden");
     });
   }
