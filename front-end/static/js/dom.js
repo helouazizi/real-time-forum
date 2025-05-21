@@ -380,7 +380,7 @@ function OneOffline(user) {
   if (user.type == "Online") {
     activeUsersComponent(user.data, container)
   } else if (user.type = "Offline") {
-    let offuser = activeSection.getElementById(user.data)
+    let offuser = document.getElementById(user.data)
     if (offuser){
       offuser.remove()
     }
