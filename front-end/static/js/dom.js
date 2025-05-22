@@ -412,7 +412,7 @@ const listenChatBtn = (socket) => {
     document.querySelector(".posts")?.classList.add("hidden");
     let container = document.querySelector(".container");
     container.appendChild(
-      chatUsersComponent(activeUsers, showChatWindow, socket)
+      chatUsersComponent(activeUsers, showChat, socket)
     );
 
     // Add close functionality
@@ -424,7 +424,7 @@ const listenChatBtn = (socket) => {
   });
 };
 
-const showChatWindow = (container, user, socket) => {
+const showChat = (container, user, socket) => {
   container.querySelector(".chat-users-list")?.classList.add("hidden");
   let chatContainer = container.querySelector(".chat-container");
   let chatWindow = document.getElementById("chat_window");
@@ -473,7 +473,10 @@ const removetyping = (container) => {
 
 
 
+
 export {
+
+ showChat,
   renderHomePage,
   showLoginForm,
   showRegisterForm,

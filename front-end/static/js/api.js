@@ -1,3 +1,4 @@
+
 import {
   renderHomePage,
   showErrorPage,
@@ -5,9 +6,11 @@ import {
   showPostForm,
   renderComments,
   removetyping,
-  OneOffline
+  OneOffline,
+  showChat,
+
 } from "./dom.js";
-import { createTypingIndicator } from "./componnents.js";
+import { chatUsersComponent, createTypingIndicator } from "./componnents.js";
 
 async function isAouth() {
   try {
@@ -363,13 +366,24 @@ async function chat(chatContainer, socket) {
         messagesContainer.appendChild(msgEl);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
+        console.log("chat_users       beffor");
+
         showMessage(
           `New message from ${data.data.username}`
         );
         let chatusers = document.getElementById("chat_users")
+        console.log(chatusers, "chat_users");
+
         if (chatusers) {
           const activeUsers = await getActiveUsers();
-          chatUsersComponent(activeUsers, showChatWindow, socket)
+          console.log(activeUsers, "activeUsers");
+
+          let container = chatUsersComponent(activeUsers, showChat, socket)
+          console.log(container, "container");
+          chatusers.replaceWith(container)
+
+
+
         }
       }
     }
@@ -437,19 +451,34 @@ async function establishConnection() {
       socket.send(JSON.stringify({ sender: parseInt(senderId), username: username }));
       resolve(socket);
     };
-    socket.onmessage = (event) => {
+    socket.onmessage = async (event) => {
 
       const ResponseMessages = JSON.parse(event.data);
       console.log(ResponseMessages.type);
       if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
         console.log("hassan");
-        
+
         OneOffline(ResponseMessages)
       }
       if (ResponseMessages.data.message) {
+
         showMessage(
           `New message from ${ResponseMessages.data.username}`
         );
+        let chatusers = document.getElementById("chat_users")
+
+
+        if (chatusers) {
+          const activeUsers = await getActiveUsers();
+          console.log(activeUsers, "activeUsers");
+
+          let container = chatUsersComponent(activeUsers, showChat, socket)
+          console.log(container, "container");
+          chatusers.replaceWith(container)
+
+
+
+        }
       }
     };
 
