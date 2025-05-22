@@ -24,19 +24,19 @@ type ChatHandler struct {
 
 type Hub struct {
 	Clients    map[int]*websocket.Conn
-	Register   chan models.ClientRegistration
+	Register   chan models.Message
 	Unregister chan int
 	Broadcast  chan models.Message
-	notify     chan models.ClientRegistration
+	notify     chan models.Message
 }
 
 func NewHub() *Hub {
 	return &Hub{
 		Clients:    make(map[int]*websocket.Conn),
-		Register:   make(chan models.ClientRegistration),
+		Register:   make(chan models.Message),
 		Unregister: make(chan int),
 		Broadcast:  make(chan models.Message),
-		notify:     make(chan models.ClientRegistration),
+		notify:     make(chan models.Message),
 	}
 }
 
@@ -51,7 +51,8 @@ func (h *ChatHandler) Run() {
 	for {
 		select {
 		case reg := <-h.Hub.Register:
-			h.Hub.Clients[reg.SenderId] = reg.Conn
+			h.Hub.Clients[reg.SenderID] = reg.Conn
+			fmt.Println(h.Hub.Clients, "jygjhgjh")
 
 		case senderId := <-h.Hub.Unregister:
 			if conn, ok := h.Hub.Clients[senderId]; ok {
@@ -63,37 +64,27 @@ func (h *ChatHandler) Run() {
 			if !ok {
 				continue
 			}
-			if err := conn.WriteJSON(map[string]any{
-				"type": "message",
-				"data": msg,
-			}); err != nil {
+			if err := conn.WriteJSON(msg); err != nil {
 				conn.Close()
 				delete(h.Hub.Clients, msg.ReciverID)
 			}
-		case online := <-h.Hub.notify:
-			fmt.Println("notify", online.SenderNickname, online.Type)
-			fmt.Println(h.Hub.Clients, "Clients")
+		case msg := <-h.Hub.notify:
 			for id, conn := range h.Hub.Clients {
-				if online.Conn != conn {
+				if msg.Conn != conn {
 					if err := conn.WriteJSON(map[string]any{
-						"type": online.Type,
-						"data": online.SenderNickname,
+						"message": msg,
 					}); err != nil {
-						fmt.Println(err, "error whritong connections")
 						conn.Close()
 						delete(h.Hub.Clients, id)
 					}
-
 					// whritinng into the same connection
 					User, _ := h.chatServices.GetUserNickname(id)
-					fmt.Println(User, "other user")
-					if err := online.Conn.WriteJSON(map[string]any{
-						"type": "Online",
-						"data": User,
+					msg.SenderNickname = User
+					if err := msg.Conn.WriteJSON(map[string]any{
+						"message": msg,
 					}); err != nil {
-						fmt.Println(err, "error whritong to the same connections")
-						online.Conn.Close()
-						delete(h.Hub.Clients, online.SenderId)
+						msg.Conn.Close()
+						delete(h.Hub.Clients, msg.SenderID)
 					}
 				}
 			}
@@ -118,15 +109,15 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var regMsg models.Message
-	if err := json.Unmarshal(msgBytes, &regMsg); err != nil {
+	var msg models.Message
+	if err := json.Unmarshal(msgBytes, &msg); err != nil {
 		logger.LogWithDetails(err)
 		conn.Close()
 		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"})
 		return
 	}
 
-	sendNickname, err1 := h.chatServices.GetUserNickname(regMsg.SenderID)
+	sendNickname, err1 := h.chatServices.GetUserNickname(msg.SenderID)
 	if err1.Code != http.StatusOK {
 		logger.LogWithDetails(fmt.Errorf(err1.Message))
 		conn.Close()
@@ -134,20 +125,11 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if sendNickname != regMsg.SenderNickname {
-		logger.LogWithDetails(err)
-		conn.Close()
-		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"})
-		return
-	}
-
-	h.Hub.Register <- models.ClientRegistration{SenderId: regMsg.SenderID, Conn: conn}
-	h.Hub.notify <- models.ClientRegistration{SenderNickname: sendNickname, Conn: conn, Type: "Online"}
-
-	// Wait for chat history request (with both sender and receiver)
+	h.Hub.Register <- models.Message{SenderID: msg.SenderID, Conn: conn}
+	h.Hub.notify <- models.Message{SenderNickname: sendNickname, Conn: conn, Type: "Online"}
 	defer func() {
-		h.Hub.Unregister <- regMsg.SenderID
-		h.Hub.notify <- models.ClientRegistration{SenderNickname: sendNickname, Conn: conn, Type: "Offline"}
+		h.Hub.Unregister <- msg.SenderID
+		h.Hub.notify <- models.Message{SenderNickname: sendNickname, Conn: conn, Type: "Offline"}
 	}()
 
 	for {
@@ -163,26 +145,10 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 			utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"})
 			break
 		}
-		if msg.Typing == "typing" || msg.Typing == "fin" {
+		if msg.Type == "typing" || msg.Type == "fin" {
 			h.Hub.Broadcast <- msg
 			continue
 		}
-		// if msg.ReciverID > 0 && msg.Content == "" {
-		// 	// History request with pagination
-		// 	messages, err := h.chatServices.GetMessages(msg)
-		// 	if err.Code != 200 {
-		// 		logger.LogWithDetails(fmt.Errorf("error unmarshling message"))
-		// 		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest,Message: "Bad Request"})
-		// 	break
-		// 	}
-		// 	for i := len(messages) - 1; i >= 0; i-- { // send in chronological order
-		// 		conn.WriteJSON(map[string]any{
-		// 			"type": "history",
-		// 			"data": messages[i],
-		// 		})
-		// 	}
-		// 	continue
-		// }
 
 		if msg.Content == "" {
 			continue
@@ -191,6 +157,10 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		// Save and broadcast real message
 		msg.SenderNickname = sendNickname
 		h.chatServices.SaveMessage(msg)
+		// this him self
+		conn.WriteJSON(map[string]any{
+			"message": msg,
+		})
 		h.Hub.Broadcast <- msg
 	}
 }
@@ -200,14 +170,14 @@ func (h *ChatHandler) ChatHistory(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithJSON(w, http.StatusMethodNotAllowed, models.Error{Message: "Method Not Allowed", Code: http.StatusMethodNotAllowed})
 		return
 	}
-	var regMsg models.Message
-	if err := json.NewDecoder(r.Body).Decode(&regMsg); err != nil {
+	var msg models.Message
+	if err := json.NewDecoder(r.Body).Decode(&msg); err != nil {
 		logger.LogWithDetails(err)
 		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Message: "Bad Request", Code: http.StatusBadRequest})
 		return
 	}
 
-	messages, err := h.chatServices.GetMessages(regMsg)
+	messages, err := h.chatServices.GetMessages(msg)
 	if err.Code != 200 {
 		logger.LogWithDetails(fmt.Errorf(err.Message))
 		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"})

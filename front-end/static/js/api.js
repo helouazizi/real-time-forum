@@ -264,6 +264,14 @@ async function showComments(postId, container) {
     showErrorPage(error);
   }
 }
+// Debounce helper
+function debounce(func, delay) {
+  let timeout;
+  return function (...args) {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
+  };
+}
 
 async function chat(chatContainer, socket) {
   const username = document.getElementById("username").innerText;
@@ -276,26 +284,15 @@ async function chat(chatContainer, socket) {
   let loading = false;
   const messagesContainer = chatContainer.querySelector(".chat-messages");
 
-  // Debounce helper
-  function debounce(func, delay) {
-    let timeout;
-    return function (...args) {
-      if (timeout) clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), delay);
-    };
-  }
-
   async function fetchHistory() {
     if (loading) return;
     loading = true;
-
     try {
       const requestBody = {
-        sender: senderId,
-        receiver: receiverId,
+        sender_id: senderId,
+        receiver_id: receiverId,
         offset: offset,
         limit: limit,
-        username: username
       };
 
       const response = await fetch("/api/v1/chat/history", {
@@ -308,15 +305,15 @@ async function chat(chatContainer, socket) {
       });
 
       const dataa = await response.json();
-     console.log(dataa,"history");
-     
-      
+      // console.log(dataa, "history");
+
+
 
       if (Array.isArray(dataa) && dataa.length > 0) {
         const currentScrollHeight = messagesContainer.scrollHeight;
 
         dataa.reverse().forEach(data => {
-          const messageElement = createMessageElement({data:data}, senderId);
+          const messageElement = createMessageElement({ data: data }, senderId);
           messagesContainer.prepend(messageElement);
         });
 
@@ -337,7 +334,7 @@ async function chat(chatContainer, socket) {
     if (messagesContainer.scrollTop === 0) {
       fetchHistory();
     }
-  }, 300)); // 300ms debounce
+  }, 500));
 
   // Initial fetch
   fetchHistory();
@@ -353,45 +350,37 @@ async function chat(chatContainer, socket) {
     if (!message) return;
 
     const messageData = {
-      data: {
-        username,
-        sender: senderId,
-        receiver: receiverId,
-        message,
-        timestamp: new Date(Date.now()).toLocaleString()
-      },
-      type: 'message'
+      sender_id: senderId,
+      receiver_id: receiverId,
+      message_content: message,
+      timestamp: new Date(Date.now()).toLocaleString(), // can cause an eror
+      message_type: 'message'
     };
-
-    socket.send(JSON.stringify(messageData.data));
-
-    const messageElement = createMessageElement(messageData, senderId);
-    messagesContainer.appendChild(messageElement);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    messageInput.value = "";
+    socket.send(JSON.stringify(messageData));
   });
 
   // Handle WebSocket messages
   socket.onmessage = async (event) => {
     const data = JSON.parse(event.data);
-    const type = data.type;
+    const message = data.message
+    const type = message.type;
     const chatWindowExists = chatContainer.querySelector("#chat_window");
 
-    if (data.data?.typing === "typing") {
-      const typingContainer = createTypingIndicator(data.data.username);
+    if (message.message_type === "typing") {
+      const typingContainer = createTypingIndicator(message.sender_nickname);
       removetyping(messagesContainer);
       messagesContainer.appendChild(typingContainer);
     } else {
       removetyping(messagesContainer);
     }
 
-    if (type === "message" && !data.data.typing) {
-      const msgEl = createMessageElement(data, senderId);
+    if (type === "message" /*&& !data.data.typing*/) {
+      const msgEl = createMessageElement(message, senderId);
       if (chatWindowExists) {
         messagesContainer.appendChild(msgEl);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
-        showMessage(`New message from ${data.data.username}`);
+        showMessage(`New message from ${message.sender_nickname}`);
         const chatusers = document.getElementById("chat_users");
         if (chatusers) {
           const activeUsers = await getActiveUsers();
@@ -416,16 +405,17 @@ async function chat(chatContainer, socket) {
 }
 
 function createMessageElement(data, senderId) {
+  console.log(data, "meassge");
 
-  
+
   const messageElement = document.createElement("div");
   let senderName;
   if (data.type == "history") {
     messageElement.className = data.data.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
-    senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.RecieverNickname || "Unknown";
+    senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.username;
   } else {
     messageElement.className = data.data.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
-    senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.username || "Unknown";
+    senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.RecieverNickname || "Unknown";
   }
 
   const timestamp = new Date(data.data.timestamp).toLocaleString(); // Assumes ISO timestamp
@@ -451,29 +441,27 @@ function sanitizeHTML(str) {
 
 
 async function establishConnection() {
-  const username = document.getElementById("username").innerText
   const senderId = sessionStorage.getItem("user_id");
   const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
 
   return new Promise((resolve, reject) => {
     socket.onopen = () => {
-      socket.send(JSON.stringify({ sender: parseInt(senderId), username: username }));
+      socket.send(JSON.stringify({ sender_id: parseInt(senderId)}));
       resolve(socket);
     };
-    socket.onmessage = (event) => {
-
+    socket.onmessage = (event) => {      
       const ResponseMessages = JSON.parse(event.data);
-      if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
-
-        OneOffline(ResponseMessages)
+      console.log(ResponseMessages.message,"on message");
+      
+      if (ResponseMessages.message.message_type == "Online" || ResponseMessages.message.message_type == "Offline") {
+        OneOffline(ResponseMessages.message)
       }
-      if (ResponseMessages.data.message) {
+      if (ResponseMessages.message.message_content) {
         showMessage(
-          `New message from ${ResponseMessages.data.username}`
+          `New message from ${ResponseMessages.message.sender_nickname}`
         );
       }
     };
-
     socket.onerror = reject;
   });
 }
@@ -489,10 +477,10 @@ function setupTypingIndicator(socket, username, senderId, receiverId) {
     if (!isTyping) {
       // Send typing: true only once when typing starts
       const typingData = {
-        username,
-        sender: senderId,
-        receiver: receiverId,
-        typing: "typing"
+        sender_nickname: username,
+        sender_id: senderId,
+        receiver_id: receiverId,
+        message_type: "typing"
       };
       socket.send(JSON.stringify(typingData));
       isTyping = true;
@@ -503,10 +491,10 @@ function setupTypingIndicator(socket, username, senderId, receiverId) {
     typingTimeout = setTimeout(() => {
       // Send typing: false after 2 seconds of inactivity
       const stopTypingData = {
-        username,
-        sender: senderId,
-        receiver: receiverId,
-        typing: "fin"
+        sender_nickname: username,
+        sender_id: senderId,
+        receiver_id: receiverId,
+        message_type: "fin"
       };
       socket.send(JSON.stringify(stopTypingData));
       isTyping = false;
@@ -514,10 +502,10 @@ function setupTypingIndicator(socket, username, senderId, receiverId) {
   });
   window.addEventListener("beforeunload", () => {
     const stopTypingData = {
-      username,
-      sender: senderId,
-      receiver: receiverId,
-      typing: "fin"
+      sender_nickname: username,
+      sender_id: senderId,
+      receiver_id: receiverId,
+      message_type: "fin"
     };
     socket.send(JSON.stringify(stopTypingData));
     isTyping = false;

@@ -23,7 +23,7 @@ func (h *ActiveHandler) GetActiveUsers(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithJSON(w, http.StatusMethodNotAllowed, models.Error{Message: "Method Not Allowed", Code: http.StatusMethodNotAllowed})
 		return
 	}
-	var user models.ClientRegistration
+	var user models.Message
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		logger.LogWithDetails(err)
 		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Message: "Bad Request", Code: http.StatusBadRequest})
@@ -31,7 +31,7 @@ func (h *ActiveHandler) GetActiveUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	// fmt.Println(user.SenderId,"user id")
 
-	activeUsers, err1 := h.activeService.GetActiveUsers(user.SenderId)
+	activeUsers, err1 := h.activeService.GetActiveUsers(user.SenderID)
 	if err1 != nil {
 		logger.LogWithDetails(err1)
 		return

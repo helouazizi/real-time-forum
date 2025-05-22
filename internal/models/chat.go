@@ -5,21 +5,21 @@ import (
 )
 
 type Message struct {
-	SenderID         int    `json:"sender"`
-	ReciverID        int    `json:"receiver"`
-	Content          string `json:"message"`
-	SenderNickname   string  `json:"username"`
-	RecieverNickname string
+	SenderID         int    `json:"sender_id"`
+	ReciverID        int    `json:"receiver_id"`
+	Content          string `json:"message_content"`
+	SenderNickname   string `json:"sender_nickname"`
+	RecieverNickname string `json:"reciever_nickname"`
 	Offset           int    `json:"offset,omitempty"` // for pagination
 	Limit            int    `json:"limit,omitempty"`  // for pagination
 	Date             string `json:"timestamp"`
-    Typing           string   `json:"typing"`
-
+	Type             string `json:"message_type"`
+	Conn           *websocket.Conn
 }
 
-type ClientRegistration struct {
-	SenderId int   `json:"user_id"`
-	Conn     *websocket.Conn
-	SenderNickname   string  `json:"username"`
-	Type string
-}
+// type ClientRegistration struct {
+// 	SenderId       int `json:"sender_id"`
+	
+// 	SenderNickname string `json:"sender_nickname"`
+// 	Type           string
+// }

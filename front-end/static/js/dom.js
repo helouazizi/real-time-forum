@@ -382,13 +382,13 @@ function showFilterForm() {
 function OneOffline(user) {
   let activeSection = document.getElementById('active_users')
   if (activeSection) {
-    if (user.type == "Online") {
-      const activuser = activeUsersComponent(user.data)
+    if (user.message_type == "Online") {
+      const activuser = activeUsersComponent(user.sender_nickname)
       if (activuser) {
         activeSection.appendChild(activuser)
       }
-    } else if (user.type = "Offline") {
-      let offuser = document.getElementById(`active-${user.data}`)
+    } else if (user.message_type = "Offline") {
+      let offuser = document.getElementById(`active-${user.sender_nickname}`)
       if (offuser) {
         offuser.remove()
       }
@@ -397,7 +397,6 @@ function OneOffline(user) {
 }
 const listenChatBtn = (socket) => {
   const chatBtn = document.getElementById("chat_btn");
-
   chatBtn.addEventListener("click", async () => {
     removeOldeForms();
     const activeUsers = await getActiveUsers();

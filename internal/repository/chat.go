@@ -32,12 +32,12 @@ func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, 
 	// Get nicknames
 	senderNickname, err1 := r.GetUserNickname(message.SenderID)
 	if err1.Code != http.StatusOK {
-		// logger.LogWithDetails(err1)
+		logger.LogWithDetails(fmt.Errorf(err1.Message))
 		return nil, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"}
 	}
 	receiverNickname, err2 := r.GetUserNickname(message.ReciverID)
 	if err2.Code != http.StatusOK {
-		// logger.LogWithDetails(err1)
+		logger.LogWithDetails(fmt.Errorf(err2.Message))
 		return nil, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"}
 	}
 
