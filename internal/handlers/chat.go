@@ -7,6 +7,7 @@ import (
 
 	"web-forum/internal/models"
 	"web-forum/internal/services"
+	"web-forum/internal/utils"
 	"web-forum/pkg/logger"
 
 	"github.com/gorilla/websocket"
@@ -78,7 +79,7 @@ func (h *ChatHandler) Run() {
 						"type": online.Type,
 						"data": online.SenderNickname,
 					}); err != nil {
-						fmt.Println(err , "error whritong connections")
+						fmt.Println(err, "error whritong connections")
 						conn.Close()
 						delete(h.Hub.Clients, id)
 					}
@@ -95,7 +96,6 @@ func (h *ChatHandler) Run() {
 						delete(h.Hub.Clients, online.SenderId)
 					}
 				}
-					
 			}
 		}
 	}
@@ -104,7 +104,9 @@ func (h *ChatHandler) Run() {
 func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		logger.LogWithDetails(err)
+		logger.LogWithDetails(fmt.Errorf("cant upgrade the connection"))
+		conn.Close()
+		utils.RespondWithJSON(w, http.StatusInternalServerError, models.Error{Code: http.StatusInternalServerError, Message: "Internal Server Error"})
 		return
 	}
 
@@ -120,17 +122,22 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(msgBytes, &regMsg); err != nil {
 		logger.LogWithDetails(err)
 		conn.Close()
+		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"})
 		return
 	}
-	sendNickname, err := h.chatServices.GetUserNickname(regMsg.SenderID)
-	if err != nil {
-		logger.LogWithDetails(err)
+
+	sendNickname, err1 := h.chatServices.GetUserNickname(regMsg.SenderID)
+	if err1.Code != http.StatusOK {
+		logger.LogWithDetails(fmt.Errorf(err1.Message))
 		conn.Close()
+		utils.RespondWithJSON(w, err1.Code, err1)
 		return
 	}
+
 	if sendNickname != regMsg.SenderNickname {
 		logger.LogWithDetails(err)
 		conn.Close()
+		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"})
 		return
 	}
 
@@ -153,27 +160,29 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		var msg models.Message
 		if err := json.Unmarshal(msgBytes, &msg); err != nil {
 			logger.LogWithDetails(err)
-			continue
+			utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"})
+			break
 		}
 		if msg.Typing == "typing" || msg.Typing == "fin" {
 			h.Hub.Broadcast <- msg
 			continue
 		}
-		if msg.ReciverID > 0 && msg.Content == "" {
-			// History request with pagination
-			messages, err := h.chatServices.GetMessages(msg)
-			if err != nil {
-				logger.LogWithDetails(err)
-				continue
-			}
-			for i := len(messages) - 1; i >= 0; i-- { // send in chronological order
-				conn.WriteJSON(map[string]any{
-					"type": "history",
-					"data": messages[i],
-				})
-			}
-			continue
-		}
+		// if msg.ReciverID > 0 && msg.Content == "" {
+		// 	// History request with pagination
+		// 	messages, err := h.chatServices.GetMessages(msg)
+		// 	if err.Code != 200 {
+		// 		logger.LogWithDetails(fmt.Errorf("error unmarshling message"))
+		// 		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest,Message: "Bad Request"})
+		// 	break
+		// 	}
+		// 	for i := len(messages) - 1; i >= 0; i-- { // send in chronological order
+		// 		conn.WriteJSON(map[string]any{
+		// 			"type": "history",
+		// 			"data": messages[i],
+		// 		})
+		// 	}
+		// 	continue
+		// }
 
 		if msg.Content == "" {
 			continue
@@ -184,4 +193,25 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		h.chatServices.SaveMessage(msg)
 		h.Hub.Broadcast <- msg
 	}
+}
+
+func (h *ChatHandler) ChatHistory(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.RespondWithJSON(w, http.StatusMethodNotAllowed, models.Error{Message: "Method Not Allowed", Code: http.StatusMethodNotAllowed})
+		return
+	}
+	var regMsg models.Message
+	if err := json.NewDecoder(r.Body).Decode(&regMsg); err != nil {
+		logger.LogWithDetails(err)
+		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Message: "Bad Request", Code: http.StatusBadRequest})
+		return
+	}
+
+	messages, err := h.chatServices.GetMessages(regMsg)
+	if err.Code != 200 {
+		logger.LogWithDetails(fmt.Errorf(err.Message))
+		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"})
+	}
+
+	utils.RespondWithJSON(w, http.StatusOK, messages)
 }

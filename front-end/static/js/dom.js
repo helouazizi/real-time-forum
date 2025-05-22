@@ -374,24 +374,16 @@ function showFilterForm() {
     e.preventDefault();
     const checked = form.querySelectorAll("input[name='categories']:checked");
     const selectedCategories = Array.from(checked).map((input) => input.value);
-
-    console.log("Selected categories:", selectedCategories);
     const posts = await fetchFilteredPosts(selectedCategories);
     renderHomePage(posts);
-
     form.remove(); // Optional: remove popup after applying
   });
 }
 function OneOffline(user) {
   let activeSection = document.getElementById('active_users')
-  console.log(activeSection, "avtive section");
   if (activeSection) {
     if (user.type == "Online") {
-      
-      console.log(user.data, "user Data");
-      
       const activuser = activeUsersComponent(user.data)
-      console.log(activuser,"active user");
       if (activuser) {
         activeSection.appendChild(activuser)
       }
@@ -462,7 +454,6 @@ const showChatWindow = (container, user, socket) => {
 };
 const removetyping = (container) => {
   let typers = container.querySelectorAll(".typing-indicator")
-  console.log(typers, 'typers');
 
   if (typers.length > 0) {
     typers.forEach((elem) => {

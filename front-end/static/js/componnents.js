@@ -272,9 +272,7 @@ const postForm = (errors = {}) => {
   return form;
 };
 const activeUsersComponent = (nickname) => {
-  let user = document.getElementById(`active-${nickname}`)
-  console.log(user, "hh");
-  
+  let user = document.getElementById(`active-${nickname}`)  
   if (!user) {
     const usersHTML = `
       <li class="user-item" id="active-${nickname}">

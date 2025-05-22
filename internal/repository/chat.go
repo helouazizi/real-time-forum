@@ -3,15 +3,16 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"net/http"
 
 	"web-forum/internal/models"
 	"web-forum/pkg/logger"
 )
 
 type ChatMethods interface {
-	SaveMessage(models.Message) error                     // Save chat messages to DB
-	GetMessages(models.Message) ([]models.Message, error) // Retrieve chat messages from DB
-	GetUserNickname(int) (string ,error)
+	SaveMessage(models.Message) error                            // Save chat messages to DB
+	GetMessages(models.Message) ([]models.Message, models.Error) // Retrieve chat messages from DB
+	GetUserNickname(int) (string, models.Error)
 }
 
 type ChatRepository struct {
@@ -27,19 +28,18 @@ func (r *ChatRepository) SaveMessage(message models.Message) error {
 	return err
 }
 
-func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, error) {
+func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, models.Error) {
 	// Get nicknames
-	senderNickname, err := r.GetUserNickname(message.SenderID)
-	if err != nil {
-		logger.LogWithDetails(err)
-		return nil, err
+	senderNickname, err1 := r.GetUserNickname(message.SenderID)
+	if err1.Code != http.StatusOK {
+		// logger.LogWithDetails(err1)
+		return nil, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"}
 	}
-	receiverNickname, err := r.GetUserNickname(message.ReciverID)
-	if err != nil {
-		logger.LogWithDetails(err)
-		return nil, err
+	receiverNickname, err2 := r.GetUserNickname(message.ReciverID)
+	if err2.Code != http.StatusOK {
+		// logger.LogWithDetails(err1)
+		return nil, models.Error{Code: http.StatusBadRequest, Message: "Bad Request"}
 	}
-
 
 	// Pagination-aware query: get latest messages first
 	rows, err := r.db.Query(`
@@ -55,7 +55,7 @@ func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, 
 	)
 	if err != nil {
 		logger.LogWithDetails(err)
-		return nil, err
+		return nil, models.Error{Code: http.StatusInternalServerError, Message: "Internal server error"}
 	}
 	defer rows.Close()
 
@@ -64,7 +64,7 @@ func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, 
 		var msg models.Message
 		if err := rows.Scan(&msg.SenderID, &msg.ReciverID, &msg.Content, &msg.Date); err != nil {
 			logger.LogWithDetails(err)
-			return nil, err
+			return nil, models.Error{Code: http.StatusInternalServerError, Message: "Internal server error"}
 		}
 		msg.RecieverNickname = receiverNickname
 		msg.SenderNickname = senderNickname
@@ -76,10 +76,10 @@ func (r *ChatRepository) GetMessages(message models.Message) ([]models.Message, 
 		messages[i], messages[j] = messages[j], messages[i]
 	}
 
-	return messages, nil
+	return messages, models.Error{Code: http.StatusOK, Message: "Fetched succefully"}
 }
 
-func (r *ChatRepository) GetUserNickname(userId int) (string, error) {
+func (r *ChatRepository) GetUserNickname(userId int) (string, models.Error) {
 	var Nickname string
 
 	query := `
@@ -90,13 +90,13 @@ func (r *ChatRepository) GetUserNickname(userId int) (string, error) {
 	err := r.db.QueryRow(query, userId).Scan(&Nickname)
 	if err != nil {
 		logger.LogWithDetails(err)
-		return "", err
+		return "", models.Error{Code: http.StatusInternalServerError, Message: "Internal server error"}
 	}
 
 	if Nickname == "" {
 		logger.LogWithDetails(fmt.Errorf("user not exist"))
-		return "", fmt.Errorf("user not exist")
+		return "", models.Error{Code: http.StatusInternalServerError, Message: "Internal server error"}
 	}
 
-	return Nickname, nil
+	return Nickname, models.Error{Code: http.StatusOK, Message: "Fetched succefully"}
 }

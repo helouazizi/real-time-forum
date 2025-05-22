@@ -27,6 +27,7 @@ type PostRepository struct {
 func NewPostRepository(db *sql.DB) *PostRepository {
 	return &PostRepository{db: db}
 }
+
 func (r *PostRepository) FetchAllPosts() ([]models.Post, models.Error) {
 	rows, err := r.db.Query(`
 		SELECT 
@@ -100,7 +101,6 @@ func (r *PostRepository) FetchAllPosts() ([]models.Post, models.Error) {
 
 // CreatePost requires the user to be logged in (verified by token)
 func (r *PostRepository) CreatePost(post models.Post) models.Error {
-
 	// check categories categories
 	for _, cat := range post.Categories {
 		// Ensure category exists or insert it
@@ -402,3 +402,4 @@ func (r *PostRepository) FilterPosts(categories []string) ([]models.Post, models
 
 	return posts, models.Error{Code: http.StatusOK}
 }
+

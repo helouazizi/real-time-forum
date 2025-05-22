@@ -266,115 +266,142 @@ async function showComments(postId, container) {
 }
 
 async function chat(chatContainer, socket) {
-  const username = document.getElementById("username").innerText
+  const username = document.getElementById("username").innerText;
   const senderId = parseInt(sessionStorage.getItem("user_id"));
   const spanElement = chatContainer.querySelector("span[user-id]");
   const receiverId = parseInt(spanElement.getAttribute("user-id"));
 
-  // Pagination state
   let offset = 0;
   const limit = 10;
   let loading = false;
-
   const messagesContainer = chatContainer.querySelector(".chat-messages");
-  // Load chat history (initial fetch)
-  function fetchHistory() {
-    const historyRequest = {
-      username: username,
-      sender: senderId,
-      receiver: receiverId,
-      message: "",
-      limit,
-      offset,
+
+  // Debounce helper
+  function debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), delay);
     };
-    socket.send(JSON.stringify(historyRequest));
   }
 
-  fetchHistory(); // Load the latest messages on open
+  async function fetchHistory() {
+    if (loading) return;
+    loading = true;
 
-  // Scroll listener for loading older messages
-  messagesContainer.addEventListener("scroll", () => {
-    if (messagesContainer.scrollTop === 0 && !loading) {
-      loading = true;
+    try {
+      const requestBody = {
+        sender: senderId,
+        receiver: receiverId,
+        offset: offset,
+        limit: limit,
+        username: username
+      };
+
+      const response = await fetch("/api/v1/chat/history", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(requestBody)
+      });
+
+      const dataa = await response.json();
+     console.log(dataa,"history");
+     
+      
+
+      if (Array.isArray(dataa) && dataa.length > 0) {
+        const currentScrollHeight = messagesContainer.scrollHeight;
+
+        dataa.reverse().forEach(data => {
+          const messageElement = createMessageElement({data:data}, senderId);
+          messagesContainer.prepend(messageElement);
+        });
+
+        messagesContainer.scrollTop = messagesContainer.scrollHeight - currentScrollHeight;
+        offset += limit;
+      }
+
+    } catch (err) {
+      console.error("Error fetching history:", err);
+    }
+
+    loading = false;
+  }
+
+
+  // Debounced scroll handler
+  messagesContainer.addEventListener("scroll", debounce(() => {
+    if (messagesContainer.scrollTop === 0) {
       fetchHistory();
     }
-  });
-  setupTypingIndicator(socket, username, senderId, receiverId)
-  // Send message button logic
+  }, 300)); // 300ms debounce
+
+  // Initial fetch
+  fetchHistory();
+
+  // Typing indicator
+  setupTypingIndicator(socket, username, senderId, receiverId);
+
+  // Send message logic
   const sendBtn = chatContainer.querySelector("#sent-message");
   sendBtn.addEventListener("click", () => {
     const messageInput = chatContainer.querySelector("#message");
     const message = messageInput.value.trim();
-
     if (!message) return;
 
     const messageData = {
       data: {
-        username: username,
+        username,
         sender: senderId,
         receiver: receiverId,
         message,
-        timestamp: new Date(Date.now()).toLocaleString(),
-
+        timestamp: new Date(Date.now()).toLocaleString()
       },
       type: 'message'
-
     };
 
     socket.send(JSON.stringify(messageData.data));
 
-    // Display message immediately in UI
     const messageElement = createMessageElement(messageData, senderId);
     messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
     messageInput.value = "";
   });
 
-  // Handle incoming WebSocket messages
+  // Handle WebSocket messages
   socket.onmessage = async (event) => {
     const data = JSON.parse(event.data);
-    const chatWindowExists = chatContainer.querySelector("#chat_window");
     const type = data.type;
-    console.log(type, 'tyyype');
+    const chatWindowExists = chatContainer.querySelector("#chat_window");
 
-    if (data.data.typing == "typing") {
-
-      let typingcontainer = createTypingIndicator(data.data.username)
-      removetyping(messagesContainer)
-      messagesContainer.appendChild(typingcontainer)
+    if (data.data?.typing === "typing") {
+      const typingContainer = createTypingIndicator(data.data.username);
+      removetyping(messagesContainer);
+      messagesContainer.appendChild(typingContainer);
     } else {
-      removetyping(messagesContainer)
+      removetyping(messagesContainer);
     }
 
-    if (type === "history") {
-
-      loading = false;
-      const currentScrollHeight = messagesContainer.scrollHeight;
-      const msgEl = createMessageElement(data, senderId);
-      messagesContainer.prepend(msgEl);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight - currentScrollHeight;
-      offset += 1;
-
-    } else if (type === "message" && !data.data.typing) {
-
-      removetyping(messagesContainer)
+    if (type === "message" && !data.data.typing) {
       const msgEl = createMessageElement(data, senderId);
       if (chatWindowExists) {
         messagesContainer.appendChild(msgEl);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
-        showMessage(
-          `New message from ${data.data.username}`
-        );
-        let chatusers = document.getElementById("chat_users")
+        showMessage(`New message from ${data.data.username}`);
+        const chatusers = document.getElementById("chat_users");
         if (chatusers) {
           const activeUsers = await getActiveUsers();
-          chatUsersComponent(activeUsers, showChatWindow, socket)
+          chatUsersComponent(activeUsers, showChatWindow, socket);
         }
       }
     }
-    if (data.type == "Online" || data.type == "Offline") {
-      OneOffline(data)
+
+    if (type === "Online" || type === "Offline") {
+      OneOffline(data);
     }
   };
 
@@ -383,27 +410,24 @@ async function chat(chatContainer, socket) {
   };
 
   socket.onclose = () => {
-    removetyping(messagesContainer)
+    removetyping(messagesContainer);
     console.log("WebSocket connection closed");
   };
 }
+
 function createMessageElement(data, senderId) {
+
+  
   const messageElement = document.createElement("div");
   let senderName;
   if (data.type == "history") {
-
     messageElement.className = data.data.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
-
-
     senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.RecieverNickname || "Unknown";
-
-
   } else {
-
     messageElement.className = data.data.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
-
     senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.username || "Unknown";
   }
+
   const timestamp = new Date(data.data.timestamp).toLocaleString(); // Assumes ISO timestamp
   messageElement.innerHTML = `
     <div class="message-meta">
@@ -414,7 +438,6 @@ function createMessageElement(data, senderId) {
       <p>${sanitizeHTML(data.data.message)}</p>
     </div>
   `;
-
 
   return messageElement;
 }
@@ -440,10 +463,8 @@ async function establishConnection() {
     socket.onmessage = (event) => {
 
       const ResponseMessages = JSON.parse(event.data);
-      console.log(ResponseMessages.type);
       if (ResponseMessages.type == "Online" || ResponseMessages.type == "Offline") {
-        console.log("hassan");
-        
+
         OneOffline(ResponseMessages)
       }
       if (ResponseMessages.data.message) {

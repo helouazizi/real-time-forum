@@ -18,7 +18,7 @@ func SetupRoutes(h *app.Application) *http.ServeMux {
 
 	// Serve static files (JS/CSS)
 	// mux.Handle("/front-end/static/", http.StripPrefix("/front-end/static/", http.FileServer(http.Dir("front-end/static"))))
-	mux.HandleFunc("/front-end/static/" ,handlers.Servstatique)
+	mux.HandleFunc("/front-end/static/", handlers.Servstatique)
 
 	// --- User routes ---
 	mux.HandleFunc("/api/v1/users/register", h.UserHandler.CreateUser)
@@ -36,6 +36,7 @@ func SetupRoutes(h *app.Application) *http.ServeMux {
 
 	// --- Chat routes ---
 	mux.Handle("/api/v1/chat", middlewares.AuthMiddleware(http.HandlerFunc(h.ChatHandler.HandleChat), h.DB))
+	mux.Handle("/api/v1/chat/history", middlewares.AuthMiddleware(http.HandlerFunc(h.ChatHandler.ChatHistory), h.DB))
 	mux.Handle("/api/v1/users", middlewares.AuthMiddleware(http.HandlerFunc(h.ActiveUsersHandler.GetActiveUsers), h.DB))
 
 	return mux
