@@ -52,8 +52,6 @@ func (h *ChatHandler) Run() {
 		select {
 		case reg := <-h.Hub.Register:
 			h.Hub.Clients[reg.SenderID] = reg.Conn
-			fmt.Println(h.Hub.Clients, "jygjhgjh")
-
 		case senderId := <-h.Hub.Unregister:
 			if conn, ok := h.Hub.Clients[senderId]; ok {
 				conn.Close()

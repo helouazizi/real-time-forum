@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
 	"time"
 
 	"web-forum/internal/models"
@@ -77,7 +76,5 @@ func (r *ActiveRepository) GetActiveUsers(currentUserID int) ([]models.User, err
 
 		users = append(users, user)
 	}
-	fmt.Println(users,"active")
-
 	return users, nil
 }

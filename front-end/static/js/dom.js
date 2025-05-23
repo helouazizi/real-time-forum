@@ -439,25 +439,20 @@ const  showChatWindow  = (container, user, socket) => {
       <button  id="sent-message" class="sent-message primary-btn"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     `;
+
     chatContainer.appendChild(chatWindow);
     chat(chatContainer, socket);
     let close = document.getElementById("close_messages");
 
     close.addEventListener("click", async () => {
-
       chatWindow.remove();
       let chatusers = document.getElementById("chat_users");
-
         if (chatusers) {
           const activeUsers = await getActiveUsers();
           console.log(activeUsers, "activeUsers");
-
           let containerr = chatUsersComponent(activeUsers, showChatWindow, socket);
-          // console.log(container, "container");
           chatusers.replaceWith(containerr);
         }
-
-
       container.querySelector(".chat-users-list")?.classList.remove("hidden");
     });
   }
