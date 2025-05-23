@@ -11,7 +11,7 @@ import { createTypingIndicator } from "./componnents.js";
 
 async function isAouth() {
   try {
-    const response = await fetch("http://localhost:3000/api/v1/users/info", {
+    const response = await fetch("/api/v1/users/info", {
       method: "GET",
       credentials: "include", // 👈 This tells the browser to send cookies
     });
@@ -33,7 +33,7 @@ function logOut(socket) {
     log_out_btn.addEventListener("click", async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/v1/users/logout",
+          "/api/v1/users/logout",
           {
             method: "GET",
             credentials: "include",
@@ -74,7 +74,7 @@ function createPost() {
     };
     try {
       const response = await fetch(
-        "http://localhost:3000/api/v1/posts/create",
+        "/api/v1/posts/create",
         {
           method: "POST",
           credentials: "include", // Very important
@@ -122,7 +122,7 @@ function createPost() {
 
 async function fetchPosts() {
   try {
-    const response = await fetch("http://localhost:3000/api/v1/posts");
+    const response = await fetch("/api/v1/posts");
     if (!response.ok) {
       let err = {
         code: response.status,
@@ -140,7 +140,7 @@ async function fetchPosts() {
 
 async function fetchFilteredPosts(categories) {
   try {
-    const response = await fetch("http://localhost:3000/api/v1/posts/filter", {
+    const response = await fetch("/api/v1/posts/filter", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -166,7 +166,7 @@ async function fetchFilteredPosts(categories) {
 async function getActiveUsers() {
   const senderId = sessionStorage.getItem("user_id");
   try {
-    const response = await fetch("http://localhost:3000/api/v1/users", {
+    const response = await fetch("/api/v1/users", {
       method: "POST",
       credentials: "include",
       body: JSON.stringify({ user_id: parseInt(senderId) }),
@@ -187,7 +187,7 @@ async function getActiveUsers() {
 
 async function reactToPost(postId, reaction) {
   try {
-    const response = await fetch("http://localhost:3000/api/v1/posts/react", {
+    const response = await fetch("/api/v1/posts/react", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -215,7 +215,7 @@ async function reactToPost(postId, reaction) {
 async function sendPostCommen(postId, commenttext) {
   try {
     const response = await fetch(
-      "http://localhost:3000/api/v1/posts/addComment",
+      "/api/v1/posts/addComment",
       {
         method: "POST",
         credentials: "include",
@@ -248,7 +248,7 @@ async function sendPostCommen(postId, commenttext) {
 async function showComments(postId, container) {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/v1/posts/fetchComments?postId=${postId}`,
+      `/api/v1/posts/fetchComments?postId=${postId}`,
       { credentials: "include" }
     );
 
@@ -305,15 +305,12 @@ async function chat(chatContainer, socket) {
       });
 
       const dataa = await response.json();
-      // console.log(dataa, "history");
-
-
 
       if (Array.isArray(dataa) && dataa.length > 0) {
         const currentScrollHeight = messagesContainer.scrollHeight;
 
-        dataa.reverse().forEach(data => {
-          const messageElement = createMessageElement({ data: data }, senderId);
+        dataa.reverse().forEach(data => {          
+          const messageElement = createMessageElement(data, senderId);
           messagesContainer.prepend(messageElement);
         });
 
@@ -357,16 +354,16 @@ async function chat(chatContainer, socket) {
       message_type: 'message'
     };
     socket.send(JSON.stringify(messageData));
+    messageInput.value = ""
   });
 
   // Handle WebSocket messages
   socket.onmessage = async (event) => {
-    const data = JSON.parse(event.data);
-    const message = data.message
-    const type = message.type;
+    const message = JSON.parse(event.data);
+    const type = message.message_type;
     const chatWindowExists = chatContainer.querySelector("#chat_window");
-
-    if (message.message_type === "typing") {
+        
+    if (type === "typing") {
       const typingContainer = createTypingIndicator(message.sender_nickname);
       removetyping(messagesContainer);
       messagesContainer.appendChild(typingContainer);
@@ -390,7 +387,7 @@ async function chat(chatContainer, socket) {
     }
 
     if (type === "Online" || type === "Offline") {
-      OneOffline(data);
+      OneOffline(message);
     }
   };
 
@@ -405,27 +402,24 @@ async function chat(chatContainer, socket) {
 }
 
 function createMessageElement(data, senderId) {
-  console.log(data, "meassge");
-
-
   const messageElement = document.createElement("div");
   let senderName;
   if (data.type == "history") {
-    messageElement.className = data.data.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
-    senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.username;
+    messageElement.className = data.sender_id === parseInt(senderId) ? "outgoing-message" : "incoming-message";
+    senderName = data.sender_id === parseInt(senderId) ? "You" : data.sender_nickname;
   } else {
-    messageElement.className = data.data.sender === parseInt(senderId) ? "outgoing-message" : "incoming-message";
-    senderName = data.data.sender === parseInt(senderId) ? "You" : data.data.RecieverNickname || "Unknown";
+    messageElement.className = data.sender_id === parseInt(senderId) ? "outgoing-message" : "incoming-message";
+    senderName = data.sender_id === parseInt(senderId) ? "You" : data.reciever_nickname || "Unknown";
   }
 
-  const timestamp = new Date(data.data.timestamp).toLocaleString(); // Assumes ISO timestamp
+  const timestamp = new Date(data.timestamp).toLocaleString(); // Assumes ISO timestamp
   messageElement.innerHTML = `
     <div class="message-meta">
       <strong class="message-user">${senderName}</strong>
       <time class="message-time">${timestamp}</time>
     </div>
     <div class="message-content">
-      <p>${sanitizeHTML(data.data.message)}</p>
+      <p>${sanitizeHTML(data.message_content)}</p>
     </div>
   `;
 
@@ -450,15 +444,13 @@ async function establishConnection() {
       resolve(socket);
     };
     socket.onmessage = (event) => {      
-      const ResponseMessages = JSON.parse(event.data);
-      console.log(ResponseMessages.message,"on message");
-      
-      if (ResponseMessages.message.message_type == "Online" || ResponseMessages.message.message_type == "Offline") {
-        OneOffline(ResponseMessages.message)
+      const ResponseMessages = JSON.parse(event.data);      
+      if (ResponseMessages.message_type == "Online" || ResponseMessages.message_type == "Offline") {
+        OneOffline(ResponseMessages)
       }
-      if (ResponseMessages.message.message_content) {
+      if (ResponseMessages.message_content) {
         showMessage(
-          `New message from ${ResponseMessages.message.sender_nickname}`
+          `New message from ${ResponseMessages.sender_nickname}`
         );
       }
     };

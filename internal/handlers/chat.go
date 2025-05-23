@@ -71,18 +71,14 @@ func (h *ChatHandler) Run() {
 		case msg := <-h.Hub.notify:
 			for id, conn := range h.Hub.Clients {
 				if msg.Conn != conn {
-					if err := conn.WriteJSON(map[string]any{
-						"message": msg,
-					}); err != nil {
+					if err := conn.WriteJSON(msg); err != nil {
 						conn.Close()
 						delete(h.Hub.Clients, id)
 					}
 					// whritinng into the same connection
 					User, _ := h.chatServices.GetUserNickname(id)
 					msg.SenderNickname = User
-					if err := msg.Conn.WriteJSON(map[string]any{
-						"message": msg,
-					}); err != nil {
+					if err := msg.Conn.WriteJSON(msg); err != nil {
 						msg.Conn.Close()
 						delete(h.Hub.Clients, msg.SenderID)
 					}
@@ -158,9 +154,7 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 		msg.SenderNickname = sendNickname
 		h.chatServices.SaveMessage(msg)
 		// this him self
-		conn.WriteJSON(map[string]any{
-			"message": msg,
-		})
+		conn.WriteJSON(msg)
 		h.Hub.Broadcast <- msg
 	}
 }
