@@ -5,9 +5,10 @@ import {
   showPostForm,
   renderComments,
   removetyping,
-  OneOffline
+  OneOffline,
+  showChatWindow
 } from "./dom.js";
-import { createTypingIndicator } from "./componnents.js";
+import { createTypingIndicator,chatUsersComponent } from "./componnents.js";
 
 async function isAouth() {
   try {
@@ -32,13 +33,10 @@ function logOut(socket) {
   if (log_out_btn) {
     log_out_btn.addEventListener("click", async () => {
       try {
-        const response = await fetch(
-          "/api/v1/users/logout",
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+        const response = await fetch("/api/v1/users/logout", {
+          method: "GET",
+          credentials: "include",
+        });
 
         if (response.ok) {
           renderHomePage();
@@ -73,19 +71,15 @@ function createPost() {
       categories,
     };
     try {
-      const response = await fetch(
-        "/api/v1/posts/create",
-        {
-          method: "POST",
-          credentials: "include", // Very important
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await fetch("/api/v1/posts/create", {
+        method: "POST",
+        credentials: "include", // Very important
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
       console.log(response.status, "status");
-
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -177,13 +171,14 @@ async function getActiveUsers() {
     }
 
     const users = await response.json();
+    console.log(users,"jygjhjh");
+    
     return users;
   } catch (error) {
     showErrorPage(error);
     return [];
   }
 }
-
 
 async function reactToPost(postId, reaction) {
   try {
@@ -214,20 +209,17 @@ async function reactToPost(postId, reaction) {
 }
 async function sendPostCommen(postId, commenttext) {
   try {
-    const response = await fetch(
-      "/api/v1/posts/addComment",
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          post_id: parseInt(postId),
-          comment: commenttext,
-        }),
-      }
-    );
+    const response = await fetch("/api/v1/posts/addComment", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        post_id: parseInt(postId),
+        comment: commenttext,
+      }),
+    });
 
     if (!response.ok) {
       const errData = await response.json();
@@ -298,10 +290,10 @@ async function chat(chatContainer, socket) {
       const response = await fetch("/api/v1/chat/history", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
       });
 
       const dataa = await response.json();
@@ -309,15 +301,15 @@ async function chat(chatContainer, socket) {
       if (Array.isArray(dataa) && dataa.length > 0) {
         const currentScrollHeight = messagesContainer.scrollHeight;
 
-        dataa.reverse().forEach(data => {          
+        dataa.reverse().forEach((data) => {
           const messageElement = createMessageElement(data, senderId);
           messagesContainer.prepend(messageElement);
         });
 
-        messagesContainer.scrollTop = messagesContainer.scrollHeight - currentScrollHeight;
+        messagesContainer.scrollTop =
+          messagesContainer.scrollHeight - currentScrollHeight;
         offset += limit;
       }
-
     } catch (err) {
       console.error("Error fetching history:", err);
     }
@@ -325,13 +317,15 @@ async function chat(chatContainer, socket) {
     loading = false;
   }
 
-
   // Debounced scroll handler
-  messagesContainer.addEventListener("scroll", debounce(() => {
-    if (messagesContainer.scrollTop === 0) {
-      fetchHistory();
-    }
-  }, 500));
+  messagesContainer.addEventListener(
+    "scroll",
+    debounce(() => {
+      if (messagesContainer.scrollTop === 0) {
+        fetchHistory();
+      }
+    }, 500)
+  );
 
   // Initial fetch
   fetchHistory();
@@ -351,10 +345,10 @@ async function chat(chatContainer, socket) {
       receiver_id: receiverId,
       message_content: message,
       timestamp: new Date(Date.now()).toLocaleString(), // can cause an eror
-      message_type: 'message'
+      message_type: "message",
     };
     socket.send(JSON.stringify(messageData));
-    messageInput.value = ""
+    messageInput.value = "";
   });
 
   // Handle WebSocket messages
@@ -362,7 +356,7 @@ async function chat(chatContainer, socket) {
     const message = JSON.parse(event.data);
     const type = message.message_type;
     const chatWindowExists = chatContainer.querySelector("#chat_window");
-        
+
     if (type === "typing") {
       const typingContainer = createTypingIndicator(message.sender_nickname);
       removetyping(messagesContainer);
@@ -378,10 +372,15 @@ async function chat(chatContainer, socket) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
         showMessage(`New message from ${message.sender_nickname}`);
-        const chatusers = document.getElementById("chat_users");
+        let chatusers = document.getElementById("chat_users");
+
         if (chatusers) {
           const activeUsers = await getActiveUsers();
-          chatUsersComponent(activeUsers, showChatWindow, socket);
+          console.log(activeUsers, "activeUsers");
+
+          let container = chatUsersComponent(activeUsers, showChatWindow, socket);
+          console.log(container, "container");
+          chatusers.replaceWith(container);
         }
       }
     }
@@ -405,11 +404,21 @@ function createMessageElement(data, senderId) {
   const messageElement = document.createElement("div");
   let senderName;
   if (data.type == "history") {
-    messageElement.className = data.sender_id === parseInt(senderId) ? "outgoing-message" : "incoming-message";
-    senderName = data.sender_id === parseInt(senderId) ? "You" : data.sender_nickname;
+    messageElement.className =
+      data.sender_id === parseInt(senderId)
+        ? "outgoing-message"
+        : "incoming-message";
+    senderName =
+      data.sender_id === parseInt(senderId) ? "You" : data.sender_nickname;
   } else {
-    messageElement.className = data.sender_id === parseInt(senderId) ? "outgoing-message" : "incoming-message";
-    senderName = data.sender_id === parseInt(senderId) ? "You" : data.reciever_nickname || "Unknown";
+    messageElement.className =
+      data.sender_id === parseInt(senderId)
+        ? "outgoing-message"
+        : "incoming-message";
+    senderName =
+      data.sender_id === parseInt(senderId)
+        ? "You"
+        : data.reciever_nickname || "Unknown";
   }
 
   const timestamp = new Date(data.timestamp).toLocaleString(); // Assumes ISO timestamp
@@ -433,25 +442,35 @@ function sanitizeHTML(str) {
   return div.innerHTML;
 }
 
-
 async function establishConnection() {
   const senderId = sessionStorage.getItem("user_id");
   const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
 
   return new Promise((resolve, reject) => {
     socket.onopen = () => {
-      socket.send(JSON.stringify({ sender_id: parseInt(senderId)}));
+      socket.send(JSON.stringify({ sender_id: parseInt(senderId) }));
       resolve(socket);
     };
-    socket.onmessage = (event) => {      
-      const ResponseMessages = JSON.parse(event.data);      
-      if (ResponseMessages.message_type == "Online" || ResponseMessages.message_type == "Offline") {
-        OneOffline(ResponseMessages)
+    socket.onmessage = async (event) => {
+      const ResponseMessages = JSON.parse(event.data);
+      if (
+        ResponseMessages.message_type == "Online" ||
+        ResponseMessages.message_type == "Offline"
+      ) {
+        OneOffline(ResponseMessages);
       }
       if (ResponseMessages.message_content) {
-        showMessage(
-          `New message from ${ResponseMessages.sender_nickname}`
-        );
+        showMessage(`New message from ${ResponseMessages.sender_nickname}`);
+        let chatusers = document.getElementById("chat_users");
+
+        if (chatusers) {
+          const activeUsers = await getActiveUsers();
+          console.log(activeUsers, "activeUsers");
+
+          let container = chatUsersComponent(activeUsers, showChatWindow, socket);
+          console.log(container, "container");
+          chatusers.replaceWith(container);
+        }
       }
     };
     socket.onerror = reject;
@@ -459,11 +478,12 @@ async function establishConnection() {
 }
 
 function setupTypingIndicator(socket, username, senderId, receiverId) {
-  const messageInput = document.getElementById('message');
+  const messageInput = document.getElementById("message");
   if (!messageInput) return;
 
   let typingTimeout;
-  let isTyping = false; setupTypingIndicator
+  let isTyping = false;
+  setupTypingIndicator;
 
   messageInput.addEventListener("input", () => {
     if (!isTyping) {
@@ -472,7 +492,7 @@ function setupTypingIndicator(socket, username, senderId, receiverId) {
         sender_nickname: username,
         sender_id: senderId,
         receiver_id: receiverId,
-        message_type: "typing"
+        message_type: "typing",
       };
       socket.send(JSON.stringify(typingData));
       isTyping = true;
@@ -486,7 +506,7 @@ function setupTypingIndicator(socket, username, senderId, receiverId) {
         sender_nickname: username,
         sender_id: senderId,
         receiver_id: receiverId,
-        message_type: "fin"
+        message_type: "fin",
       };
       socket.send(JSON.stringify(stopTypingData));
       isTyping = false;
@@ -497,17 +517,12 @@ function setupTypingIndicator(socket, username, senderId, receiverId) {
       sender_nickname: username,
       sender_id: senderId,
       receiver_id: receiverId,
-      message_type: "fin"
+      message_type: "fin",
     };
     socket.send(JSON.stringify(stopTypingData));
     isTyping = false;
-  })
-
-
+  });
 }
-
-
-
 
 export {
   isAouth,

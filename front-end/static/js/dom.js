@@ -476,5 +476,6 @@ export {
   postActions,
   OneOffline,
   renderComments,
-  removetyping
+  removetyping,
+  showChatWindow
 };
