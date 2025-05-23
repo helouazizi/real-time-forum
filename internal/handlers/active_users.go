@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"web-forum/internal/models"
@@ -29,7 +30,7 @@ func (h *ActiveHandler) GetActiveUsers(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithJSON(w, http.StatusBadRequest, models.Error{Message: "Bad Request", Code: http.StatusBadRequest})
 		return
 	}
-	// fmt.Println(user.SenderId,"user id")
+	fmt.Println(user.SenderID, "user id")
 
 	activeUsers, err1 := h.activeService.GetActiveUsers(user.SenderID)
 	if err1 != nil {

@@ -89,10 +89,7 @@ function createPost() {
           showPostForm(errorData.UserErrors, true);
           return;
         }
-        // if (errorData.Code === 401) {
-        //   showLoginForm();
-        //   return;
-        // }
+    
         const error = {
           code: errorData.Code,
           message: errorData.Message,
@@ -163,7 +160,7 @@ async function getActiveUsers() {
     const response = await fetch("/api/v1/users", {
       method: "POST",
       credentials: "include",
-      body: JSON.stringify({ user_id: parseInt(senderId) }),
+      body: JSON.stringify({ sender_id: parseInt(senderId) }),
     });
 
     if (!response.ok) {
@@ -353,7 +350,7 @@ async function chat(chatContainer, socket) {
 
   // Handle WebSocket messages
   socket.onmessage = async (event) => {
-    const message = JSON.parse(event.data);
+    const message = JSON.parse(event.data);    
     const type = message.message_type;
     const chatWindowExists = chatContainer.querySelector("#chat_window");
 
@@ -409,7 +406,7 @@ function createMessageElement(data, senderId) {
         ? "outgoing-message"
         : "incoming-message";
     senderName =
-      data.sender_id === parseInt(senderId) ? "You" : data.sender_nickname;
+      data.sender_id === parseInt(senderId) ? "You" : data.reciever_nickname;
   } else {
     messageElement.className =
       data.sender_id === parseInt(senderId)
@@ -418,7 +415,7 @@ function createMessageElement(data, senderId) {
     senderName =
       data.sender_id === parseInt(senderId)
         ? "You"
-        : data.reciever_nickname || "Unknown";
+        : data.sender_nickname || "Unknown";
   }
 
   const timestamp = new Date(data.timestamp).toLocaleString(); // Assumes ISO timestamp
