@@ -425,7 +425,7 @@ const  showChatWindow  = (container, user, socket) => {
       <div class="chat-header">
       <div id="chat_user_profile">
         <div class="avatar-wrapper">
-        <img class="user-avatar" src="./assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+        <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
         <span class="status-dot online"></span>
       </div>
       <span user-id="${user.id}" class="user-nickname" id="${user.nickname}">${user.nickname}</span>
