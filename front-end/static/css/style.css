@@ -1,0 +1,63 @@
+@import url("./variables.css");
+@import url("./header.css");
+@import url("container.css");
+@import url("footer.css");
+@import url("registraction.css");
+@import url("error.css");
+@import url("comments.css");
+@import url("chat.css");
+@import url("typing.css");
+
+@import url("filter.css");
+h1 {
+  color: red;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+li {
+  list-style: none;
+}
+body {
+  background-color: var(--third-color);
+  overflow-y: scroll;
+}
+main {
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+main::-webkit-scrollbar {
+  display: none;
+}
+.primary-btn {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: var(--primary-color);
+  color: var(--third-color);
+  border: none;
+  cursor: pointer;
+}
+
+/* Body blur when modal is active */
+.modal-active {
+  filter: blur(5px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.show {
+  display: flex;
+}
