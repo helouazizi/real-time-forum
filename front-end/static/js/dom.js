@@ -402,7 +402,7 @@ const listenChatBtn = (socket) => {
     document.querySelector(".posts")?.classList.add("hidden");
     let container = document.querySelector(".container");
     container.appendChild(
-      chatUsersComponent(activeUsers, showChatWindow, socket)
+      chatUsersComponent(activeUsers, showChat, socket)
     );
 
     // Add close functionality
@@ -468,7 +468,10 @@ const removetyping = (container) => {
 
 
 
+
 export {
+
+ showChat,
   renderHomePage,
   showLoginForm,
   showRegisterForm,
