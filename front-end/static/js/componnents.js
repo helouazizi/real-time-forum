@@ -303,19 +303,20 @@ const chatUsersComponent = (users, onUserClick, socket) => {
   const container = document.createElement("div");
   container.setAttribute("id", "chat_users");
   container.setAttribute("class", "chat_users");
-  const usersHTML = users
-    .map(
-      (user) => `
-    <li class="chat-user-item" data-user="${user.nickname}" id="${user.nickname}">
-      <div class="avatar-wrapper">
-        <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
-       
-      </div>
-      <span  class="user-nickname">${user.nickname}</span>
-    </li>
-  `
-    )
-    .join("");
+ const usersHTML = users
+  .map((user) => {
+    const isActive = document.getElementById(`active-${user.nickname}`) ? true : false;
+    return `
+      <li class="chat-user-item" data-user="${user.nickname}" id="${user.nickname}">
+        <div class="avatar-wrapper">
+          <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
+          ${isActive ? '<span class="status-dot active"></span>' : '<span></span>'}
+        </div>
+        <span class="user-nickname">${user.nickname}</span>
+      </li>
+    `;
+  })
+  .join("");
 
   container.innerHTML = `
     <div class="chat-container"><ul class="chat-users-list">${usersHTML}</ul></div>

@@ -14,7 +14,7 @@ CREATE TABLE
 
 -- -- Increment on insert
 -- CREATE TRIGGER IF NOT EXISTS increment_like_count AFTER INSERT ON post_likes BEGIN
--- UPDATE posts
+-- UPDATE posts 
 -- SET total_likes = total_likes + 1
 -- WHERE id = NEW.post_id;
 -- END;

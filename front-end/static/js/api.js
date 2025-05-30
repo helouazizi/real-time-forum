@@ -167,9 +167,7 @@ async function getActiveUsers() {
       throw { code: response.Code, message: response.Messgae };
     }
 
-    const users = await response.json();
-    console.log(users,"jygjhjh");
-    
+    const users = await response.json();    
     return users;
   } catch (error) {
     showErrorPage(error);

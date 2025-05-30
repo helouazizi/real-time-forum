@@ -33,7 +33,6 @@ function styleBody() {
   document.body.style.background =
     "radial-gradient(circle at center, rgb(37, 42, 61), rgb(65, 47, 102))";
   document.body.style.fontFamily = "Segoe UI, sans-serif";
-  // document.body.style.color = "#ffffff"; // fallback text color
 
   // Add welcome message
   const welcomeText = document.createElement("h1");
@@ -42,7 +41,7 @@ function styleBody() {
   welcomeText.style.fontSize = "2.5rem";
   welcomeText.style.marginBottom = "1rem";
   welcomeText.style.padding = "1rem";
-  welcomeText.style.color = "#ffd369"; // bright accent (yellow-gold)
+  welcomeText.style.color = "#ffd369"; 
   document.body.appendChild(welcomeText);
 
   const subText = document.createElement("p");
