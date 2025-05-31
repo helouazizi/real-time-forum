@@ -27,3 +27,124 @@
 2025/05/30 14:39:08 2025-05-30T14:39:08+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 132] websocket: close 1001 (going away)
 2025/05/30 14:40:00 2025-05-30T14:40:00+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 132] websocket: close 1001 (going away)
 2025/05/30 14:40:56 2025-05-30T14:40:56+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 132] websocket: close 1001 (going away)
+2025/05/30 17:24:18 2025-05-30T17:24:18+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:24:39 2025-05-30T17:24:39+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:24:48 2025-05-30T17:24:48+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:27:33 2025-05-30T17:27:33+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:27:33 2025-05-30T17:27:33+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:48448: use of closed network connection
+2025/05/30 17:27:36 2025-05-30T17:27:36+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:27:36 2025-05-30T17:27:36+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:49912: use of closed network connection
+2025/05/30 17:27:40 2025-05-30T17:27:40+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:27:40 2025-05-30T17:27:40+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:27:47 2025-05-30T17:27:47+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:28:20 2025-05-30T17:28:20+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:28:20 2025-05-30T17:28:20+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:50068: use of closed network connection
+2025/05/30 17:28:20 2025-05-30T17:28:20+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:28:28 2025-05-30T17:28:28+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:29:00 2025-05-30T17:29:00+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:29:00 2025-05-30T17:29:00+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:29:06 2025-05-30T17:29:06+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:29:16 2025-05-30T17:29:16+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:29:43 2025-05-30T17:29:43+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:29:43 2025-05-30T17:29:43+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:30:10 2025-05-30T17:30:10+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:30:34 2025-05-30T17:30:34+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:30:34 2025-05-30T17:30:34+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:43970: use of closed network connection
+2025/05/30 17:30:34 2025-05-30T17:30:34+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:31:17 2025-05-30T17:31:17+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:32:16 2025-05-30T17:32:16+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:32:32 2025-05-30T17:32:32+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:32:32 2025-05-30T17:32:32+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:33:55 2025-05-30T17:33:55+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:33:57 2025-05-30T17:33:57+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:33:58 2025-05-30T17:33:58+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:35:39 2025-05-30T17:35:39+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:35:44 2025-05-30T17:35:44+01:00 [Function: web-forum/internal/repository.(*UserRepository).Login] [Line: 109] crypto/bcrypt: hashedPassword is not the hash of the given password
+2025/05/30 17:35:44 2025-05-30T17:35:44+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/30 17:36:10 2025-05-30T17:36:10+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:36:11 2025-05-30T17:36:11+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:36:45 2025-05-30T17:36:45+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:37:00 2025-05-30T17:37:00+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:37:20 2025-05-30T17:37:20+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:39:42 2025-05-30T17:39:42+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:39:42 2025-05-30T17:39:42+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:39:42 2025-05-30T17:39:42+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp 10.248.0.206:3000->10.248.1.169:36430: use of closed network connection
+2025/05/30 17:40:06 2025-05-30T17:40:06+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:40:15 2025-05-30T17:40:15+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:55:48 2025-05-30T17:55:48+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 17:56:34 2025-05-30T17:56:34+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:56:34 2025-05-30T17:56:34+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:55836: use of closed network connection
+2025/05/30 17:56:34 2025-05-30T17:56:34+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 17:57:47 2025-05-30T17:57:47+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 17:57:47 2025-05-30T17:57:47+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:01:44 2025-05-30T18:01:44+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:01:47 2025-05-30T18:01:47+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:02:14 2025-05-30T18:02:14+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:02:14 2025-05-30T18:02:14+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:48148: use of closed network connection
+2025/05/30 18:02:17 2025-05-30T18:02:17+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:02:57 2025-05-30T18:02:57+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 18:02:57 2025-05-30T18:02:57+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:33120: use of closed network connection
+2025/05/30 18:02:57 2025-05-30T18:02:57+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:03:03 2025-05-30T18:03:03+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:03:22 2025-05-30T18:03:22+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 18:03:22 2025-05-30T18:03:22+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:47402: use of closed network connection
+2025/05/30 18:03:22 2025-05-30T18:03:22+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:05:04 2025-05-30T18:05:04+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:05:06 2025-05-30T18:05:06+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:05:28 2025-05-30T18:05:28+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:05:28 2025-05-30T18:05:28+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:45414: use of closed network connection
+2025/05/30 18:05:40 2025-05-30T18:05:40+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:05:40 2025-05-30T18:05:40+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:51870: use of closed network connection
+2025/05/30 18:07:32 2025-05-30T18:07:32+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:07:32 2025-05-30T18:07:32+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:51896: use of closed network connection
+2025/05/30 18:07:36 2025-05-30T18:07:36+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:07:36 2025-05-30T18:07:36+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:46580: use of closed network connection
+2025/05/30 18:07:39 2025-05-30T18:07:39+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:07:40 2025-05-30T18:07:40+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:07:49 2025-05-30T18:07:49+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:07:49 2025-05-30T18:07:49+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:34342: use of closed network connection
+2025/05/30 18:08:16 2025-05-30T18:08:16+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:08:29 2025-05-30T18:08:29+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:08:29 2025-05-30T18:08:29+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:08:59 2025-05-30T18:08:59+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 18:08:59 2025-05-30T18:08:59+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:49546: use of closed network connection
+2025/05/30 18:08:59 2025-05-30T18:08:59+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:08:59 2025-05-30T18:08:59+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:09:36 2025-05-30T18:09:36+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:09:39 2025-05-30T18:09:39+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:09:54 2025-05-30T18:09:54+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:09:54 2025-05-30T18:09:54+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:42892: use of closed network connection
+2025/05/30 18:10:21 2025-05-30T18:10:21+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/30 18:10:21 2025-05-30T18:10:21+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:10:21 2025-05-30T18:10:21+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/30 18:13:12 2025-05-30T18:13:12+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 109] websocket: close 1001 (going away)
+2025/05/30 18:13:14 2025-05-30T18:13:14+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:13:21 2025-05-30T18:13:21+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:20:38 2025-05-30T18:20:38+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:20:38 2025-05-30T18:20:38+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:47556: use of closed network connection
+2025/05/30 18:20:44 2025-05-30T18:20:44+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:20:44 2025-05-30T18:20:44+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:48436: use of closed network connection
+2025/05/30 18:20:45 2025-05-30T18:20:45+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:21:20 2025-05-30T18:21:20+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:21:20 2025-05-30T18:21:20+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:51978: use of closed network connection
+2025/05/30 18:21:27 2025-05-30T18:21:27+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:21:27 2025-05-30T18:21:27+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:37810: use of closed network connection
+2025/05/30 18:21:34 2025-05-30T18:21:34+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/30 18:21:34 2025-05-30T18:21:34+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp [::1]:3000->[::1]:53382: use of closed network connection
+2025/05/30 18:32:56 2025-05-30T18:32:56+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] read tcp 10.248.0.206:3000->10.248.1.169:38950: read: connection timed out
+2025/05/31 09:44:10 2025-05-31T09:44:10+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/31 09:44:21 2025-05-31T09:44:21+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 139] websocket: close 1001 (going away)
+2025/05/31 09:44:45 2025-05-31T09:44:45+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/31 09:45:13 2025-05-31T09:45:13+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 139] websocket: close 1001 (going away)
+2025/05/31 09:45:50 2025-05-31T09:45:50+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 139] websocket: close 1001 (going away)
+2025/05/31 09:57:52 2025-05-31T09:57:52+01:00 [Function: web-forum/internal/repository.(*UserRepository).Login] [Line: 109] crypto/bcrypt: hashedPassword is not the hash of the given password
+2025/05/31 09:57:52 2025-05-31T09:57:52+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/31 09:58:04 2025-05-31T09:58:04+01:00 [Function: web-forum/internal/repository.(*UserRepository).Login] [Line: 109] crypto/bcrypt: hashedPassword is not the hash of the given password
+2025/05/31 09:58:04 2025-05-31T09:58:04+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/31 09:58:23 2025-05-31T09:58:23+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
+2025/05/31 09:59:16 2025-05-31T09:59:16+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/31 09:59:30 2025-05-31T09:59:30+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1001 (going away)
+2025/05/31 09:59:44 2025-05-31T09:59:44+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 140] websocket: close 1005 (no status)
+2025/05/31 09:59:44 2025-05-31T09:59:44+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/05/31 10:09:42 2025-05-31T10:09:42+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 144] websocket: close 1005 (no status)
+2025/05/31 10:09:42 2025-05-31T10:09:42+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized

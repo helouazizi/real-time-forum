@@ -380,8 +380,10 @@ function showFilterForm() {
 }
 function OneOffline(user) {
   let activeSection = document.getElementById('active_users')
+  const username =document.getElementById('username').innerText
+  
   if (activeSection) {
-    if (user.message_type == "Online") {
+    if (user.message_type == "Online" && user.sender_nickname != username) {
       const activuser = activeUsersComponent(user.sender_nickname)
       if (activuser) {
         activeSection.appendChild(activuser)

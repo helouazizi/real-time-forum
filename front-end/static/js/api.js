@@ -8,7 +8,7 @@ import {
   OneOffline,
   showChatWindow
 } from "./dom.js";
-import { createTypingIndicator,chatUsersComponent } from "./componnents.js";
+import { createTypingIndicator, chatUsersComponent } from "./componnents.js";
 
 async function isAouth() {
   try {
@@ -41,6 +41,7 @@ function logOut(socket) {
         if (response.ok) {
           renderHomePage();
           socket.close();
+          localStorage.removeItem('is_logged')
         } else {
           const errorData = await response.json();
           throw { code: errorData.Code, message: errorData.Message };
@@ -89,7 +90,7 @@ function createPost() {
           showPostForm(errorData.UserErrors, true);
           return;
         }
-    
+
         const error = {
           code: errorData.Code,
           message: errorData.Message,
@@ -167,7 +168,7 @@ async function getActiveUsers() {
       throw { code: response.Code, message: response.Messgae };
     }
 
-    const users = await response.json();    
+    const users = await response.json();
     return users;
   } catch (error) {
     showErrorPage(error);
@@ -343,12 +344,13 @@ async function chat(chatContainer, socket) {
       message_type: "message",
     };
     socket.send(JSON.stringify(messageData));
+    offset++
     messageInput.value = "";
   });
 
   // Handle WebSocket messages
   socket.onmessage = async (event) => {
-    const message = JSON.parse(event.data);    
+    const message = JSON.parse(event.data);
     const type = message.message_type;
     const chatWindowExists = chatContainer.querySelector("#chat_window");
 
@@ -439,7 +441,7 @@ function sanitizeHTML(str) {
 
 async function establishConnection() {
   const senderId = sessionStorage.getItem("user_id");
-  const socket = new WebSocket("ws://localhost:3000/api/v1/chat");
+  const socket = new WebSocket("/api/v1/chat");
 
   return new Promise((resolve, reject) => {
     socket.onopen = () => {

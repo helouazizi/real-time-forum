@@ -7,7 +7,7 @@ function login() {
     const formData = new FormData(loginFormElement);
     const data = Object.fromEntries(formData.entries());
     try {
-      const response = await fetch("http://localhost:3000/api/v1/users/login", {
+      const response = await fetch("/api/v1/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,6 +29,7 @@ function login() {
       }
       location.reload()
       renderHomePage()
+      localStorage.setItem("is_logged", "true");
     } catch (err) {
       showErrorPage(err);
     }

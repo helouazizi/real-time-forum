@@ -23,7 +23,7 @@ type ChatHandler struct {
 }
 
 type Hub struct {
-	Clients    map[int]*websocket.Conn
+	Clients    map[int][]*websocket.Conn
 	Register   chan models.Message
 	Unregister chan int
 	Broadcast  chan models.Message
@@ -32,7 +32,7 @@ type Hub struct {
 
 func NewHub() *Hub {
 	return &Hub{
-		Clients:    make(map[int]*websocket.Conn),
+		Clients:    make(map[int][]*websocket.Conn),
 		Register:   make(chan models.Message),
 		Unregister: make(chan int),
 		Broadcast:  make(chan models.Message),
@@ -51,10 +51,12 @@ func (h *ChatHandler) Run() {
 	for {
 		select {
 		case reg := <-h.Hub.Register:
-			h.Hub.Clients[reg.SenderID] = reg.Conn
+			h.Hub.Clients[reg.SenderID] = append(h.Hub.Clients[reg.SenderID], reg.Conn)
 		case senderId := <-h.Hub.Unregister:
 			if conn, ok := h.Hub.Clients[senderId]; ok {
-				conn.Close()
+				for i := range conn {
+					conn[i].Close()
+				}
 				delete(h.Hub.Clients, senderId)
 			}
 		case msg := <-h.Hub.Broadcast:
@@ -62,25 +64,35 @@ func (h *ChatHandler) Run() {
 			if !ok {
 				continue
 			}
-			if err := conn.WriteJSON(msg); err != nil {
-				conn.Close()
-				delete(h.Hub.Clients, msg.ReciverID)
-			}
-		case msg := <-h.Hub.notify:
-			for id, conn := range h.Hub.Clients {
-				if msg.Conn != conn {
-					if err := conn.WriteJSON(msg); err != nil {
-						conn.Close()
-						delete(h.Hub.Clients, id)
-					}
-					// whritinng into the same connection
-					User, _ := h.chatServices.GetUserNickname(id)
-					msg.SenderNickname = User
-					if err := msg.Conn.WriteJSON(msg); err != nil {
-						msg.Conn.Close()
-						delete(h.Hub.Clients, msg.SenderID)
-					}
+			for i := range conn {
+				if err := conn[i].WriteJSON(msg); err != nil {
+					conn[i].Close()
 				}
+			}
+
+		case msg := <-h.Hub.notify:
+			println(h.Hub.Clients,"all ")
+			userCons := h.Hub.Clients[msg.SenderID]
+			fmt.Println(userCons, "cons")
+			for id, conn := range h.Hub.Clients {
+				User, _ := h.chatServices.GetUserNickname(id)
+				if msg.SenderID != id {
+					for i := range conn {
+						println(1)
+						if err := conn[i].WriteJSON(msg); err != nil {
+							conn[i].Close()
+						}
+
+					}
+					msg.SenderNickname = User
+					for j := range userCons {
+						if err := userCons[j].WriteJSON(msg); err != nil {
+							msg.Conn.Close()
+						}
+					}
+
+				}
+
 			}
 		}
 	}
@@ -120,10 +132,10 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.Hub.Register <- models.Message{SenderID: msg.SenderID, Conn: conn}
-	h.Hub.notify <- models.Message{SenderNickname: sendNickname, Conn: conn, Type: "Online"}
+	h.Hub.notify <- models.Message{SenderNickname: sendNickname, SenderID: msg.SenderID, Type: "Online"}
 	defer func() {
 		h.Hub.Unregister <- msg.SenderID
-		h.Hub.notify <- models.Message{SenderNickname: sendNickname, Conn: conn, Type: "Offline"}
+		h.Hub.notify <- models.Message{SenderNickname: sendNickname, SenderID: msg.SenderID, Type: "Offline"}
 	}()
 
 	for {
