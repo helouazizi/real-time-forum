@@ -6,7 +6,9 @@ import {
   renderComments,
   removetyping,
   OneOffline,
-  showChatWindow
+  showChatWindow,
+  renderprofiles
+
 } from "./dom.js";
 import { createTypingIndicator, chatUsersComponent } from "./componnents.js";
 
@@ -369,21 +371,14 @@ async function chat(chatContainer, socket) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
         showMessage(`New message from ${message.sender_nickname}`);
-        let chatusers = document.getElementById("chat_users");
-
-        if (chatusers) {
-          const activeUsers = await getActiveUsers();
-          console.log(activeUsers, "activeUsers");
-
-          let container = chatUsersComponent(activeUsers, showChatWindow, socket);
-          console.log(container, "container");
-          chatusers.replaceWith(container);
-        }
+        renderprofiles(socket,type)
       }
     }
 
     if (type === "Online" || type === "Offline") {
       OneOffline(message);
+
+      renderprofiles(socket, type)
     }
   };
 
@@ -395,6 +390,10 @@ async function chat(chatContainer, socket) {
     removetyping(messagesContainer);
     console.log("WebSocket connection closed");
   };
+  document.getElementById("close_chat").addEventListener("click", () => {
+    document.querySelector("#chat_users")?.remove();
+    document.querySelector(".posts")?.classList.remove("hidden");
+  });
 }
 
 function createMessageElement(data, senderId) {
@@ -455,6 +454,7 @@ async function establishConnection() {
         ResponseMessages.message_type == "Offline"
       ) {
         OneOffline(ResponseMessages);
+        renderprofiles(socket, ResponseMessages.message_type)
       }
       if (ResponseMessages.message_content) {
         showMessage(`New message from ${ResponseMessages.sender_nickname}`);

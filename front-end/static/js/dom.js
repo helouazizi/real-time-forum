@@ -41,7 +41,7 @@ function styleBody() {
   welcomeText.style.fontSize = "2.5rem";
   welcomeText.style.marginBottom = "1rem";
   welcomeText.style.padding = "1rem";
-  welcomeText.style.color = "#ffd369"; 
+  welcomeText.style.color = "#ffd369";
   document.body.appendChild(welcomeText);
 
   const subText = document.createElement("p");
@@ -380,8 +380,8 @@ function showFilterForm() {
 }
 function OneOffline(user) {
   let activeSection = document.getElementById('active_users')
-  const username =document.getElementById('username').innerText
-  
+  const username = document.getElementById('username').innerText
+
   if (activeSection) {
     if (user.message_type == "Online" && user.sender_nickname != username) {
       const activuser = activeUsersComponent(user.sender_nickname)
@@ -406,29 +406,29 @@ const listenChatBtn = (socket) => {
     container.appendChild(
       chatUsersComponent(activeUsers, showChatWindow, socket)
     );
-
     // Add close functionality
     document.getElementById("close_chat").addEventListener("click", () => {
-
       document.querySelector("#chat_users")?.remove();
       document.querySelector(".posts")?.classList.remove("hidden");
     });
   });
 };
 
-const  showChatWindow  = (container, user, socket) => {
+const showChatWindow = (container, user, socket) => {
   container.querySelector(".chat-users-list")?.classList.add("hidden");
   let chatContainer = container.querySelector(".chat-container");
   let chatWindow = document.getElementById("chat_window");
+
   if (!chatWindow) {
     chatWindow = document.createElement("div");
     chatWindow.setAttribute("id", "chat_window");
+    const isActive = document.getElementById(`active-${user.nickname}`) ? true : false;
     chatWindow.innerHTML = `
       <div class="chat-header">
       <div id="chat_user_profile">
         <div class="avatar-wrapper">
         <img class="user-avatar" src="/front-end/static/assets/avatar.png" alt="Profile picture of ${user.nickname}" />
-        <span class="status-dot online"></span>
+        ${isActive ? '<span class="status-dot active"></span>' : '<span></span>'}
       </div>
       <span user-id="${user.id}" class="user-nickname" id="${user.nickname}">${user.nickname}</span>
       </div>
@@ -441,6 +441,7 @@ const  showChatWindow  = (container, user, socket) => {
       </div>
     `;
 
+
     chatContainer.appendChild(chatWindow);
     chat(chatContainer, socket);
     let close = document.getElementById("close_messages");
@@ -448,14 +449,20 @@ const  showChatWindow  = (container, user, socket) => {
     close.addEventListener("click", async () => {
       chatWindow.remove();
       let chatusers = document.getElementById("chat_users");
-        if (chatusers) {
-          const activeUsers = await getActiveUsers();
-          console.log(activeUsers, "activeUsers");
-          let containerr = chatUsersComponent(activeUsers, showChatWindow, socket);
-          chatusers.replaceWith(containerr);
-        }
+      if (chatusers) {
+        const activeUsers = await getActiveUsers();
+        console.log(activeUsers, "activeUsers");
+        let containerr = chatUsersComponent(activeUsers, showChatWindow, socket);
+        chatusers.replaceWith(containerr);
+      }
       container.querySelector(".chat-users-list")?.classList.remove("hidden");
+      document.getElementById("close_chat").addEventListener("click", () => {
+        document.querySelector("#chat_users")?.remove();
+        document.querySelector(".posts")?.classList.remove("hidden");
+      });
     });
+
+
   }
 };
 const removetyping = (container) => {
@@ -468,9 +475,30 @@ const removetyping = (container) => {
   }
 }
 
+async function renderprofiles(socket, type) {
+  let chatusers = document.getElementById("chat_users");
+  let chatWindow = document.getElementById("chat_window");
+  const activeUsers = await getActiveUsers();
+  if (chatusers && !chatWindow) {
+    let container = chatUsersComponent(activeUsers, showChatWindow, socket);
+    chatusers.replaceWith(container);
+  } else if (chatusers && chatWindow) {
+    let statu = chatWindow.querySelector('.status-dot')
+    if (statu) {
+      if (type == "Offline") {
+        statu.classList.add('hidden')
+      } else if (type == "Online") {
+        statu.classList.remove('hidden')
+      }
+    }
+
+
+  }
+}
 
 
 export {
+  renderprofiles,
   renderHomePage,
   showLoginForm,
   showRegisterForm,

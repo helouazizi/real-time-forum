@@ -71,14 +71,11 @@ func (h *ChatHandler) Run() {
 			}
 
 		case msg := <-h.Hub.notify:
-			println(h.Hub.Clients,"all ")
 			userCons := h.Hub.Clients[msg.SenderID]
-			fmt.Println(userCons, "cons")
 			for id, conn := range h.Hub.Clients {
 				User, _ := h.chatServices.GetUserNickname(id)
 				if msg.SenderID != id {
 					for i := range conn {
-						println(1)
 						if err := conn[i].WriteJSON(msg); err != nil {
 							conn[i].Close()
 						}
