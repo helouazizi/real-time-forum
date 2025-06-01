@@ -293,7 +293,7 @@ func (r *PostRepository) GetCommentsByPostID(postId int) ([]models.PostComments,
 			  FROM post_comments c
 			  JOIN users u ON c.user_id = u.id
 			  WHERE c.post_id = ?
-			  ORDER BY c.created_at ASC`
+			  ORDER BY c.created_at DESC`
 
 	rows, err := r.db.Query(query, postId)
 	if err != nil {
