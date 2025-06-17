@@ -155,29 +155,9 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 			logger.LogWithDetails(err)
 			break
 		}
-		token, errtoken := utils.GetToken(r, "Token")
-		fmt.Println(errtoken, "get")
-		if errtoken.Code != http.StatusOK {
-			conn.WriteJSON(models.Message{
-				Type: "unhotorized",
-			})
-
-			conn.Close()
-			return
-
-		}
-		errToken := h.chatServices.CompareToken(token)
-		fmt.Println(errToken, "compoare")
-		if errToken.Code != http.StatusOK {
-
-			conn.WriteJSON(models.Message{
-				Type: "unhotorized",
-			})
-
-			conn.Close()
-			return
-
-		}
+	
+	
+		
 
 		var msg models.Message
 		if err := json.Unmarshal(msgBytes, &msg); err != nil {

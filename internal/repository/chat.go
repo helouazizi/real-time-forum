@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"text/template"
 
 	"web-forum/internal/models"
 	"web-forum/pkg/logger"
@@ -13,8 +14,6 @@ type ChatMethods interface {
 	SaveMessage(models.Message) error                            // Save chat messages to DB
 	GetMessages(models.Message) ([]models.Message, models.Error) // Retrieve chat messages from DB
 	GetUserNickname(int) (string, models.Error)
-	CompareToken(token string) models.Error
-
 }
 
 type ChatRepository struct {
@@ -26,7 +25,7 @@ func NewChatRepo(db *sql.DB) *ChatRepository {
 }
 
 func (r *ChatRepository) SaveMessage(message models.Message) error {
-	_, err := r.db.Exec("INSERT INTO messages (sender_id,receiver_id , content) VALUES (?,?, ?)", message.SenderID, message.ReciverID, message.Content)
+	_, err := r.db.Exec("INSERT INTO messages (sender_id,receiver_id , content) VALUES (?,?, ?)", message.SenderID, message.ReciverID, template.HTMLEscapeString(message.Content))
 	return err
 }
 
@@ -103,34 +102,3 @@ func (r *ChatRepository) GetUserNickname(userId int) (string, models.Error) {
 	return Nickname, models.Error{Code: http.StatusOK, Message: "Fetched succefully"}
 }
 
-func (r *ChatRepository)CompareToken(token string) models.Error {
-	const query = `
-			SELECT id 
-			FROM users 
-			WHERE session_token = ?
-		`
-	var id int
-	fmt.Println(token,"token")
-	err1 := r.db.QueryRow(query, token).Scan(&id)
-	if err1 == sql.ErrNoRows {
-		logger.LogWithDetails(fmt.Errorf("invalid token"))
-		return models.Error{
-			Message: "Invalid or expired token",
-			Code:    http.StatusUnauthorized,
-		}
-
-	}
-
-	if err1 != nil {
-		logger.LogWithDetails(err1)
-		return models.Error{
-			Message: "Internal Server Error",
-			Code:    http.StatusInternalServerError,
-		}
-
-	}
-	return models.Error{
-		Message: "ok",
-		Code:    http.StatusOK,
-	}
-}

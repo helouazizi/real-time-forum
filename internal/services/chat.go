@@ -24,7 +24,5 @@ func (r *ChatService) GetMessages(message models.Message) ([]models.Message, mod
 func (r *ChatService) GetUserNickname(id int) (string, models.Error) {
 	return r.repo.GetUserNickname(id)
 }
-func (r *ChatService) CompareToken(token string)  models.Error {
-	return r.repo.CompareToken(token)
-}
+
 

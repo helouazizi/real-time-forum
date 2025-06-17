@@ -351,11 +351,7 @@ async function chat(chatContainer, socket) {
     console.log(message, "message chat ");
     const chatWindowExists = chatContainer.querySelector("#chat_window");
 
-    if (type === "unhotorized") {
-      
-
-      showErrorPage({ code: 401, message: "Service Unauthorized" });
-    }
+   
 
     if (type === "typing") {
       const typingContainer = createTypingIndicator(message.sender_nickname);
@@ -450,11 +446,6 @@ async function establishConnection() {
       resolve(socket);
     };
     socket.onmessage = async (event) => {
-      if (ResponseMessages.message_type === "unhotorized") {
-        console.log(ResponseMessages, "message chat ");
-
-        showErrorPage({ code: 401, message: "Service Unauthorized" });
-      }
       const ResponseMessages = JSON.parse(event.data);
       if (
         ResponseMessages.message_type == "Online" ||
