@@ -219,6 +219,11 @@ function showProfile() {
 }
 
 function showErrorPage(error) {
+  if(!error.message){
+    error.message= "Invalid or expired token"
+    error.code = 401
+  }
+
   document.body.innerHTML = `
     <div class="error-container">
       <h1 class="error-code">${error.code}</h1>
