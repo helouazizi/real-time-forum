@@ -128,3 +128,13 @@
 2025/06/01 12:04:18 2025-06-01T12:04:18+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 141] websocket: close 1005 (no status)
 2025/06/01 12:04:18 2025-06-01T12:04:18+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
 2025/06/01 12:09:03 2025-06-01T12:09:03+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 141] websocket: close 1001 (going away)
+2025/06/05 17:01:36 2025-06-05T17:01:36+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/06/05 17:01:51 2025-06-05T17:01:51+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 141] websocket: close 1001 (going away)
+2025/06/05 17:03:40 2025-06-05T17:03:40+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/06/05 17:06:34 2025-06-05T17:06:34+01:00 [Function: web-forum/internal/repository.(*UserRepository).GetUserInfo] [Line: 161] sql: no rows in result set
+2025/06/05 17:06:34 2025-06-05T17:06:34+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 119] Internal Server Error
+2025/06/05 17:06:35 2025-06-05T17:06:35+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 110] websocket: close 1001 (going away)
+2025/06/05 17:07:11 2025-06-05T17:07:11+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 141] websocket: close 1001 (going away)
+2025/06/05 17:09:38 2025-06-05T17:09:38+01:00 [Function: web-forum/internal/handlers.(*ChatHandler).HandleChat] [Line: 141] websocket: close 1001 (going away)
+2025/06/08 11:07:12 2025-06-08T11:07:12+01:00 [Function: web-forum/internal/handlers.(*UserHandler).GetUserInfo] [Line: 112] Service Unauthorized
+2025/06/08 11:07:17 2025-06-08T11:07:17+01:00 [Function: web-forum/internal/handlers.(*UserHandler).Login] [Line: 66] Bad Request
