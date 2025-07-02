@@ -7,8 +7,7 @@ import {
   removetyping,
   OneOffline,
   showChatWindow,
-  renderprofiles
-
+  renderprofiles,
 } from "./dom.js";
 import { createTypingIndicator, chatUsersComponent } from "./componnents.js";
 
@@ -26,7 +25,9 @@ async function isAouth() {
       return null;
     }
   } catch (err) {
-    console.log(err);
+    console.log(err, "rrrrrrrrrr");
+
+    showErrorPage(err);
   }
 }
 
@@ -43,7 +44,7 @@ function logOut(socket) {
         if (response.ok) {
           renderHomePage();
           socket.close();
-          localStorage.removeItem('is_logged')
+          localStorage.removeItem("is_logged");
         } else {
           const errorData = await response.json();
           throw { code: errorData.Code, message: errorData.Message };
@@ -82,11 +83,9 @@ function createPost() {
         },
         body: JSON.stringify(postData),
       });
-      console.log(response.status, "status");
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log(errorData, "errrrrr");
 
         if (errorData.UserErrors.HasError) {
           showPostForm(errorData.UserErrors, true);
@@ -97,18 +96,13 @@ function createPost() {
           code: errorData.Code,
           message: errorData.Message,
         };
-        console.log(error, "test");
 
         throw error;
       }
       const result = await response.json();
-      showMessage(result.Message);
-      setTimeout(() => {
-        renderHomePage();
-      }, 2000);
-    } catch (err) {
-      console.log(err, "ctacj");
 
+      renderHomePage();
+    } catch (err) {
       showErrorPage(err);
     }
   });
@@ -346,7 +340,7 @@ async function chat(chatContainer, socket) {
       message_type: "message",
     };
     socket.send(JSON.stringify(messageData));
-    offset++
+    offset++;
     messageInput.value = "";
   });
 
@@ -354,7 +348,10 @@ async function chat(chatContainer, socket) {
   socket.onmessage = async (event) => {
     const message = JSON.parse(event.data);
     const type = message.message_type;
+    console.log(message, "message chat ");
     const chatWindowExists = chatContainer.querySelector("#chat_window");
+
+   
 
     if (type === "typing") {
       const typingContainer = createTypingIndicator(message.sender_nickname);
@@ -371,14 +368,14 @@ async function chat(chatContainer, socket) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
       } else {
         showMessage(`New message from ${message.sender_nickname}`);
-        renderprofiles(socket,type)
+        renderprofiles(socket, type);
       }
     }
 
     if (type === "Online" || type === "Offline") {
       OneOffline(message);
 
-      renderprofiles(socket, type)
+      renderprofiles(socket, type);
     }
   };
 
@@ -388,6 +385,7 @@ async function chat(chatContainer, socket) {
 
   socket.onclose = () => {
     removetyping(messagesContainer);
+
     console.log("WebSocket connection closed");
   };
   document.getElementById("close_chat").addEventListener("click", () => {
@@ -454,7 +452,7 @@ async function establishConnection() {
         ResponseMessages.message_type == "Offline"
       ) {
         OneOffline(ResponseMessages);
-        renderprofiles(socket, ResponseMessages.message_type)
+        renderprofiles(socket, ResponseMessages.message_type);
       }
       if (ResponseMessages.message_content) {
         showMessage(`New message from ${ResponseMessages.sender_nickname}`);
@@ -464,7 +462,11 @@ async function establishConnection() {
           const activeUsers = await getActiveUsers();
           console.log(activeUsers, "activeUsers");
 
-          let container = chatUsersComponent(activeUsers, showChatWindow, socket);
+          let container = chatUsersComponent(
+            activeUsers,
+            showChatWindow,
+            socket
+          );
           console.log(container, "container");
           chatusers.replaceWith(container);
         }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"text/template"
 
 	"web-forum/internal/models"
 	"web-forum/pkg/logger"
@@ -127,7 +128,7 @@ func (r *PostRepository) CreatePost(post models.Post) models.Error {
 		INSERT INTO posts (user_id, title, content)
 		VALUES (?, ?, ?)
 		`
-	res, err := r.db.Exec(query, post.UserID, post.Title, post.Content)
+	res, err := r.db.Exec(query, post.UserID, template.HTMLEscapeString(post.Title), template.HTMLEscapeString(post.Content))
 	if err != nil {
 		logger.LogWithDetails(err)
 		return models.Error{
@@ -273,7 +274,7 @@ func (r *PostRepository) AddComment(token string, reaction models.PostReaction) 
 
 	// Prepare SQL INSERT query
 	query := `INSERT INTO post_comments (post_id, user_id, comment) VALUES (?, ?, ?)`
-	_, err := r.db.Exec(query, reaction.PostID, userId, reaction.Comment)
+	_, err := r.db.Exec(query, reaction.PostID, userId, template.HTMLEscapeString(reaction.Comment))
 	if err != nil {
 		logger.LogWithDetails(fmt.Errorf("failed to insert comment: %v", err))
 		return models.Error{Message: "Failed to add comment", Code: http.StatusInternalServerError}
@@ -402,4 +403,3 @@ func (r *PostRepository) FilterPosts(categories []string) ([]models.Post, models
 
 	return posts, models.Error{Code: http.StatusOK}
 }
-

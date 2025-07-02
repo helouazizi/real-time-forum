@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"text/template"
 
 	"web-forum/internal/models"
 	"web-forum/pkg/logger"
@@ -24,7 +25,7 @@ func NewChatRepo(db *sql.DB) *ChatRepository {
 }
 
 func (r *ChatRepository) SaveMessage(message models.Message) error {
-	_, err := r.db.Exec("INSERT INTO messages (sender_id,receiver_id , content) VALUES (?,?, ?)", message.SenderID, message.ReciverID, message.Content)
+	_, err := r.db.Exec("INSERT INTO messages (sender_id,receiver_id , content) VALUES (?,?, ?)", message.SenderID, message.ReciverID, template.HTMLEscapeString(message.Content))
 	return err
 }
 
@@ -100,3 +101,4 @@ func (r *ChatRepository) GetUserNickname(userId int) (string, models.Error) {
 
 	return Nickname, models.Error{Code: http.StatusOK, Message: "Fetched succefully"}
 }
+

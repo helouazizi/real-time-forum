@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"text/template"
 	"time"
 
 	"web-forum/internal/models"
@@ -60,12 +61,13 @@ func (r *UserRepository) CreateUser(user models.User) models.Error {
 	) VALUES (?, ?, ?, ?, ?, ?, ? )
 	`
 	_, err = r.db.Exec(query,
-		user.Nickname,
+		template.HTMLEscapeString(user.Nickname),
+
 		user.Age,
-		user.Gender,
-		user.FirstName,
-		user.LastName,
-		user.Email,
+		template.HTMLEscapeString(user.Gender),
+		template.HTMLEscapeString(user.FirstName),
+		template.HTMLEscapeString(user.LastName),
+		template.HTMLEscapeString(user.Email),
 		hashedPass,
 	)
 	if err != nil {

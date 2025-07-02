@@ -61,6 +61,7 @@ func (h *ChatHandler) Run() {
 			}
 		case msg := <-h.Hub.Broadcast:
 			conn, ok := h.Hub.Clients[msg.ReciverID]
+			fmt.Println(conn)
 			if !ok {
 				continue
 			}
@@ -71,26 +72,39 @@ func (h *ChatHandler) Run() {
 			}
 
 		case msg := <-h.Hub.notify:
-			userCons := h.Hub.Clients[msg.SenderID]
-			for id, conn := range h.Hub.Clients {
-				User, _ := h.chatServices.GetUserNickname(id)
-				if msg.SenderID != id {
-					for i := range conn {
-						if err := conn[i].WriteJSON(msg); err != nil {
-							conn[i].Close()
-						}
 
-					}
-					msg.SenderNickname = User
-					for j := range userCons {
-						if err := userCons[j].WriteJSON(msg); err != nil {
-							msg.Conn.Close()
-						}
-					}
-
+			// Notify other users about the sender's status
+			for id, conns := range h.Hub.Clients {
+				if msg.SenderID == id {
+					continue
 				}
 
+				for _, conn := range conns {
+					if err := conn.WriteJSON(msg); err != nil {
+						conn.Close()
+					}
+				}
 			}
+
+			// Notify the sender about the status of all other users
+			senderConns := h.Hub.Clients[msg.SenderID]
+			for id := range h.Hub.Clients {
+				if msg.SenderID == id {
+					continue
+				}
+
+				nickname, _ := h.chatServices.GetUserNickname(id)
+				statusMsg := msg // shallow copy is fine here
+				statusMsg.SenderNickname = nickname
+				statusMsg.SenderID = id // Important if you want the sender to know *who* is online/offline
+
+				for _, conn := range senderConns {
+					if err := conn.WriteJSON(statusMsg); err != nil {
+						conn.Close()
+					}
+				}
+			}
+
 		}
 	}
 }
@@ -141,6 +155,9 @@ func (h *ChatHandler) HandleChat(w http.ResponseWriter, r *http.Request) {
 			logger.LogWithDetails(err)
 			break
 		}
+	
+	
+		
 
 		var msg models.Message
 		if err := json.Unmarshal(msgBytes, &msg); err != nil {
